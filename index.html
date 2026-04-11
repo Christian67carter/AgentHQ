@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Agent HQ: Pro Split</title>
+<title>Agent HQ: Focus Build</title>
 <style>
 :root{--g:#1D9E75;--gl:#EAF3DE;--gd:#085041;--am:#BA7517;--al:#FAEEDA;--bl:#185FA5;--bll:#E6F1FB;--rd:#E24B4A;--rl:#FCEBEB;--tl:#0F6E56;--bg:#F2F2F7;--card:#FFF;--tx:#1C1C1E;--tx2:#6C6C70;--tx3:#AEAEB2;--br:rgba(60,60,67,.12);--inp:#F2F2F7;--st:env(safe-area-inset-top,44px);--sb:env(safe-area-inset-bottom,34px);--th:83px;}
 [data-dark]{--bg:#1C1C1E;--card:#2C2C2E;--tx:#FFF;--tx2:#AEAEB2;--tx3:#6C6C70;--br:rgba(255,255,255,.1);--inp:#3A3A3C;--gl:#0F3D2A;--al:#3D2800;--bll:#001A3D;--rl:#3D0F0F;}
@@ -34,7 +34,6 @@ body{display:flex;flex-direction:column;}
 .rc{flex:1;min-width:0;}
 .rt{font-size:15px;font-weight:600;color:var(--tx);}
 .rs{font-size:12px;color:var(--tx2);margin-top:2px;}
-.anniv-bdg{background:var(--bl);color:#fff;font-size:9px;font-weight:800;padding:2px 6px;border-radius:4px;}
 input,select{height:44px;border-radius:10px;border:none;background:var(--inp);padding:0 14px;font-size:16px;color:var(--tx);width:100%;margin-bottom:8px;}
 .btn{height:44px;border-radius:10px;border:none;background:var(--g);color:#fff;font-size:15px;font-weight:600;padding:0 18px;cursor:pointer;width:100%;}
 .mg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
@@ -42,38 +41,33 @@ input,select{height:44px;border-radius:10px;border:none;background:var(--inp);pa
 .mv{font-size:22px;font-weight:700;letter-spacing:-.8px;line-height:1.2;}
 .mv.g{color:var(--g);}.mv.r{color:var(--rd);}
 .ml{font-size:10px;color:var(--tx2);margin-top:4px;font-weight:600;text-transform:uppercase;}
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;padding:12px;}
-.cal-d{aspect-ratio:1;border-radius:4px;background:var(--inp);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:var(--tx3);}
-.cal-d.hit{background:var(--g);color:#fff;}
-.pb{height:8px;background:var(--inp);border-radius:4px;overflow:hidden;margin-top:8px;}
-.pf{height:100%;border-radius:4px;transition:width .4s;}
 </style>
 </head>
 <body>
 <div class="ss"></div>
 <div class="hdr">
-  <div class="hdr-l"><div class="t">Agent HQ</div><div class="s">Dual Circle Edition</div></div>
-  <div class="hdr-r"><div class="anniv-bdg" id="total-anniv" style="display:none;">ANNIVERSARY</div></div>
+  <div class="hdr-l"><div class="t">Agent HQ</div><div class="s">Organic Growth · Abilene</div></div>
+  <div class="hdr-r"><div class="bdg" style="background:var(--bl); color:white; padding:4px 8px; border-radius:8px; font-size:10px;">WARM CIRCLE FOCUS</div></div>
 </div>
 <div class="scrl">
 
 <div id="scn-daily" class="scn on">
   <div class="mg">
-    <div class="m"><div class="mv g" id="m-cv">0</div><div class="ml">Convos</div><div class="pb"><div class="pf" id="p-cv" style="width:0%;background:var(--g);"></div></div></div>
+    <div class="m"><div class="mv g" id="m-cv">0</div><div class="ml">Convos</div><div class="ms" style="font-size:10px; color:var(--tx3);">Goal: 20</div></div>
     <div class="m"><div class="mv r" id="total-debt">$93,725</div><div class="ml">Total Debt</div></div>
   </div>
-  <div class="card"><div class="ch">Streak Tracker</div><div id="calendar" class="cal-grid"></div></div>
-  <div class="card"><div class="ch">Daily Input</div><div class="row"><div class="rc"><div class="rt">Log Conversation</div></div><div style="display:flex;gap:12px;"><button onclick="adj('cv',-1)">−</button><span id="s-cv" style="font-weight:700;">0</span><button onclick="adj('cv',1)">+</button></div></div></div>
+  <div class="card"><div class="ch">Streak Tracker</div><div id="calendar" class="cal-grid" style="display:grid; grid-template-columns:repeat(7,1fr); gap:4px; padding:12px;"></div></div>
+  <div class="card"><div class="ch">Quick Log</div><div class="row"><div class="rc"><div class="rt">Conversation Count</div></div><div style="display:flex;gap:12px;"><button onclick="adj('cv',-1)">−</button><span id="s-cv" style="font-weight:700;">0</span><button onclick="adj('cv',1)">+</button></div></div></div>
 </div>
 
 <div id="scn-re" class="scn">
-  <div class="card"><div class="ch">Leads & Closings</div><div id="re-list"></div></div>
-  <div class="card"><div class="ch">New Lead</div><div class="cb"><input type="text" id="ren" placeholder="Lead Name"><input type="text" id="rea" placeholder="Current Address (optional)"><button class="btn" onclick="addRE()">Add to Pipeline</button></div></div>
+  <div class="card"><div class="ch">Active Clients & Leads</div><div id="re-list"></div></div>
+  <div class="card"><div class="ch">Add New Lead</div><div class="cb"><input type="text" id="ren" placeholder="Name"><select id="ret"><option value="web">Online Lead</option><option value="referral">Referral</option><option value="other">Other</option></select><button class="btn" onclick="addRE()">Add to Pipeline</button></div></div>
 </div>
 
 <div id="scn-pers" class="scn">
-  <div class="card"><div class="ch">Warm Circle (Family/HSU)</div><div id="pers-list"></div></div>
-  <div class="card"><div class="ch">Add Person</div><div class="cb"><input type="text" id="pn" placeholder="Name"><input type="text" id="pr" placeholder="Relationship (e.g. HSU, Brother)"><button class="btn" style="background:var(--bl);" onclick="addPers()">Add to Warm Circle</button></div></div>
+  <div class="card"><div class="ch">HSU & Warm Connections</div><div id="pers-list"></div></div>
+  <div class="card"><div class="ch">Add Relationship</div><div class="cb"><input type="text" id="pn" placeholder="Name"><input type="text" id="pr" placeholder="e.g. HSU Engineering, 3D Printing Customer"><button class="btn" style="background:var(--bl);" onclick="addPers()">Add to Circle</button></div></div>
 </div>
 
 <div id="scn-money" class="scn">
@@ -81,57 +75,41 @@ input,select{height:44px;border-radius:10px;border:none;background:var(--inp);pa
     <div class="m"><div class="mv g" id="mc">0</div><div class="ml">Closings</div></div>
     <div class="m"><div class="mv" id="me">$0</div><div class="ml">ZR1X Fund</div></div>
   </div>
-  <div class="card"><div class="ch">Record a Sale</div><div class="cb"><input type="text" id="cln" placeholder="Client Name"><input type="text" id="cla" placeholder="Property Address"><input type="number" id="clp" placeholder="Price ($)"><button class="btn" onclick="logClose()">Log Closing</button></div></div>
+  <div class="card"><div class="ch">Log a Sale</div><div class="cb"><input type="text" id="cln" placeholder="Client Name"><input type="text" id="cla" placeholder="Address"><input type="number" id="clp" placeholder="Price ($)"><button class="btn" onclick="logClose()">Record Closing</button></div></div>
 </div>
 
 </div>
 
 <div class="tbar">
   <div class="tab on" onclick="showScn('daily',this)"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/></svg><span class="tl">Daily</span></div>
-  <div class="tab" onclick="showScn('re',this)"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span class="tl">Real Estate</span></div>
-  <div class="tab" onclick="showScn('pers',this)"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="tl">Personal</span></div>
+  <div class="tab" onclick="showScn('re',this)"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span class="tl">Leads</span></div>
+  <div class="tab" onclick="showScn('pers',this)"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/></svg><span class="tl">Personal</span></div>
   <div class="tab" onclick="showScn('money',this)"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><span class="tl">Money</span></div>
 </div>
 
 <script>
-let S = JSON.parse(localStorage.getItem('AHQ_DUAL')) || {cv:0, history:{}, re:[], pers:[], closings:[], zr1x:0, savings:0, truck:64000, sallie:24225, federal:5500};
-function save(){ localStorage.setItem('AHQ_DUAL', JSON.stringify(S)); render(); }
+let S = JSON.parse(localStorage.getItem('AHQ_EASE')) || {cv:0, history:{}, re:[], pers:[], closings:[], zr1x:0, savings:0, truck:64000, sallie:24225, federal:5500};
+function save(){ localStorage.setItem('AHQ_EASE', JSON.stringify(S)); render(); }
 function showScn(id, el){ document.querySelectorAll('.scn, .tab').forEach(x=>x.classList.remove('on')); document.getElementById('scn-'+id).classList.add('on'); el.classList.add('on'); }
 function adj(k,d){ S[k]=Math.max(0,S[k]+d); let t = new Date().toISOString().split('T')[0]; S.history[t] = S.cv; save(); }
 
 function render(){
   document.getElementById('m-cv').innerText = S.cv; document.getElementById('s-cv').innerText = S.cv;
-  document.getElementById('p-cv').style.width = Math.min(100, (S.cv/20)*100)+'%';
   document.getElementById('total-debt').innerText = '$' + Math.round(S.truck+S.sallie+S.federal).toLocaleString();
   document.getElementById('mc').innerText = S.closings.length;
   document.getElementById('me').innerText = '$' + Math.round(S.zr1x).toLocaleString();
-  
   renderRE(); renderPers(); renderCalendar();
 }
 
-function addRE(){ let n=document.getElementById('ren').value; if(!n)return; S.re.unshift({name:n, addr:document.getElementById('rea').value, time:Date.now()}); document.getElementById('ren').value=''; document.getElementById('rea').value=''; save(); }
+function addRE(){ let n=document.getElementById('ren').value; if(!n)return; S.re.unshift({name:n, type:document.getElementById('ret').value, time:Date.now()}); document.getElementById('ren').value=''; save(); }
 function addPers(){ let n=document.getElementById('pn').value; if(!n)return; S.pers.unshift({name:n, rel:document.getElementById('pr').value}); document.getElementById('pn').value=''; document.getElementById('pr').value=''; save(); }
 
 function renderRE(){
-  let now = Date.now();
-  let html = S.re.map((c,i)=> {
-    let stale = (now - c.time) > 172800000;
-    return `<div class="row ${stale?'stale':''}"><div class="rc"><div class="rt">${c.name}</div><div class="rs">${c.addr || 'Lead'} ${stale?'· STALE':''}</div></div><button onclick="rem('re',${i})">×</button></div>`;
-  }).join('');
-  
-  let nowD = new Date();
-  let annivHtml = S.closings.map(c => {
-    let d = new Date(c.date);
-    let isA = (nowD.getMonth()===d.getMonth() && nowD.getDate()===d.getDate() && nowD.getFullYear()!==nowD.getFullYear());
-    if(isA) document.getElementById('total-anniv').style.display = 'block';
-    return `<div class="row"><div class="rc"><div class="rt">${c.name} ${isA?'<span class="anniv-bdg">ANNIVERSARY</span>':''}</div><div class="rs">${c.address} · Closed ${d.toLocaleDateString()}</div></div></div>`;
-  }).join('');
-  
-  document.getElementById('re-list').innerHTML = (annivHtml + html) || '<div class="cb">No active leads.</div>';
+  document.getElementById('re-list').innerHTML = S.re.map((c,i)=> `<div class="row"><div class="rc"><div class="rt">${c.name}</div><div class="rs">${c.type}</div></div><button onclick="rem('re',${i})">×</button></div>`).join('') || '<div class="cb" style="font-size:12px; color:var(--tx3);">Pipeline empty.</div>';
 }
 
 function renderPers(){
-  document.getElementById('pers-list').innerHTML = S.pers.map((p,i)=> `<div class="row"><div class="rc"><div class="rt">${p.name}</div><div class="rs">${p.rel}</div></div><button onclick="rem('pers',${i})">×</button></div>`).join('') || '<div class="cb">Warm circle empty.</div>';
+  document.getElementById('pers-list').innerHTML = S.pers.map((p,i)=> `<div class="row"><div class="rc"><div class="rt">${p.name}</div><div class="rs">${p.rel}</div></div><button onclick="rem('pers',${i})">×</button></div>`).join('') || '<div class="cb" style="font-size:12px; color:var(--tx3);">Warm circle empty.</div>';
 }
 
 function rem(k,i){ S[k].splice(i,1); save(); }
@@ -150,8 +128,8 @@ function renderCalendar(){
   for(let i=0; i<first; i++) cal.innerHTML += '<div></div>';
   for(let d=1; d<=days; d++){
     let dt = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    let hit = S.history[dt] >= 20; let isT = d === now.getDate();
-    cal.innerHTML += `<div class="cal-d ${hit?'hit':''} ${isT?'today':''}">${d}</div>`;
+    let hit = S.history[dt] >= 20;
+    cal.innerHTML += `<div style="aspect-ratio:1; border-radius:4px; background:${hit?'var(--g)':'var(--inp)'}; color:${hit?'white':'var(--tx3)'}; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:600;">${d}</div>`;
   }
 }
 window.onload = render;
