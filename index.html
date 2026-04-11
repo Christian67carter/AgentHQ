@@ -39,11 +39,10 @@ body{display:flex;flex-direction:column;}
 .ml{font-size:11px;color:var(--tx2);margin-top:4px;font-weight:500;}
 .ms{font-size:10px;color:var(--tx3);margin-top:2px;}
 .row{display:flex;align-items:center;padding:12px 16px;gap:12px;border-bottom:.5px solid var(--br);}
-.row:last-child{border-bottom:none;}
 .rc{flex:1;min-width:0;}
 .rt{font-size:15px;color:var(--tx);}
 .rs{font-size:12px;color:var(--tx2);margin-top:2px;}
-.cb2{width:24px;height:24px;border-radius:50%;border:2px solid var(--tx3);flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;}
+.cb2{width:24px;height:24px;border-radius:50%;border:2px solid var(--tx3);flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer;}
 .cb2.ck{background:var(--g);border-color:var(--g);}
 .cb2.ck::after{content:'';width:12px;height:8px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translateY(-1px);display:block;}
 .rt.dn{color:var(--tx3);text-decoration:line-through;}
@@ -52,126 +51,96 @@ body{display:flex;flex-direction:column;}
 .sv{font-size:22px;font-weight:600;min-width:36px;text-align:center;}
 .pb{height:6px;background:var(--inp);border-radius:3px;overflow:hidden;margin-top:6px;}
 .pf{height:100%;border-radius:3px;transition:width .4s;}
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;padding:10px 14px 14px;}
-.cal-day-name{font-size:9px;font-weight:600;color:var(--tx3);text-align:center;padding-bottom:2px;}
-.cal-d{aspect-ratio:1;border-radius:7px;background:var(--inp);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--tx3);}
-.cal-d.today{border:1.5px solid var(--g);color:var(--tx);}
-.cal-d.hit{background:var(--g);color:#fff;}
-.cal-d.today.hit{background:var(--g);color:#fff;border:none;}
-.fst{display:flex;gap:6px;margin-bottom:10px;overflow-x:auto;padding-bottom:2px;}
+.fst{display:flex;gap:6px;margin-bottom:10px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;}
 .fc{flex-shrink:0;height:32px;padding:0 14px;border-radius:16px;border:none;font-size:13px;font-weight:500;cursor:pointer;background:var(--inp);color:var(--tx2);}
 .fc.on{background:var(--g);color:#fff;}
-.ci{display:flex;align-items:center;padding:10px 16px;gap:12px;border-bottom:.5px solid var(--br);}
-.ci:last-child{border-bottom:none;}
-.ci.stale{background:rgba(226,75,74,.06);}
-.av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:600;flex-shrink:0;}
-.cas{display:flex;gap:5px;}
-.ab{width:32px;height:32px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;}
-.stabs{display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;padding-bottom:2px;}
-.stab{flex-shrink:0;height:32px;padding:0 14px;border-radius:16px;border:none;font-size:13px;font-weight:500;cursor:pointer;background:var(--inp);color:var(--tx2);}
+.ci{display:flex;align-items:center;padding:12px 16px;gap:12px;border-bottom:.5px solid var(--br);}
+.av{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;flex-shrink:0;}
+.cas{display:flex;gap:8px;}
+.ab{width:36px;height:36px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;}
+.stabs{display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;}
+.stab{flex-shrink:0;height:34px;padding:0 16px;border-radius:17px;border:none;font-size:13px;font-weight:600;cursor:pointer;background:var(--inp);color:var(--tx2);}
 .stab.on{background:var(--g);color:#fff;}
-.scard{background:var(--inp);border-radius:12px;padding:14px;margin-bottom:10px;}
-.sst{font-size:11px;font-weight:700;color:var(--tx2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;}
-.stxt{font-size:14px;color:var(--tx);line-height:1.55;font-style:italic;}
-.stip{font-size:12px;color:var(--g);margin-top:8px;font-weight:500;}
-.dbk{margin-bottom:14px;}
-.dbr{display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px;}
-.dbn{font-weight:600;}
+.scard{background:var(--card);border-radius:14px;padding:16px;margin-bottom:12px;border:1px solid var(--br);}
+.sst{font-size:11px;font-weight:800;color:var(--g);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;}
+.stxt{font-size:15px;color:var(--tx);line-height:1.5;margin-bottom:10px;}
+.stip{font-size:12px;color:var(--tx3);font-style:italic;padding-top:8px;border-top:1px solid var(--br);}
 .zp{height:14px;background:var(--inp);border-radius:7px;overflow:hidden;margin:8px 0 5px;}
-.zf{height:100%;background:linear-gradient(90deg,var(--g),#34D399);border-radius:7px;transition:width .6s;}
-.cli{display:flex;justify-content:space-between;align-items:flex-start;padding:10px 16px;border-bottom:.5px solid var(--br);}
-.cli:last-child{border-bottom:none;}
-.mli{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;border-bottom:.5px solid var(--br);}
-.mli:last-child{border-bottom:none;}
-input,select{height:44px;border-radius:10px;border:none;background:var(--inp);padding:0 14px;font-size:16px;color:var(--tx);outline:none;-webkit-appearance:none;width:100%;}
-input::placeholder{color:var(--tx3);}
-.ir{display:flex;gap:8px;padding:0 16px 10px;flex-wrap:wrap;}
-.btn{height:44px;border-radius:10px;border:none;background:var(--g);color:#fff;font-size:15px;font-weight:600;padding:0 18px;cursor:pointer;white-space:nowrap;}
-.bsm{height:34px;border-radius:8px;font-size:13px;padding:0 12px;}
+.zf{height:100%;background:linear-gradient(90deg,var(--g),#34D399);border-radius:7px;}
+input,select,textarea{width:100%;border-radius:10px;border:none;background:var(--inp);padding:12px;font-size:16px;color:var(--tx);outline:none;}
+.btn{height:44px;border-radius:10px;border:none;background:var(--g);color:#fff;font-size:15px;font-weight:700;padding:0 20px;cursor:pointer;}
+.bsm{height:32px;font-size:12px;padding:0 12px;border-radius:8px;}
 .bo{background:var(--inp);color:var(--g);}
-.br2{background:var(--rl);color:var(--rd);}
-.bbl{background:var(--bll);color:var(--bl);}
-.ta{background:var(--al);border-radius:14px;padding:14px 16px;margin-bottom:12px;}
-.ta-t{font-size:14px;font-weight:700;color:var(--am);margin-bottom:3px;}
-.ta-b{font-size:12px;color:var(--tx2);line-height:1.5;}
-.cw{position:relative;height:200px;margin:8px 0 4px;}
-.es{text-align:center;padding:28px 20px;color:var(--tx3);font-size:14px;}
-.ri{display:flex;align-items:center;padding:10px 16px;gap:12px;border-bottom:.5px solid var(--br);}
-.ri:last-child{border-bottom:none;}
-.rk{width:28px;height:28px;border-radius:50%;background:var(--gl);color:var(--gd);font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.anniv{background:var(--bl);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:5px;margin-left:6px;}
-.pa{background:var(--rl);border-radius:12px;padding:10px 14px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;}
-.pn{font-size:14px;font-weight:600;color:var(--rd);}
-.pd{font-size:11px;color:var(--rd);}
-.savings-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px;}
-.sel-box{width:20px;height:20px;border-radius:50%;border:2px solid var(--tx3);flex-shrink:0;margin-right:4px;}
+.cw{position:relative;height:180px;margin-top:10px;}
+.sel-box{width:22px;height:22px;border-radius:50%;border:2px solid var(--tx3);flex-shrink:0;}
 .ci.selected .sel-box{background:var(--g);border-color:var(--g);}
-.ci.selected .sel-box::after{content:'';display:block;width:10px;height:6px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translate(3px, 2px);}
-#hustle-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:var(--bg);z-index:2000;display:none;padding:20px;}
-.h-card{background:var(--card);border-radius:20px;padding:30px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,0.1);margin-top:40px;}
+#hustle-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:var(--bg);z-index:2000;display:none;padding:20px;flex-direction:column;}
+.h-card{background:var(--card);border-radius:24px;padding:30px;text-align:center;box-shadow:0 15px 35px rgba(0,0,0,0.15);margin-top:40px;flex:1;display:flex;flex-direction:column;justify-content:center;}
 </style>
 </head>
 <body>
+
 <div id="hustle-overlay">
   <div style="display:flex;justify-content:space-between;align-items:center;">
-    <div style="font-size:18px;font-weight:700;" id="h-count">Hustle 1/20</div>
-    <button class="btn bo bsm" onclick="stopHustle()">Quit</button>
+    <div style="font-size:18px;font-weight:700;" id="h-count">Queue 1/20</div>
+    <button class="btn bo bsm" onclick="stopHustle()">Exit</button>
   </div>
   <div class="h-card">
-    <div class="av" id="h-av" style="width:80px;height:80px;margin:0 auto 15px;font-size:28px;"></div>
-    <div style="font-size:24px;font-weight:700;" id="h-name">Name</div>
-    <div style="font-size:14px;color:var(--tx2);margin-top:5px;" id="h-note">Note</div>
-    <button class="btn" style="width:100%;margin-top:30px;height:60px;font-size:18px;" onclick="hustleSend()">Send Text 💬</button>
-    <button class="btn bo" style="width:100%;margin-top:10px;" onclick="nextHustle()">Skip / Next →</button>
+    <div class="av" id="h-av" style="width:80px;height:80px;margin:0 auto 20px;font-size:32px;background:var(--gl);color:var(--gd);border-radius:50%;"></div>
+    <div style="font-size:26px;font-weight:700;" id="h-name">Name</div>
+    <div style="font-size:15px;color:var(--tx2);margin-top:10px;" id="h-note">No notes</div>
+    <div style="margin-top:12px; font-size:12px; font-weight:700; color:var(--g);" id="h-source"></div>
+    <button class="btn" style="width:100%;margin-top:40px;height:60px;font-size:18px;" onclick="hustleSend()">Send Text 💬</button>
+    <button class="btn bo" style="width:100%;margin-top:15px;" onclick="nextHustle()">Next →</button>
   </div>
 </div>
 
 <div class="ss"></div>
 <div class="hdr">
-  <div class="hdr-l"><div class="t">Agent HQ</div><div class="s">Christian · Pro 20 Sprint</div></div>
-  <div class="hdr-r"><button class="dbtn" id="dbtn" onclick="toggleDark()">🌙</button><div class="bdg">$3,308/close</div></div>
+  <div class="hdr-l"><div class="t">Agent HQ</div><div class="s">Christian · Pre-Launch Build</div></div>
+  <div class="hdr-r"><button class="dbtn" id="dbtn" onclick="toggleDark()">🌙</button><div class="bdg">$3,308/cl</div></div>
 </div>
+
 <div class="scrl">
 
 <div id="scn-daily" class="scn on">
-  <div id="daily-quote" style="background:var(--card); border-left:4px solid var(--g); border-radius:8px; padding:16px; margin-bottom:16px; font-size:13px; font-weight:600; font-style:italic; color:var(--tx2); text-align:center;"></div>
+  <div id="daily-quote" style="background:var(--card); border-left:4px solid var(--g); border-radius:12px; padding:20px; margin-bottom:16px; font-size:14px; font-weight:600; font-style:italic; color:var(--tx2); text-align:center; box-shadow:0 2px 8px rgba(0,0,0,0.05);"></div>
   <div class="mg">
-    <div class="m"><div class="mv g" id="m-cv">0</div><div class="ml">Conversations</div><div class="ms">Goal: 20 today</div><div class="pb"><div class="pf" id="p-cv" style="width:0%;background:var(--g);"></div></div></div>
-    <div class="m"><div class="mv r" id="m-debt">$93,432</div><div class="ml">Total debt</div><div class="ms">Truck + student loans</div></div>
-    <div class="m"><div class="mv b" id="m-dr">0</div><div class="ml">Doors knocked</div><div class="ms">Near Dyess</div><div class="pb"><div class="pf" id="p-dr" style="width:0%;background:var(--bl);"></div></div></div>
-    <div class="m"><div class="mv" id="m-st">0</div><div class="ml">Day streak</div><div class="ms">Days at 20+</div></div>
+    <div class="m"><div class="mv g" id="m-cv">0</div><div class="ml">Conversations</div><div class="ms">Goal: 20</div><div class="pb"><div class="pf" id="p-cv" style="width:0%;background:var(--g);"></div></div></div>
+    <div class="m"><div class="mv r" id="m-debt">$93,432</div><div class="ml">Debt Load</div><div class="ms">Truck + Student</div></div>
+    <div class="m"><div class="mv b" id="m-dr">0</div><div class="ml">Doors Hit</div><div class="ms">Near Base</div><div class="pb"><div class="pf" id="p-dr" style="width:0%;background:var(--bl);"></div></div></div>
+    <div class="m"><div class="mv" id="m-st">0</div><div class="ml">Day Streak</div><div class="ms">20+ Convos</div></div>
   </div>
-  <div id="tax-banner"></div>
-  <div class="card"><div class="ch">Counters</div>
-    <div class="row"><div class="rc"><div class="rt">Conversations</div><div class="rs">Every real talk about real estate</div></div><div class="stp"><button class="sbtn" onclick="adj('cv',-1)">−</button><span class="sv" id="s-cv">0</span><button class="sbtn" onclick="adj('cv',1)">+</button></div></div>
+  <div class="card"><div class="ch">Quick Counters</div>
+    <div class="row" style="padding:16px; display:flex; justify-content:space-between; align-items:center;">
+      <div><div class="rt">Log Conversation</div><div class="rs">Real Estate related chat</div></div>
+      <div class="stp"><button class="sbtn" onclick="adj('cv',-1)">-</button><span class="sv" id="s-cv">0</span><button class="sbtn" onclick="adj('cv',1)">+</button></div>
+    </div>
     <div class="dv"></div>
-    <div class="row"><div class="rc"><div class="rt">Doors knocked</div><div class="rs">Near base</div></div><div class="stp"><button class="sbtn" onclick="adj('dr',-1)">−</button><span class="sv" id="s-dr">0</span><button class="sbtn" onclick="adj('dr',1)">+</button></div></div>
+    <div class="row" style="padding:16px; display:flex; justify-content:space-between; align-items:center;">
+      <div><div class="rt">Log Doors</div><div class="rs">Knocks near Dyess/Abilene</div></div>
+      <div class="stp"><button class="sbtn" onclick="adj('dr',-1)">-</button><span class="sv" id="s-dr">0</span><button class="sbtn" onclick="adj('dr',1)">+</button></div>
+    </div>
   </div>
-  <div class="card"><div class="ch">Non-negotiables</div><div id="tlist"></div></div>
-  <div class="card"><div class="ch">Activity calendar — <span id="cal-month"></span></div><div class="cal-grid" id="cal-names"></div><div class="cal-grid" id="cal-days" style="padding-top:0;"></div></div>
+  <div class="card"><div class="ch">Non-Negotiables</div><div id="tlist"></div></div>
 </div>
 
 <div id="scn-circle" class="scn">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-    <div style="font-size:20px;font-weight:700;letter-spacing:-.3px;">Warm circle</div>
-    <button id="h-btn" class="btn" style="background:var(--gd);display:none;" onclick="launchHustle()">Start Hustle Queue</button>
+    <div style="font-size:22px;font-weight:800;">Warm Circle</div>
+    <button id="h-btn" class="btn bsm" style="background:var(--gd);display:none;" onclick="launchHustle()">Start Hustle</button>
   </div>
-  <div id="stale-alerts"></div>
-  <div class="card" style="margin-bottom:10px;"><div class="ch">Add Lead</div>
-    <div class="ir" style="padding-top:10px;gap:8px;">
-      <input type="text" id="cn" placeholder="Full name" style="flex:1;min-width:110px;">
-      <input type="text" id="cp" placeholder="Phone" style="flex:1;min-width:90px;">
+  <div class="card" style="padding:16px;"><div class="sst" style="margin-bottom:10px;">Quick Add Lead</div>
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-bottom:8px;">
+      <input type="text" id="cn" placeholder="Name">
+      <input type="text" id="cp" placeholder="Phone">
     </div>
-    <div class="ir" style="padding-top:0;gap:8px;">
-      <input type="text" id="cnot" placeholder="Quick note (e.g., Met at HSU)" style="flex:1;">
+    <div style="display:grid; grid-template-columns: 1.5fr 1fr; gap:8px; margin-bottom:8px;">
+      <input type="text" id="cnot" placeholder="Notes (PCSing, met at...)">
+      <input type="text" id="cref" placeholder="Source">
     </div>
-    <div class="ir" style="padding-top:0;gap:8px;">
-      <select id="cs" style="flex:1;">
-        <option value="not-contacted">New Lead</option>
-        <option value="contacted">Contacted</option>
-        <option value="interested">Interested</option>
-        <option value="military">Military / PCS</option>
-      </select>
+    <div style="display:flex; gap:8px;">
+      <select id="cs" style="flex:1;"><option value="not-contacted">New Lead</option><option value="contacted">Contacted</option><option value="interested">Interested</option></select>
       <button class="btn" onclick="addContact()">Add</button>
     </div>
   </div>
@@ -180,83 +149,90 @@ input::placeholder{color:var(--tx3);}
     <button class="fc" onclick="setFilter('not-contacted',this)">New</button>
     <button class="fc" onclick="setFilter('military',this)">Military</button>
   </div>
-  <div class="card"><div id="clist"><div class="es">No contacts yet</div></div></div>
+  <div class="card" id="clist"></div>
 </div>
 
 <div id="scn-scripts" class="scn">
-  <div style="font-size:20px;font-weight:700;letter-spacing:-.3px;margin-bottom:12px;">Conversation scripts</div>
+  <div style="font-size:22px;font-weight:800;margin-bottom:15px;">Scripts & Dialogues</div>
   <div class="stabs">
-    <button class="stab on" onclick="showS('door',this)">Door knocking</button>
-    <button class="stab" onclick="showS('military',this)">Military</button>
-    <button class="stab" onclick="showS('warm',this)">Warm circle</button>
+    <button class="stab on" onclick="showS('sphere',this)">Sphere</button>
+    <button class="stab" onclick="showS('fsbo',this)">FSBO</button>
+    <button class="stab" onclick="showS('expired',this)">Expired</button>
+    <button class="stab" onclick="showS('open',this)">Open House</button>
+    <button class="stab" onclick="showS('follow',this)">Follow-up</button>
+    <button class="stab" onclick="showS('listing',this)">Listing Apt</button>
+    <button class="stab" onclick="showS('buyer',this)">Buyer Consult</button>
   </div>
   <div id="scontent"></div>
 </div>
 
 <div id="scn-money" class="scn">
-  <div style="font-size:20px;font-weight:700;letter-spacing:-.3px;margin-bottom:12px;">Money dashboard</div>
-  <div id="tax-money"></div>
   <div class="savings-grid">
+    <div class="m"><div class="mv g" id="me">$0</div><div class="ml">Net Earned</div></div>
     <div class="m"><div class="mv g" id="mc">0</div><div class="ml">Closings</div></div>
-    <div class="m"><div class="mv g" id="me">$0</div><div class="ml">Net earned</div></div>
-    <div class="m"><div class="mv a" id="mt">$0</div><div class="ml">Tax vault</div></div>
-    <div class="m"><div class="mv g" id="mz">$0</div><div class="ml">ZR1X fund</div></div>
-    <div class="m"><div class="mv b" id="msav">$0</div><div class="ml">Savings</div></div>
-    <div class="m"><div class="mv" id="mn">20</div><div class="ml">Goal Left</div></div>
+    <div class="m"><div class="mv a" id="mz">$0</div><div class="ml">ZR1X Fund</div></div>
+    <div class="m"><div class="mv" id="mn">21</div><div class="ml">Goal Left</div></div>
   </div>
-  <div class="card"><div class="ch">Revenue vs Target ($69K)</div><div class="cw"><canvas id="rchart" role="img">Chart</canvas></div></div>
-  <div class="card"><div class="ch">Log Closing</div>
-    <div class="ir" style="padding-top:10px;gap:8px;">
-      <input type="text" id="cln" placeholder="Client name" style="flex:1;">
-      <input type="number" id="clp" placeholder="Sale price ($)" style="flex:1;">
-      <button class="btn" onclick="logClose()">Log</button>
+  <div class="card"><div class="ch">Cumulative Net vs Target ($69K)</div><div class="cw"><canvas id="rchart"></canvas></div></div>
+  <div class="card" style="padding:16px;"><div class="sst">Log a Closing</div>
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-top:10px;">
+      <input type="text" id="cln" placeholder="Client Name">
+      <input type="number" id="clp" placeholder="Sale Price ($)">
     </div>
+    <button class="btn" style="width:100%;margin-top:10px;" onclick="logClose()">Log Closing</button>
   </div>
-</div>
-
-<div id="scn-miles" class="scn">
-  <div style="font-size:20px;font-weight:700;letter-spacing:-.3px;margin-bottom:12px;">Mileage log</div>
-  <div class="mg">
-    <div class="m"><div class="mv g" id="mit">0</div><div class="ml">Total miles</div></div>
-    <div class="m"><div class="mv g" id="mid">$0</div><div class="ml">Tax deduction</div></div>
-  </div>
-  <div class="card"><div class="ch">Log Trip</div>
-    <div class="ir" style="padding-top:10px;gap:8px;">
-      <input type="number" id="mmi" placeholder="Miles driven" style="flex:1;">
-      <button class="btn" onclick="logMile()">Log</button>
-    </div>
-  </div>
-  <div class="card"><div id="mlist"></div></div>
 </div>
 
 </div>
 
 <div class="tbar">
-  <div class="tab on" id="tab-daily" onclick="showScn('daily',this)"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/></svg><span class="tl">Daily</span></div>
-  <div class="tab" id="tab-circle" onclick="showScn('circle',this)"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg><span class="tl">Circle</span></div>
-  <div class="tab" id="tab-scripts" onclick="showScn('scripts',this)"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2z"/></svg><span class="tl">Scripts</span></div>
-  <div class="tab" id="tab-money" onclick="showScn('money',this)"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><span class="tl">Money</span></div>
-  <div class="tab" id="tab-miles" onclick="showScn('miles',this)"><svg viewBox="0 0 24 24"><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/><path d="M5 10V7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v3"/></svg><span class="tl">Miles</span></div>
+  <div class="tab on" onclick="showScn('daily',this)"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span class="tl">Daily</span></div>
+  <div class="tab" onclick="showScn('circle',this)"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><circle cx="9" cy="7" r="4"/><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/></svg><span class="tl">Circle</span></div>
+  <div class="tab" onclick="showScn('scripts',this)"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span class="tl">Scripts</span></div>
+  <div class="tab" onclick="showScn('money',this)"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><span class="tl">Money</span></div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script src="quotes.js"></script>
 <script>
-const IRS=.70,NPC=3308;
+const IRS=.70, NPC=3308;
 const MOS=['Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 const TARGETS=[0, 3308, 9924, 19848, 29772, 39696, 49620, 59544, 69852];
 let rChart=null, selectedContacts=[], hIdx=0;
 
 const S={
   dark:false,cv:0,dr:0,streak:0,history:{},
-  tasks:[{id:'t1',t:'20 conversations',d:false},{id:'t2',t:'1hr door knocking',d:false},{id:'t3',t:'Follow up CRM',d:false}],
-  contacts:[],closings:[],miles:[],
+  tasks:[{id:'t1',t:'20 conversations',d:false},{id:'t2',t:'1hr door knocking',d:false},{id:'t3',t:'Post 4 TikToks',d:false}],
+  contacts:[],closings:[],
   sallie:24225,federal:5500,zr1x:0,savings:0
 };
 
-function save(){localStorage.setItem('ahq_final',JSON.stringify(S));}
-function load(){const d=JSON.parse(localStorage.getItem('ahq_final')||'{}');Object.assign(S,d);updateC();}
+const allScripts = {
+  sphere: [
+    {s:'Announcement', t:'"Hey [name], it\'s Christian — I wanted to let you know I just got my real estate license and joined the Tonya Harbin Team here in Abilene. If you ever hear someone mention they\'re looking to move, I\'d love your help!"', tip:'Call 10 people every day in your first 30 days.'}
+  ],
+  fsbo: [
+    {s:'Buyer Approach', t:'"Hey, I\'m Christian with the Tonya Harbin Team — I\'m not calling to list your home, I actually have buyers looking in your area. Would you be open to letting me bring them through?"', tip:'Focus on showing value first, talk fees later.'}
+  ],
+  expired: [
+    {s:'Solution Opener', t:'"I noticed your home came off the market recently and I didn\'t want to assume you changed your mind about selling. Are you still looking to move?"', tip:'Position yourself as the fix, don\'t bash the previous agent.'}
+  ],
+  open: [
+    {s:'Greeting', t:'"Welcome! I\'m Christian. Before you look around, can I ask — are you just getting started, or are you a little further along in the process?"', tip:'Always get a phone number before they leave.'}
+  ],
+  follow: [
+    {s:'Post-Showing', t:'"Hey! Just following up on [address]. What\'d you think? Did anything stand out or was it a no for you?"', tip:'Short texts get more replies than long ones.'}
+  ],
+  listing: [
+    {s:'Motivation Opener', t:'"Before I show you anything, I\'d love to hear from you. What made you decide now is the right time to sell, and where are you headed?"', tip:'Listen for motivation, timeline, and urgency.'}
+  ],
+  buyer: [
+    {s:'Consultation Opener', t:'"I want to make sure we find you the right home, not just any home. What\'s bringing you to Abilene or making you want to move?"', tip:'Present the buyer agreement with confidence.'}
+  ]
+};
 
+function save(){localStorage.setItem('ahq_final_build',JSON.stringify(S));}
+function load(){const d=JSON.parse(localStorage.getItem('ahq_final_build')||'{}');Object.assign(S,d);updateC();}
 function toggleDark(){S.dark=!S.dark;applyDark();save();}
 function applyDark(){document.documentElement.toggleAttribute('data-dark',S.dark);if(rChart)renderCharts();}
 
@@ -264,7 +240,7 @@ function showScn(id,el){
   document.querySelectorAll('.scn').forEach(s=>s.classList.remove('on'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
   document.getElementById('scn-'+id).classList.add('on');
-  (el||document.getElementById('tab-'+id)).classList.add('on');
+  if(el)el.classList.add('on');
   if(id==='money')renderMoney();
   if(id==='circle')renderContacts();
 }
@@ -278,10 +254,9 @@ function adj(k,d){
 function updateC(){
   document.getElementById('m-cv').textContent=S.cv;
   document.getElementById('s-cv').textContent=S.cv;
-  document.getElementById('s-dr').textContent=S.dr;
   document.getElementById('m-dr').textContent=S.dr;
+  document.getElementById('s-dr').textContent=S.dr;
   document.getElementById('p-cv').style.width=Math.min(100,(S.cv/20)*100)+'%';
-  document.getElementById('m-debt').textContent='$'+Math.round(S.sallie+S.federal+63707).toLocaleString();
   renderTasks();
 }
 
@@ -294,10 +269,10 @@ function renderTasks(){
 function togT(id){const t=S.tasks.find(x=>x.id===id);t.d=!t.d;renderTasks();save();}
 
 function addContact(){
-  const n=document.getElementById('cn').value, p=document.getElementById('cp').value, nt=document.getElementById('cnot').value, st=document.getElementById('cs').value;
+  const n=document.getElementById('cn').value, p=document.getElementById('cp').value, nt=document.getElementById('cnot').value, src=document.getElementById('cref').value, st=document.getElementById('cs').value;
   if(!n)return;
-  S.contacts.unshift({id:Date.now(),name:n,phone:p,note:nt,status:st,lt:Date.now()});
-  document.getElementById('cn').value='';document.getElementById('cp').value='';document.getElementById('cnot').value='';
+  S.contacts.unshift({id:Date.now(),name:n,phone:p,note:nt,source:src,status:st,lt:Date.now()});
+  document.getElementById('cn').value='';document.getElementById('cp').value='';document.getElementById('cnot').value='';document.getElementById('cref').value='';
   renderContacts();save();
 }
 
@@ -307,10 +282,13 @@ function renderContacts(){
     <div class="ci ${selectedContacts.includes(c.id)?'selected':''}" onclick="togSel(${c.id})">
       <div class="sel-box"></div>
       <div class="av" style="background:var(--gl);color:var(--gd);">${c.name[0]}</div>
-      <div class="rc">
-        <div style="font-weight:600;">${c.name}</div>
+      <div style="flex:1">
+        <div style="font-weight:700;">${c.name}</div>
         <div style="font-size:12px;color:var(--tx2);">${c.status} · ${c.phone}</div>
-        ${c.note?`<div style="font-size:11px;color:var(--tx3);">📝 ${c.note}</div>`:''}
+        <div style="display:flex;gap:5px;margin-top:4px;">
+           ${c.note?`<span style="font-size:10px;background:var(--inp);padding:2px 6px;border-radius:4px;">📝 ${c.note}</span>`:''}
+           ${c.source?`<span style="font-size:10px;background:var(--bll);padding:2px 6px;border-radius:4px;">📣 ${c.source}</span>`:''}
+        </div>
       </div>
     </div>`).join('');
   document.getElementById('h-btn').style.display=selectedContacts.length?'block':'none';
@@ -322,39 +300,23 @@ function togSel(id){
   renderContacts();
 }
 
-function launchHustle(){
-  hIdx=0;
-  showHustle();
-  document.getElementById('hustle-overlay').style.display='block';
-}
-
+function launchHustle(){ hIdx=0; showHustle(); document.getElementById('hustle-overlay').style.display='flex'; }
 function showHustle(){
   const c=S.contacts.find(x=>x.id===selectedContacts[hIdx]);
-  document.getElementById('h-count').textContent=`Hustle ${hIdx+1}/${selectedContacts.length}`;
+  document.getElementById('h-count').textContent=`Queue ${hIdx+1}/${selectedContacts.length}`;
   document.getElementById('h-name').textContent=c.name;
   document.getElementById('h-note').textContent=c.note||'No notes';
+  document.getElementById('h-source').textContent=c.source?`Source: ${c.source}`:'';
   document.getElementById('h-av').textContent=c.name[0];
-  document.getElementById('h-av').style.background='var(--gl)';
 }
-
 function hustleSend(){
   const c=S.contacts.find(x=>x.id===selectedContacts[hIdx]);
   const msg="Hey! Checking in — have you heard of anyone thinking about buying or selling? Would love any introductions if you think of someone!";
   window.location.href=`sms:${c.phone.replace(/\D/g,'')}&body=${encodeURIComponent(msg)}`;
   adj('cv',1);
 }
-
-function nextHustle(){
-  hIdx++;
-  if(hIdx >= selectedContacts.length) stopHustle();
-  else showHustle();
-}
-
-function stopHustle(){
-  document.getElementById('hustle-overlay').style.display='none';
-  selectedContacts=[];
-  renderContacts();
-}
+function nextHustle(){ hIdx++; if(hIdx >= selectedContacts.length) stopHustle(); else showHustle(); }
+function stopHustle(){ document.getElementById('hustle-overlay').style.display='none'; selectedContacts=[]; renderContacts(); }
 
 function logClose(){
   const p=parseFloat(document.getElementById('clp').value)||0;
@@ -369,8 +331,8 @@ function renderMoney(){
   const net=S.closings.reduce((a,c)=>a+c.net,0);
   document.getElementById('me').textContent='$'+Math.round(net).toLocaleString();
   document.getElementById('mc').textContent=S.closings.length;
+  document.getElementById('mn').textContent=Math.max(0,21-S.closings.length);
   document.getElementById('mz').textContent='$'+Math.round(S.zr1x).toLocaleString();
-  document.getElementById('msav').textContent='$'+Math.round(S.savings).toLocaleString();
   renderCharts();
 }
 
@@ -385,20 +347,14 @@ function renderCharts(){
   if(rChart)rChart.destroy();
   rChart=new Chart(document.getElementById('rchart'),{type:'line',data:{labels:MOS,datasets:[
     {label:'Actual',data:cum,borderColor:'#1D9E75',fill:true,backgroundColor:'rgba(29,158,117,.1)'},
-    {label:'Target',data:TARGETS,borderColor:'#BA7517',borderDash:[5,4]}
+    {label:'Target',data:TARGETS,borderColor:'#BA7517',borderDash:[5,4],pointRadius:0}
   ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}}});
 }
 
-function logMile(){
-  const m=parseFloat(document.getElementById('mmi').value)||0;
-  S.miles.push({m,date:new Date().toLocaleDateString()});
-  renderMiles();save();
-}
-function renderMiles(){
-  const tot=S.miles.reduce((a,m)=>a+m.m,0);
-  document.getElementById('mit').textContent=Math.round(tot);
-  document.getElementById('mid').textContent='$'+Math.round(tot*IRS);
-  document.getElementById('mlist').innerHTML=S.miles.slice(-5).map(m=>`<div class="mli">${m.date}<span>${m.m} mi</span></div>`).join('');
+function showS(k,el){
+  document.querySelectorAll('.stab').forEach(t=>t.classList.remove('on')); el.classList.add('on');
+  document.getElementById('scontent').innerHTML=(allScripts[k]||[]).map(s=>`
+    <div class="scard"><div class="sst">${s.s}</div><div class="stxt">${s.t}</div><div class="stip">PRO TIP: ${s.tip}</div></div>`).join('');
 }
 
 function renderQuote(){
@@ -408,16 +364,11 @@ function renderQuote(){
   }
 }
 
-function showS(k,el){
-  document.querySelectorAll('.stab').forEach(t=>t.classList.remove('on')); el.classList.add('on');
-  const scripts={
-    door:[{s:'Approach',t:'"Hey! I helped a neighbor close on [Street] and wanted to see if you had questions about the market."'}],
-    warm:[{s:'Follow up',t:'"Hey [Name], just checking in! Do you know anyone thinking about buying or selling?"'}]
-  };
-  document.getElementById('scontent').innerHTML=(scripts[k]||[]).map(s=>`<div class="scard"><b>${s.s}</b><p>${s.t}</p></div>`).join('');
-}
-
-window.onload=()=>{load();applyDark();renderQuote();renderCharts();showS('door',document.querySelector('.stab'));};
+window.onload=()=>{
+  load(); applyDark(); renderQuote(); renderCharts(); 
+  showS('sphere',document.querySelector('.stab'));
+  document.getElementById('cal-month').textContent=new Date().toLocaleString('default',{month:'short'})+' '+new Date().getFullYear();
+};
 </script>
 </body>
 </html>
