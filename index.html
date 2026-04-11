@@ -38,7 +38,7 @@ body{display:flex;flex-direction:column;}
 .tbar{position:fixed;bottom:0;left:0;right:0;height:var(--th);background:var(--card);border-top:.5px solid var(--br);display:flex;align-items:flex-start;padding-top:10px;z-index:100;}
 .tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:0 2px;}
 .tab svg{width:22px;height:22px;stroke:var(--tx2);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
-.tab .tl{font-size:9px;font-weight:500;color:var(--tx2);}
+.tab .tl{font-size:9px;font-weight:500;color:var(--tx3);}
 .tab.on svg{stroke:var(--ios-blue);} .tab.on .tl{color:var(--ios-blue);}
 .scn{display:none;} .scn.on{display:block;animation:su .18s ease;}
 @keyframes su{from{transform:translateY(14px);opacity:0;}to{transform:translateY(0);opacity:1;}}
@@ -384,7 +384,6 @@ input,select,textarea{width:100%;border-radius:10px;border:none;background:var(-
       <input type="number" id="ma-tax" placeholder="Add extra income ($)">
       <button class="btn" style="background:var(--am);" onclick="addTax()">Stash</button>
     </div>
-    <p style="font-size:11px;color:var(--tx2);margin-top:10px;">Enter a negative number to log an IRS payment.</p>
   </div></div>
 
   <div class="card"><div class="cb">
@@ -406,7 +405,6 @@ input,select,textarea{width:100%;border-radius:10px;border:none;background:var(-
     </div>
     <div class="zp"><div class="zf" id="zf" style="width:0%;"></div></div>
     <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--tx3);margin-bottom:4px;"><span>$0</span><span>$25,000</span></div>
-    <div style="font-size:11px;color:var(--tx3);">Auto: 50% of each closing net goes here.</div>
   </div></div>
 
   <div class="card"><div class="ch">Debt Payoff</div><div class="cb" style="padding-top:10px;">
@@ -486,8 +484,54 @@ let calYear = todayD.getFullYear();
 let calMonth = todayD.getMonth();
 let activeDateStr = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(todayD.getDate()).padStart(2,'0')}`;
 
-function save(){ try{ localStorage.setItem('ahq_v5_ios',JSON.stringify(S)); }catch(e){} }
-function load(){ try{ const d = JSON.parse(localStorage.getItem('ahq_v5_ios') || '{}'); Object.assign(S, d); if(!S.calEvents) S.calEvents={}; }catch(e){} updateC(); }
+// FIREBASE CLOUD SYNC HYBRID ENGINE
+let dbRef = null;
+let setDb = null;
+
+import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js').then((firebaseApp) => {
+  import('https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js').then((firebaseDb) => {
+    
+    // YOUR KEYS INJECTED HERE
+    const firebaseConfig = {
+      apiKey: "AIzaSyBRl0xHETygH2XYB8lWzWOPoGFrzI-zqwg",
+      authDomain: "agenthq-3c2c9.firebaseapp.com",
+      databaseURL: "https://agenthq-3c2c9-default-rtdb.firebaseio.com",
+      projectId: "agenthq-3c2c9",
+      storageBucket: "agenthq-3c2c9.firebasestorage.app",
+      messagingSenderId: "91185374523",
+      appId: "1:91185374523:web:fef9123905c7d416d1831e"
+    };
+    
+    const app = firebaseApp.initializeApp(firebaseConfig);
+    const db = firebaseDb.getDatabase(app);
+    dbRef = firebaseDb.ref(db, 'agent_hq_data');
+    setDb = firebaseDb.set;
+
+    // Listen for real-time cloud updates
+    firebaseDb.onValue(dbRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        Object.assign(S, data);
+        if(!S.calEvents) S.calEvents={};
+        updateC(); 
+        if(document.getElementById('cal-month')) renderCal(); 
+        renderMoney(); renderContacts(); renderClients();
+      }
+    });
+  });
+});
+
+window.save = function() {
+  try { localStorage.setItem('ahq_v5_ios',JSON.stringify(S)); } catch(e){}
+  if(setDb && dbRef) {
+    try { setDb(dbRef, S); } catch(e) { console.error("Cloud Save Failed", e); }
+  }
+}
+
+window.load = function() {
+  try { const d = JSON.parse(localStorage.getItem('ahq_v5_ios') || '{}'); Object.assign(S, d); if(!S.calEvents) S.calEvents={}; } catch(e){} 
+  updateC();
+}
 
 function toggleDark(){ S.dark=!S.dark; applyDark(); save(); }
 function applyDark(){ document.documentElement.toggleAttribute('data-dark',S.dark); if(rChart) renderCharts(); }
@@ -518,14 +562,15 @@ function updateC(){
   } else {
       pTracker.style.borderLeftColor = 'var(--g)'; pTitle.style.color = 'var(--g)'; pTitle.textContent = 'DAILY GOAL MET.'; pDesc.textContent = "20 hit. You're doing good, but good is the enemy of great. Give 120%. Keep pushing.";
   }
-  renderTasks(); renderCal(); // Render cal to update hit rings
+  renderTasks(); 
+  if(document.getElementById('cal-month')) renderCal(); 
 }
 
 function renderTasks(){ document.getElementById('tlist').innerHTML = S.tasks.map(t=>`<div class="row" style="cursor:pointer;" onclick="togT('${t.id}')"><div class="cb2 ${t.d?'ck':''}"></div><div class="rt ${t.d?'dn':''}">${t.t}</div></div>`).join(''); }
-function togT(id){ const t=S.tasks.find(x=>x.id===id); t.d=!t.d; renderTasks(); save(); }
+window.togT = function(id){ const t=S.tasks.find(x=>x.id===id); t.d=!t.d; renderTasks(); save(); }
 
 // ── ICS IMPORT ENGINE ──
-function importICS(inp) {
+window.importICS = function(inp) {
   const files = inp.files; if (!files.length) return;
   let totalImported = 0; let filesProcessed = 0; const dayMap = {SU:0,MO:1,TU:2,WE:3,TH:4,FR:5,SA:6};
 
@@ -586,7 +631,7 @@ function importICS(inp) {
 }
 
 // ── VCF IMPORT ENGINE ──
-function importVCF(inp){
+window.importVCF = function(inp){
   const f=inp.files[0]; if(!f) return;
   const r=new FileReader();
   r.onload=e=>{
@@ -608,14 +653,14 @@ function importVCF(inp){
   r.readAsText(f); inp.value='';
 }
 
-function addContact(){
+window.addContact = function(){
   const n=document.getElementById('cn').value.trim(), p=document.getElementById('cp').value.trim(), nt=document.getElementById('cnot').value.trim(), src=document.getElementById('cref').value.trim(), type=document.getElementById('ctype').value, st=document.getElementById('cs').value;
   if(!n) return;
   S.contacts.unshift({id:Date.now(),name:n,phone:p,note:nt,source:src,type:type,status:st,lt:Date.now()});
   document.getElementById('cn').value=''; document.getElementById('cp').value=''; document.getElementById('cnot').value=''; document.getElementById('cref').value=''; adj('nc', 1); renderContacts(); save();
 }
 
-function setFilter(f, el){ currentFilter = f; document.querySelectorAll('.fc').forEach(b=>b.classList.remove('on')); el.classList.add('on'); renderContacts(); }
+window.setFilter = function(f, el){ currentFilter = f; document.querySelectorAll('.fc').forEach(b=>b.classList.remove('on')); el.classList.add('on'); renderContacts(); }
 
 function renderContacts(){
   const el = document.getElementById('clist'); let filtered = S.contacts;
@@ -632,22 +677,22 @@ function renderContacts(){
   document.getElementById('h-btn').style.display = selectedContacts.length ? 'block' : 'none';
 }
 
-function togSel(id){ if(selectedContacts.includes(id)) selectedContacts=selectedContacts.filter(x=>x!==id); else selectedContacts.push(id); renderContacts(); }
+window.togSel = function(id){ if(selectedContacts.includes(id)) selectedContacts=selectedContacts.filter(x=>x!==id); else selectedContacts.push(id); renderContacts(); }
 
-function launchHustle(){ hIdx=0; showHustle(); document.getElementById('hustle-overlay').style.display='flex'; }
+window.launchHustle = function(){ hIdx=0; showHustle(); document.getElementById('hustle-overlay').style.display='flex'; }
 function showHustle(){
   const c = S.contacts.find(x=>x.id===selectedContacts[hIdx]); if(!c) return stopHustle();
   document.getElementById('h-count').textContent = `Queue ${hIdx+1}/${selectedContacts.length}`; document.getElementById('h-name').textContent = c.name; document.getElementById('h-note').textContent = c.note || 'No notes recorded'; document.getElementById('h-source').textContent = c.source ? `Source: ${c.source}` : ''; document.getElementById('h-av').textContent = c.name[0].toUpperCase();
 }
-function hustleSend(){
+window.hustleSend = function(){
   const c = S.contacts.find(x=>x.id===selectedContacts[hIdx]);
   const msg = "Hey! It's Christian Carter — I just joined the Tonya Harbin Team here in Abilene as a licensed real estate agent. If you or anyone you know is thinking about buying or selling, I'd love to help!";
   window.location.href = `sms:${(c.phone||'').replace(/\D/g,'')}&body=${encodeURIComponent(msg)}`; adj('cv', 1); setTimeout(()=>nextHustle(), 500);
 }
-function nextHustle(){ hIdx++; if(hIdx>=selectedContacts.length) stopHustle(); else showHustle(); }
-function stopHustle(){ document.getElementById('hustle-overlay').style.display='none'; selectedContacts=[]; renderContacts(); }
+window.nextHustle = function(){ hIdx++; if(hIdx>=selectedContacts.length) stopHustle(); else showHustle(); }
+window.stopHustle = function(){ document.getElementById('hustle-overlay').style.display='none'; selectedContacts=[]; renderContacts(); }
 
-function addClient(){
+window.addClient = function(){
   const name = document.getElementById('cli-name').value.trim(), addr = document.getElementById('cli-addr').value.trim(), price = parseFloat(document.getElementById('cli-price').value) || 0, date = document.getElementById('cli-date').value, type = document.getElementById('cli-type').value, notes = document.getElementById('cli-notes').value.trim();
   if(!name || !date) return alert('Name and close date are required.');
   const gross = price * 0.03; const afterSplit = gross * 0.70; const net = afterSplit * 0.70; const tax = afterSplit * 0.30;
@@ -678,15 +723,15 @@ function renderClients(){
   }).join('');
 }
 
-function logCloseMoney(){
+window.logCloseMoney = function(){
   const p = parseFloat(document.getElementById('clp').value)||0; const n = document.getElementById('cln').value.trim();
   if(p <= 0) return; const gross = p*0.03; const afterSplit = gross*0.70; const net = afterSplit*0.70; const tax = afterSplit*0.30;
   S.closings.push({net, tax, date:new Date().toISOString(), name:n}); S.zr1x += net*0.5; document.getElementById('clp').value=''; document.getElementById('cln').value=''; renderMoney(); updateC(); save();
 }
 
-function addTax(){ const v=parseFloat(document.getElementById('ma-tax').value)||0; if(v!==0){S.manualTax+=v;document.getElementById('ma-tax').value='';renderMoney();save();} }
-function addSav(){ const v=parseFloat(document.getElementById('ma-sav').value)||0; if(v!==0){S.manualSav+=v;document.getElementById('ma-sav').value='';renderMoney();save();} }
-function payDebt(){ const v = parseFloat(document.getElementById('debt-pay').value)||0; if(v<=0) return; S.sallie = Math.max(0, S.sallie - v); if(S.sallie === 0){ const rem = v - S.sallie; S.federal = Math.max(0, S.federal - rem); } document.getElementById('debt-pay').value=''; renderMoney(); save(); }
+window.addTax = function(){ const v=parseFloat(document.getElementById('ma-tax').value)||0; if(v!==0){S.manualTax+=v;document.getElementById('ma-tax').value='';renderMoney();save();} }
+window.addSav = function(){ const v=parseFloat(document.getElementById('ma-sav').value)||0; if(v!==0){S.manualSav+=v;document.getElementById('ma-sav').value='';renderMoney();save();} }
+window.payDebt = function(){ const v = parseFloat(document.getElementById('debt-pay').value)||0; if(v<=0) return; S.sallie = Math.max(0, S.sallie - v); if(S.sallie === 0){ const rem = v - S.sallie; S.federal = Math.max(0, S.federal - rem); } document.getElementById('debt-pay').value=''; renderMoney(); save(); }
 
 function renderMoney(){
   const net = S.closings.reduce((a,c)=>a+c.net,0); const autoTax = S.closings.reduce((a,c)=>a+c.tax,0); const totalTax = autoTax + (S.manualTax||0); const autoSav = S.closings.reduce((a,c)=>a+(c.net*0.2),0); const totalSav = autoSav + (S.manualSav||0);
@@ -701,20 +746,19 @@ function renderCharts(){
   rChart=new Chart(document.getElementById('rchart'),{ type:'line', data:{labels:MOS,datasets:[{label:'Your Net',data:cum,borderColor:'#1D9E75',fill:true,backgroundColor:'rgba(29,158,117,.1)',tension:.3}, {label:'$75K Target',data:TARGETS,borderColor:'#C9A84C',borderDash:[5,4],pointRadius:0,tension:.3}]}, options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>'$'+Math.round(v/1000)+'K',color:isDark?'#AEAEB2':'#6C6C70'},grid:{color:isDark?'rgba(255,255,255,.06)':'rgba(0,0,0,.06)'}},x:{ticks:{color:isDark?'#AEAEB2':'#6C6C70'},grid:{display:false}}}} });
 }
 
-function showS(k, el){ document.querySelectorAll('.stab').forEach(t=>t.classList.remove('on')); el.classList.add('on'); document.getElementById('scontent').innerHTML=(SCRIPTS[k]||[]).map(s=>`<div class="scard"><div class="sst">${s.s}</div><div class="stxt">${s.t}</div><div class="stip">PRO TIP: ${s.tip}</div></div>`).join(''); }
+window.showS = function(k, el){ document.querySelectorAll('.stab').forEach(t=>t.classList.remove('on')); el.classList.add('on'); document.getElementById('scontent').innerHTML=(SCRIPTS[k]||[]).map(s=>`<div class="scard"><div class="sst">${s.s}</div><div class="stxt">${s.t}</div><div class="stip">PRO TIP: ${s.tip}</div></div>`).join(''); }
 
-function calNav(dir){ calMonth += dir; if(calMonth > 11){ calMonth=0; calYear++; } if(calMonth < 0){ calMonth=11; calYear--; } renderCal(); }
+window.calNav = function(dir){ calMonth += dir; if(calMonth > 11){ calMonth=0; calYear++; } if(calMonth < 0){ calMonth=11; calYear--; } renderCal(); }
 
-function selectDate(key) {
-  activeDateStr = key;
-  renderCal();
+window.selectDate = function(key) {
+  activeDateStr = key; renderCal();
 }
 
 function renderCal(){
   const now = new Date(), months=['January','February','March','April','May','June','July','August','September','October','November','December'];
   document.getElementById('cal-month').textContent=months[calMonth]+' '+calYear; document.getElementById('cal-names').innerHTML=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d=>`<div class="cal-day-name">${d}</div>`).join('');
   const first=new Date(calYear,calMonth,1).getDay(), total=new Date(calYear,calMonth+1,0).getDate(); 
-  const evColors={openhouse:'#C9A84C',showing:'#1A2744',listing:'#7B9ED9',closing:'#2E7D52',prospecting:'#5A3472',doorknock:'#B94040',class:'#6B7280',other:'#9AA0AD'};
+  const evColors={openhouse:'#C9A84C',showing:'var(--ios-blue)',listing:'#7B9ED9',closing:'#2E7D52',prospecting:'#5A3472',doorknock:'var(--ios-red)',class:'#6B7280',other:'#9AA0AD'};
   
   let html=''; for(let i=0;i<first;i++) html+='<div></div>';
   for(let d=1;d<=total;d++){
@@ -732,8 +776,7 @@ function renderCal(){
              <div class="cal-dots">${dotsHtml}</div>
            </div>`;
   }
-  document.getElementById('cal-days').innerHTML=html; 
-  renderCalEventsList();
+  document.getElementById('cal-days').innerHTML=html; renderCalEventsList();
 }
 
 function formatTime(time24) {
@@ -767,41 +810,43 @@ function renderCalEventsList(){
     </div>`).join('');
 }
 
-function openModal(dateKey, editIdx = null){
+window.openModal = function(dateKey, editIdx = null){
   document.getElementById('modal-date-title').textContent = "Add Event";
   if(editIdx !== null) {
       const evs = (S.calEvents||{})[dateKey]||[];
       if(evs[editIdx]) {
          document.getElementById('existing-events').innerHTML = `<button onclick="deleteEvent('${dateKey}',${editIdx})" style="width:100%;height:44px;border-radius:10px;border:none;background:var(--rl);color:var(--ios-red);font-size:15px;font-weight:600;margin-top:10px;cursor:pointer;">Delete Event</button>`;
       }
-  } else {
-      document.getElementById('existing-events').innerHTML = '';
-  }
+  } else { document.getElementById('existing-events').innerHTML = ''; }
   document.getElementById('cal-modal').style.display='flex';
 }
 
-function closeModal(){ document.getElementById('cal-modal').style.display='none'; }
+window.closeModal = function(){ document.getElementById('cal-modal').style.display='none'; }
 
-function openAddEvent() {
-    document.getElementById('ev-title').value=''; document.getElementById('ev-start').value=''; document.getElementById('ev-end').value='';
-    openModal(activeDateStr);
+window.openAddEvent = function() {
+    document.getElementById('ev-title').value=''; document.getElementById('ev-start').value=''; document.getElementById('ev-end').value=''; openModal(activeDateStr);
 }
 
-function saveEvent(){
+window.saveEvent = function(){
   const type=document.getElementById('ev-type').value, title=document.getElementById('ev-title').value.trim(), start=document.getElementById('ev-start').value, end=document.getElementById('ev-end').value;
   if(!activeDateStr || !title) return; 
   if(!S.calEvents) S.calEvents={}; if(!S.calEvents[activeDateStr]) S.calEvents[activeDateStr]=[];
-  S.calEvents[activeDateStr].push({type,title,start,end}); 
-  S.calEvents[activeDateStr].sort((a,b)=>a.start.localeCompare(b.start));
+  S.calEvents[activeDateStr].push({type,title,start,end}); S.calEvents[activeDateStr].sort((a,b)=>a.start.localeCompare(b.start));
   document.getElementById('ev-title').value=''; document.getElementById('ev-start').value=''; document.getElementById('ev-end').value=''; 
   save(); renderCal(); closeModal();
 }
 
-function deleteEvent(dateKey,idx){ S.calEvents[dateKey].splice(idx,1); if(S.calEvents[dateKey].length===0) delete S.calEvents[dateKey]; save(); renderCal(); closeModal(); }
+window.deleteEvent = function(dateKey,idx){ S.calEvents[dateKey].splice(idx,1); if(S.calEvents[dateKey].length===0) delete S.calEvents[dateKey]; save(); renderCal(); closeModal(); }
+// Attach globally so inline HTML handlers work while we use type="module" dynamically
+window.toggleDark = toggleDark;
+window.showScn = showScn;
+window.adj = adj;
 
 window.onload=()=>{
-  load(); applyDark(); renderCal(); renderCharts(); showS('sphere', document.querySelector('.stab'));
-  const dateEl=document.getElementById('todays-date'); if(dateEl) dateEl.textContent=todayD.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+  load(); applyDark(); 
+  const day=Math.floor((new Date()-new Date(new Date().getFullYear(),0,0))/864e5);
+  document.getElementById('daily-quote').textContent=QUOTES[day%QUOTES.length];
+  showS('sphere', document.querySelector('.stab'));
 };
 </script>
 </body>
