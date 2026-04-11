@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Agent HQ: Pro Playbook</title>
+<title>Agent HQ: Master Build</title>
 <style>
 :root{--g:#1D9E75;--gl:#EAF3DE;--gd:#085041;--am:#BA7517;--al:#FAEEDA;--bl:#185FA5;--bll:#001A3D;--rd:#E24B4A;--rl:#FCEBEB;--tl:#0F6E56;--bg:#F2F2F7;--card:#FFF;--tx:#1C1C1E;--tx2:#6C6C70;--tx3:#AEAEB2;--br:rgba(60,60,67,.12);--inp:#F2F2F7;--st:env(safe-area-inset-top,44px);--sb:env(safe-area-inset-bottom,34px);--th:83px;}
 [data-dark]{--bg:#1C1C1E;--card:#2C2C2E;--tx:#FFF;--tx2:#AEAEB2;--tx3:#6C6C70;--br:rgba(255,255,255,.1);--inp:#3A3A3C;--gl:#0F3D2A;--al:#3D2800;--bll:#001A3D;--rl:#3D0F0F;}
@@ -29,25 +29,29 @@ body{display:flex;flex-direction:column;}
 .card{background:var(--card);border-radius:16px;margin-bottom:12px;overflow:hidden;}
 .ch{padding:12px 16px 0;font-size:11px;font-weight:700;color:var(--tx2);text-transform:uppercase;letter-spacing:.06em;}
 .cb{padding:12px 16px 16px;}
-.row{display:flex;flex-direction:column;padding:16px;border-bottom:.5px solid var(--br);}
-.rt{font-size:15px;font-weight:700;color:var(--g);margin-bottom:6px;}
-.rs{font-size:14px;color:var(--tx);line-height:1.5;}
-.rcxt{font-size:11px;color:var(--tx3);margin-top:8px;font-style:italic;}
-input,textarea{width:100%;background:var(--inp);border:none;border-radius:10px;padding:12px;color:var(--tx);font-size:15px;margin-bottom:10px;outline:none;}
-textarea{height:80px;resize:none;}
+.row{display:flex;align-items:center;padding:13px 16px;gap:12px;border-bottom:.5px solid var(--br);}
+.rc{flex:1;min-width:0;}
+.rt{font-size:15px;font-weight:600;color:var(--tx);}
+.rs{font-size:12px;color:var(--tx2);margin-top:2px;}
+.rt-s{font-size:14px;font-weight:700;color:var(--g);margin-bottom:4px;}
+.rs-s{font-size:13px;color:var(--tx);line-height:1.4;}
+input,select,textarea{width:100%;background:var(--inp);border:none;border-radius:10px;padding:12px;color:var(--tx);font-size:15px;margin-bottom:10px;outline:none;}
 .btn{height:44px;border-radius:10px;border:none;background:var(--g);color:#fff;font-size:15px;font-weight:600;padding:0 18px;cursor:pointer;width:100%;}
 .mg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
 .m{background:var(--card);border-radius:14px;padding:12px;}
-.mv{font-size:20px;font-weight:700;}
-.cal-d.hit{background:var(--g);color:#fff;}
+.mv{font-size:22px;font-weight:700;}
+.pb{height:8px;background:var(--inp);border-radius:4px;overflow:hidden;margin-top:6px;}
+.pf{height:100%;border-radius:4px;transition:width .4s;}
+.anniv-bdg{background:var(--bl);color:white;font-size:9px;font-weight:800;padding:2px 6px;border-radius:4px;margin-left:5px;}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;padding:12px;}
 .cal-d{aspect-ratio:1;border-radius:4px;background:var(--inp);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:var(--tx3);}
+.cal-d.hit{background:var(--g);color:#fff;}
 </style>
 </head>
 <body>
 <div class="ss"></div>
 <div class="hdr">
-  <div class="hdr-l"><div class="t">Agent HQ</div><div class="s" style="font-size:10px; color:var(--tx2);">Christian · PLACE Playbook</div></div>
+  <div class="hdr-l"><div class="t">Agent HQ</div><div class="s" style="font-size:10px; color:var(--tx2);">Master Build · 40-House Sprint</div></div>
   <div class="hdr-r"><button class="dbtn" onclick="toggleDark()">☀️</button></div>
 </div>
 <div class="scrl">
@@ -58,27 +62,17 @@ textarea{height:80px;resize:none;}
     <div class="m"><div class="mv" id="total-debt" style="color:var(--rd);">$93,725</div><div style="font-size:10px; font-weight:700; color:var(--tx2);">TOTAL DEBT</div></div>
   </div>
   <div class="card"><div class="ch">Streak Tracker</div><div id="calendar" class="cal-grid"></div></div>
-  <div class="card"><div class="ch">Input</div><div style="padding:16px; display:flex; justify-content:space-between; align-items:center;"><span>Add Conversation</span><div style="display:flex; gap:12px;"><button onclick="adj('cv',-1)">−</button><span id="s-cv">0</span><button onclick="adj('cv',1)">+</button></div></div></div>
+  <div class="card"><div class="ch">Input</div><div class="row"><div class="rc">Daily Conversations</div><div style="display:flex;gap:14px;"><button onclick="adj('cv',-1)">−</button><span id="s-cv" style="font-weight:700;">0</span><button onclick="adj('cv',1)">+</button></div></div></div>
 </div>
 
 <div id="scn-scripts" class="scn">
-  <div class="card">
-    <div class="ch">Abilene Pro Scripts</div>
-    <div id="script-list"></div>
-  </div>
-  <div class="card">
-    <div class="ch">Add Custom Script</div>
-    <div class="cb">
-      <input type="text" id="stitle" placeholder="Scenario (e.g. Price Objection)">
-      <textarea id="sbody" placeholder="What do you say?"></textarea>
-      <button class="btn" onclick="addScript()">Save Script</button>
-    </div>
-  </div>
+  <div class="card"><div class="ch">Playbook</div><div id="script-list"></div></div>
+  <div class="card"><div class="ch">Add Custom Script</div><div class="cb"><input type="text" id="stitle" placeholder="Scenario"><textarea id="sbody" placeholder="Script body..."></textarea><button class="btn" onclick="addScript()">Save</button></div></div>
 </div>
 
 <div id="scn-re" class="scn">
-  <div class="card"><div class="ch">Pipeline</div><div id="re-list"></div></div>
-  <div class="card"><div class="ch">New Lead</div><div class="cb"><input type="text" id="ren" placeholder="Name"><button class="btn" onclick="addRE()">Add Lead</button></div></div>
+  <div class="card"><div class="ch">Client Relationship Engine</div><div id="re-list"></div></div>
+  <div class="card"><div class="ch">Add Prospect</div><div class="cb"><input type="text" id="ren" placeholder="Name"><button class="btn" onclick="addRE()">Add to Circle</button></div></div>
 </div>
 
 <div id="scn-money" class="scn">
@@ -86,12 +80,13 @@ textarea{height:80px;resize:none;}
     <div class="m"><div class="mv" id="mc" style="color:var(--g);">0</div><div style="font-size:10px; font-weight:700; color:var(--tx2);">CLOSINGS</div></div>
     <div class="m"><div class="mv" id="me">$0</div><div style="font-size:10px; font-weight:700; color:var(--tx2);">ZR1X FUND</div></div>
   </div>
-  <div class="card"><div class="ch">Log Sale</div>
+  <div class="card"><div class="ch">Debt Avalanche</div><div class="cb">
+    <div class="rs">Sallie Mae (10.25%): <span id="ds" style="color:var(--rd);">$24,225</span></div><div class="pb"><div class="pf" id="dps" style="background:var(--rd); width:0%;"></div></div>
+    <div class="rs" style="margin-top:10px;">Truck (2.99%): <span id="dt" style="color:var(--tx2);">$64,000</span></div><div class="pb"><div class="pf" id="dpt" style="background:var(--tx3); width:0%;"></div></div>
+  </div></div>
+  <div class="card"><div class="ch">Record Closing</div>
     <div class="cb">
-      <input type="text" id="cln" placeholder="Client Name">
-      <input type="date" id="cdate">
-      <input type="number" id="clp" placeholder="Price">
-      <button class="btn" onclick="logClose()">Record</button>
+        <input type="text" id="cln" placeholder="Client Name"><input type="text" id="cla" placeholder="Address"><input type="date" id="cdate"><input type="number" id="clp" placeholder="Price"><button class="btn" onclick="logClose()">Log Sale</button>
     </div>
   </div>
 </div>
@@ -101,22 +96,22 @@ textarea{height:80px;resize:none;}
 <div class="tbar">
   <div class="tab on" onclick="showScn('daily',this)"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/></svg><span class="tl">Daily</span></div>
   <div class="tab" onclick="showScn('scripts',this)"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span class="tl">Scripts</span></div>
-  <div class="tab" onclick="showScn('re',this)"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><span class="tl">Leads</span></div>
+  <div class="tab" onclick="showScn('re',this)"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><span class="tl">Circle</span></div>
   <div class="tab" onclick="showScn('money',this)"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><span class="tl">Money</span></div>
 </div>
 
 <script>
-let S = JSON.parse(localStorage.getItem('AHQ_SCRIPT_V1')) || {
-  dark:true, cv:0, history:{}, re:[], closings:[], zr1x:0, 
-  truck:64000, sallie:24225, federal:5500,
+let S = JSON.parse(localStorage.getItem('AHQ_MASTER')) || {
+  dark:true, cv:0, history:{}, re:[], closings:[], zr1x:0, savings:0,
+  truck:64000, sallie:24225, federal:5500, truckO:64000, sallieO:24225,
   scripts: [
-    {t: "The 'I'm a Student' Edge", b: "Honestly, I'm finishing my engineering degree at HSU, so I look at houses like a project—I'm more focused on the structural integrity and the math than just 'selling' you. If you want someone to geek out on the inspections with you, I'm your guy.", c: "Use with: HSU connections / Young families"},
-    {t: "The Dyess Soft Intro", b: "Hey, I saw you guys might be heading to Dyess soon. Most people just show you houses, but I know the base area really well. My goal is to make sure your BAH actually builds you some equity while you're stationed here in Abilene.", c: "Use with: Military leads"},
-    {t: "Home Anniversary Text", b: "Hey! Happy 1-year 'Home-iversary.' I was just checking my records and realized it's been exactly a year since you moved into [Address]. Hope you're still loving it—if you need a contractor recommendation or just want to know what the house is worth now, let me know!", c: "Use for: Past clients"}
+    {t:"The Engineering Edge", b:"I'm an engineering student at HSU, so I look at houses like structures, not just sales. I'll geek out on the inspections with you to make sure it's solid."},
+    {t:"Dyess Soft Intro", b:"I know the Dyess area well—my goal is to make sure your BAH builds equity while you're stationed here in Abilene."},
+    {t:"Anniversary Text", b:"Happy Home-iversary! It's been exactly one year since you moved into [Address]. Hope you're loving it!"}
   ]
 };
 
-function save(){ localStorage.setItem('AHQ_SCRIPT_V1', JSON.stringify(S)); render(); }
+function save(){ localStorage.setItem('AHQ_MASTER', JSON.stringify(S)); render(); }
 function toggleDark(){ S.dark=!S.dark; applyDark(); save(); }
 function applyDark(){ document.documentElement.toggleAttribute('data-dark', S.dark); document.querySelector('.dbtn').innerText = S.dark ? '☀️' : '🌙'; }
 function showScn(id, el){ document.querySelectorAll('.scn, .tab').forEach(x=>x.classList.remove('on')); document.getElementById('scn-'+id).classList.add('on'); el.classList.add('on'); }
@@ -127,43 +122,34 @@ function render(){
   document.getElementById('total-debt').innerText = '$' + Math.round(S.truck+S.sallie+S.federal).toLocaleString();
   document.getElementById('mc').innerText = S.closings.length;
   document.getElementById('me').innerText = '$' + Math.round(S.zr1x).toLocaleString();
+  document.getElementById('ds').innerText = '$' + Math.round(S.sallie).toLocaleString();
+  document.getElementById('dt').innerText = '$' + Math.round(S.truck).toLocaleString();
+  document.getElementById('dps').style.width = (1-S.sallie/S.sallieO)*100+'%';
+  document.getElementById('dpt').style.width = (1-S.truck/S.truckO)*100+'%';
   
-  document.getElementById('script-list').innerHTML = S.scripts.map(s => `
-    <div class="row">
-      <div class="rt">${s.t}</div>
-      <div class="rs">${s.b}</div>
-      <div class="rcxt">${s.c}</div>
-    </div>
-  `).join('');
-
-  document.getElementById('re-list').innerHTML = S.closings.map(c => `<div class="row"><div class="rt" style="font-size:14px;">${c.name} (Closed)</div></div>`).join('') + S.re.map(r => `<div class="row"><div class="rt" style="font-size:14px;">${r.name} (Lead)</div></div>`).join('');
+  let now = new Date();
+  document.getElementById('script-list').innerHTML = S.scripts.map(s => `<div class="row"><div class="rt-s">${s.t}</div><div class="rs-s">${s.b}</div></div>`).join('');
+  document.getElementById('re-list').innerHTML = S.closings.map(c => {
+    let cd = new Date(c.date);
+    let isA = (now.getMonth() === cd.getMonth() && now.getDate() === cd.getDate() && now.getFullYear() !== cd.getFullYear());
+    return `<div class="row"><div class="rc"><div class="rt">${c.name}${isA?' <span class="anniv-bdg">ANNIVERSARY</span>':''}</div><div class="rs">${c.address} · ${cd.toLocaleDateString()}</div></div></div>`;
+  }).join('') + S.re.map((r,i) => `<div class="row"><div class="rc"><div class="rt">${r.name}</div><div class="rs">Prospect</div></div><button onclick="S.re.splice(${i},1);save()">×</button></div>`).join('');
   
-  renderCalendar();
-}
-
-function addScript(){
-  let t = document.getElementById('stitle').value;
-  let b = document.getElementById('sbody').value;
-  if(t && b){ S.scripts.unshift({t:t, b:b, c:"Custom Script"}); document.getElementById('stitle').value=''; document.getElementById('sbody').value=''; save(); }
-}
-
-function logClose(){
-  let n=document.getElementById('cln').value; let p=parseFloat(document.getElementById('clp').value)||225000;
-  if(n){ let net=(p*0.03*0.7)*0.7; S.zr1x+=(net*0.5); S.closings.push({name:n, date:document.getElementById('cdate').value}); save();}
-}
-
-function addRE(){ let n=document.getElementById('ren').value; if(n){S.re.unshift({name:n}); document.getElementById('ren').value=''; save();}}
-
-function renderCalendar(){
   let cal = document.getElementById('calendar'); cal.innerHTML = '';
-  let now = new Date(); let first = new Date(now.getFullYear(), now.getMonth(), 1).getDay();
+  let first = new Date(now.getFullYear(), now.getMonth(), 1).getDay();
   let days = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
   for(let i=0; i<first; i++) cal.innerHTML += '<div></div>';
   for(let d=1; d<=days; d++){
     let dt = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    let hit = S.history[dt] >= 20;
-    cal.innerHTML += `<div class="cal-d ${hit?'hit':''}">${d}</div>`;
+    cal.innerHTML += `<div class="cal-d ${S.history[dt]>=20?'hit':''}">${d}</div>`;
   }
+}
+
+function addScript(){ let t=document.getElementById('stitle').value, b=document.getElementById('sbody').value; if(t&&b){S.scripts.unshift({t,b});document.getElementById('stitle').value='';document.getElementById('sbody').value='';save();}}
+function addRE(){ let n=document.getElementById('ren').value; if(n){S.re.unshift({name:n});document.getElementById('ren').value='';save();}}
+function logClose(){
+  let n=document.getElementById('cln').value, a=document.getElementById('cla').value, p=parseFloat(document.getElementById('clp').value)||225000, d=document.getElementById('cdate').value||new Date().toISOString();
+  if(n&&a){ let net=(p*0.03*0.7)*0.7; S.zr1x+=(net*0.5); S.savings+=(net*0.2); S.closings.push({name:n, address:a, date:d}); document.getElementById('cln').value=''; document.getElementById('cla').value=''; save();}
 }
 window.onload = () => { applyDark(); render(); };
 </script>
