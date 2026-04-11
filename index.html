@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Agent HQ: Master Build</title>
+<title>Agent HQ: Pro Financial</title>
 <style>
 :root{--g:#1D9E75;--gl:#EAF3DE;--gd:#085041;--am:#BA7517;--al:#FAEEDA;--bl:#185FA5;--bll:#001A3D;--rd:#E24B4A;--rl:#FCEBEB;--tl:#0F6E56;--bg:#F2F2F7;--card:#FFF;--tx:#1C1C1E;--tx2:#6C6C70;--tx3:#AEAEB2;--br:rgba(60,60,67,.12);--inp:#F2F2F7;--st:env(safe-area-inset-top,44px);--sb:env(safe-area-inset-bottom,34px);--th:83px;}
 [data-dark]{--bg:#1C1C1E;--card:#2C2C2E;--tx:#FFF;--tx2:#AEAEB2;--tx3:#6C6C70;--br:rgba(255,255,255,.1);--inp:#3A3A3C;--gl:#0F3D2A;--al:#3D2800;--bll:#001A3D;--rl:#3D0F0F;}
@@ -33,13 +33,11 @@ body{display:flex;flex-direction:column;}
 .rc{flex:1;min-width:0;}
 .rt{font-size:15px;font-weight:600;color:var(--tx);}
 .rs{font-size:12px;color:var(--tx2);margin-top:2px;}
-.rt-s{font-size:14px;font-weight:700;color:var(--g);margin-bottom:4px;}
-.rs-s{font-size:13px;color:var(--tx);line-height:1.4;}
 input,select,textarea{width:100%;background:var(--inp);border:none;border-radius:10px;padding:12px;color:var(--tx);font-size:15px;margin-bottom:10px;outline:none;}
 .btn{height:44px;border-radius:10px;border:none;background:var(--g);color:#fff;font-size:15px;font-weight:600;padding:0 18px;cursor:pointer;width:100%;}
 .mg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
 .m{background:var(--card);border-radius:14px;padding:12px;}
-.mv{font-size:22px;font-weight:700;}
+.mv{font-size:20px;font-weight:700;}
 .pb{height:8px;background:var(--inp);border-radius:4px;overflow:hidden;margin-top:6px;}
 .pf{height:100%;border-radius:4px;transition:width .4s;}
 .anniv-bdg{background:var(--bl);color:white;font-size:9px;font-weight:800;padding:2px 6px;border-radius:4px;margin-left:5px;}
@@ -51,7 +49,7 @@ input,select,textarea{width:100%;background:var(--inp);border:none;border-radius
 <body>
 <div class="ss"></div>
 <div class="hdr">
-  <div class="hdr-l"><div class="t">Agent HQ</div><div class="s" style="font-size:10px; color:var(--tx2);">Master Build · 40-House Sprint</div></div>
+  <div class="hdr-l"><div class="t">Agent HQ</div><div class="s" style="font-size:10px; color:var(--tx2);">PLACE Edition · 40-House Goal</div></div>
   <div class="hdr-r"><button class="dbtn" onclick="toggleDark()">☀️</button></div>
 </div>
 <div class="scrl">
@@ -67,7 +65,6 @@ input,select,textarea{width:100%;background:var(--inp);border:none;border-radius
 
 <div id="scn-scripts" class="scn">
   <div class="card"><div class="ch">Playbook</div><div id="script-list"></div></div>
-  <div class="card"><div class="ch">Add Custom Script</div><div class="cb"><input type="text" id="stitle" placeholder="Scenario"><textarea id="sbody" placeholder="Script body..."></textarea><button class="btn" onclick="addScript()">Save</button></div></div>
 </div>
 
 <div id="scn-re" class="scn">
@@ -78,15 +75,19 @@ input,select,textarea{width:100%;background:var(--inp);border:none;border-radius
 <div id="scn-money" class="scn">
   <div class="mg">
     <div class="m"><div class="mv" id="mc" style="color:var(--g);">0</div><div style="font-size:10px; font-weight:700; color:var(--tx2);">CLOSINGS</div></div>
-    <div class="m"><div class="mv" id="me">$0</div><div style="font-size:10px; font-weight:700; color:var(--tx2);">ZR1X FUND</div></div>
+    <div class="m"><div class="mv" id="tv" style="color:var(--am);">$0</div><div style="font-size:10px; font-weight:700; color:var(--tx2);">TAX VAULT (30%)</div></div>
+    <div class="m"><div class="mv" id="me" style="color:var(--g);">$0</div><div style="font-size:10px; font-weight:700; color:var(--tx2);">ZR1X FUND (50%)</div></div>
+    <div class="m"><div class="mv" id="msv" style="color:var(--bl);">$0</div><div style="font-size:10px; font-weight:700; color:var(--tx2);">NO-TOUCH (20%)</div></div>
   </div>
-  <div class="card"><div class="ch">Debt Avalanche</div><div class="cb">
-    <div class="rs">Sallie Mae (10.25%): <span id="ds" style="color:var(--rd);">$24,225</span></div><div class="pb"><div class="pf" id="dps" style="background:var(--rd); width:0%;"></div></div>
-    <div class="rs" style="margin-top:10px;">Truck (2.99%): <span id="dt" style="color:var(--tx2);">$64,000</span></div><div class="pb"><div class="pf" id="dpt" style="background:var(--tx3); width:0%;"></div></div>
+
+  <div class="card"><div class="ch">Savings Goals</div><div class="cb">
+    <div class="rs">HSU Semester Fund: <span id="gs1" style="color:var(--g);">$0</span></div><div class="pb"><div class="pf" id="gps1" style="background:var(--g); width:0%;"></div></div>
+    <div class="rs" style="margin-top:10px;">3D Farm Upgrades: <span id="gs2" style="color:var(--bl);">$0</span></div><div class="pb"><div class="pf" id="gps2" style="background:var(--bl); width:0%;"></div></div>
   </div></div>
+
   <div class="card"><div class="ch">Record Closing</div>
     <div class="cb">
-        <input type="text" id="cln" placeholder="Client Name"><input type="text" id="cla" placeholder="Address"><input type="date" id="cdate"><input type="number" id="clp" placeholder="Price"><button class="btn" onclick="logClose()">Log Sale</button>
+        <input type="text" id="cln" placeholder="Client Name"><input type="text" id="cla" placeholder="Address"><input type="date" id="cdate"><input type="number" id="clp" placeholder="Sale Price"><button class="btn" onclick="logClose()">Log & Distribute</button>
     </div>
   </div>
 </div>
@@ -101,17 +102,16 @@ input,select,textarea{width:100%;background:var(--inp);border:none;border-radius
 </div>
 
 <script>
-let S = JSON.parse(localStorage.getItem('AHQ_MASTER')) || {
-  dark:true, cv:0, history:{}, re:[], closings:[], zr1x:0, savings:0,
-  truck:64000, sallie:24225, federal:5500, truckO:64000, sallieO:24225,
+let S = JSON.parse(localStorage.getItem('AHQ_VAULT')) || {
+  dark:true, cv:0, history:{}, re:[], closings:[], zr1x:0, savings:0, tax_vault:0,
+  truck:64000, sallie:24225, federal:5500,
   scripts: [
     {t:"The Engineering Edge", b:"I'm an engineering student at HSU, so I look at houses like structures, not just sales. I'll geek out on the inspections with you to make sure it's solid."},
-    {t:"Dyess Soft Intro", b:"I know the Dyess area well—my goal is to make sure your BAH builds equity while you're stationed here in Abilene."},
-    {t:"Anniversary Text", b:"Happy Home-iversary! It's been exactly one year since you moved into [Address]. Hope you're loving it!"}
+    {t:"Anniversary Text", b:"Happy Home-iversary! It's been exactly one year since you moved into [Address]. Hope you're still loving it!"}
   ]
 };
 
-function save(){ localStorage.setItem('AHQ_MASTER', JSON.stringify(S)); render(); }
+function save(){ localStorage.setItem('AHQ_VAULT', JSON.stringify(S)); render(); }
 function toggleDark(){ S.dark=!S.dark; applyDark(); save(); }
 function applyDark(){ document.documentElement.toggleAttribute('data-dark', S.dark); document.querySelector('.dbtn').innerText = S.dark ? '☀️' : '🌙'; }
 function showScn(id, el){ document.querySelectorAll('.scn, .tab').forEach(x=>x.classList.remove('on')); document.getElementById('scn-'+id).classList.add('on'); el.classList.add('on'); }
@@ -122,18 +122,22 @@ function render(){
   document.getElementById('total-debt').innerText = '$' + Math.round(S.truck+S.sallie+S.federal).toLocaleString();
   document.getElementById('mc').innerText = S.closings.length;
   document.getElementById('me').innerText = '$' + Math.round(S.zr1x).toLocaleString();
-  document.getElementById('ds').innerText = '$' + Math.round(S.sallie).toLocaleString();
-  document.getElementById('dt').innerText = '$' + Math.round(S.truck).toLocaleString();
-  document.getElementById('dps').style.width = (1-S.sallie/S.sallieO)*100+'%';
-  document.getElementById('dpt').style.width = (1-S.truck/S.truckO)*100+'%';
+  document.getElementById('tv').innerText = '$' + Math.round(S.tax_vault).toLocaleString();
+  document.getElementById('msv').innerText = '$' + Math.round(S.savings).toLocaleString();
   
+  // Savings Goal Logic (Divide the 20% No-Touch into two sub-goals for display)
+  document.getElementById('gs1').innerText = '$' + Math.round(S.savings * 0.7).toLocaleString();
+  document.getElementById('gps1').style.width = Math.min(100, (S.savings * 0.7 / 10000)*100) + '%';
+  document.getElementById('gs2').innerText = '$' + Math.round(S.savings * 0.3).toLocaleString();
+  document.getElementById('gps2').style.width = Math.min(100, (S.savings * 0.3 / 5000)*100) + '%';
+
   let now = new Date();
-  document.getElementById('script-list').innerHTML = S.scripts.map(s => `<div class="row"><div class="rt-s">${s.t}</div><div class="rs-s">${s.b}</div></div>`).join('');
+  document.getElementById('script-list').innerHTML = S.scripts.map(s => `<div class="row" style="flex-direction:column; align-items:flex-start;"><div style="font-weight:700; color:var(--g);">${s.t}</div><div style="font-size:13px; margin-top:4px;">${s.b}</div></div>`).join('');
   document.getElementById('re-list').innerHTML = S.closings.map(c => {
     let cd = new Date(c.date);
     let isA = (now.getMonth() === cd.getMonth() && now.getDate() === cd.getDate() && now.getFullYear() !== cd.getFullYear());
-    return `<div class="row"><div class="rc"><div class="rt">${c.name}${isA?' <span class="anniv-bdg">ANNIVERSARY</span>':''}</div><div class="rs">${c.address} · ${cd.toLocaleDateString()}</div></div></div>`;
-  }).join('') + S.re.map((r,i) => `<div class="row"><div class="rc"><div class="rt">${r.name}</div><div class="rs">Prospect</div></div><button onclick="S.re.splice(${i},1);save()">×</button></div>`).join('');
+    return `<div class="row"><div class="rc"><div class="rt">${c.name}${isA?' <span class="anniv-bdg">ANNIVERSARY</span>':''}</div><div class="rs">${c.address}</div></div></div>`;
+  }).join('') + S.re.map((r,i) => `<div class="row"><div class="rc"><div class="rt">${r.name}</div></div><button onclick="S.re.splice(${i},1);save()">×</button></div>`).join('');
   
   let cal = document.getElementById('calendar'); cal.innerHTML = '';
   let first = new Date(now.getFullYear(), now.getMonth(), 1).getDay();
@@ -145,12 +149,20 @@ function render(){
   }
 }
 
-function addScript(){ let t=document.getElementById('stitle').value, b=document.getElementById('sbody').value; if(t&&b){S.scripts.unshift({t,b});document.getElementById('stitle').value='';document.getElementById('sbody').value='';save();}}
-function addRE(){ let n=document.getElementById('ren').value; if(n){S.re.unshift({name:n});document.getElementById('ren').value='';save();}}
 function logClose(){
-  let n=document.getElementById('cln').value, a=document.getElementById('cla').value, p=parseFloat(document.getElementById('clp').value)||225000, d=document.getElementById('cdate').value||new Date().toISOString();
-  if(n&&a){ let net=(p*0.03*0.7)*0.7; S.zr1x+=(net*0.5); S.savings+=(net*0.2); S.closings.push({name:n, address:a, date:d}); document.getElementById('cln').value=''; document.getElementById('cla').value=''; save();}
+  let n=document.getElementById('cln').value, a=document.getElementById('cla').value, p=parseFloat(document.getElementById('clp').value)||225000;
+  if(n&&a){ 
+    let gross=(p*0.03*0.7); // Split
+    let tax=gross*0.3; 
+    let net=gross*0.7;
+    S.tax_vault += tax;
+    S.zr1x += (net * 0.5); 
+    S.savings += (net * 0.2); 
+    S.closings.push({name:n, address:a, date:document.getElementById('cdate').value||new Date().toISOString()}); 
+    save();
+  }
 }
+function addRE(){ let n=document.getElementById('ren').value; if(n){S.re.unshift({name:n});document.getElementById('ren').value='';save();}}
 window.onload = () => { applyDark(); render(); };
 </script>
 </body>
