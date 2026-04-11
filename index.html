@@ -34,7 +34,209 @@ body{display:flex;flex-direction:column;}
 .cb{padding:12px 16px 16px;}
 .mg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
 .m{background:var(--card);border-radius:14px;padding:12px;}
-.mv{font-size:28px;font-weight:700;letter-spacing:-.8px;line-height:1;}
+.mv{font-size:24px;font-weight:700;letter-spacing:-.8px;line-height:1.2;}
+.mv.g{color:var(--g);}.mv.a{color:var(--am);}.mv.b{color:var(--bl);}.mv.r{color:var(--rd);}
+.ml{font-size:11px;color:var(--tx2);margin-top:4px;font-weight:600;text-transform:uppercase;}
+.ms{font-size:10px;color:var(--tx3);margin-top:2px;}
+.row{display:flex;align-items:center;padding:13px 16px;gap:12px;border-bottom:.5px solid var(--br);}
+.rc{flex:1;min-width:0;}
+.rt{font-size:16px;color:var(--tx);}
+.rs{font-size:12px;color:var(--tx2);margin-top:2px;}
+.stp{display:flex;align-items:center;gap:12px;}
+.sbtn{width:32px;height:32px;border-radius:50%;background:var(--inp);border:none;font-size:20px;color:var(--g);cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.sv{font-size:22px;font-weight:600;min-width:36px;text-align:center;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;padding:12px;}
+.cal-d{aspect-ratio:1;border-radius:4px;background:var(--inp);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:var(--tx3);}
+.cal-d.hit{background:var(--g);color:#fff;}
+.cal-d.today{border:1.5px solid var(--g);}
+.cal-h{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;font-size:10px;font-weight:700;color:var(--tx3);margin-bottom:4px;padding:0 12px;}
+.pb{height:8px;background:var(--inp);border-radius:4px;overflow:hidden;margin-top:8px;}
+.pf{height:100%;border-radius:4px;transition:width .4s;}
+.zp{height:14px;background:var(--inp);border-radius:7px;overflow:hidden;margin:8px 0 5px;}
+.zf{height:100%;background:linear-gradient(90deg,var(--g),#34D399);border-radius:7px;transition:width .6s;}
+input,select{height:44px;border-radius:10px;border:none;background:var(--inp);padding:0 14px;font-size:16px;color:var(--tx);width:100%;}
+.btn{height:44px;border-radius:10px;border:none;background:var(--g);color:#fff;font-size:15px;font-weight:600;padding:0 18px;cursor:pointer;width:100%;}
+.bo{background:var(--inp);color:var(--g);}
+.cw{position:relative;height:180px;margin:8px 0 4px;}
+</style>
+</head>
+<body>
+<div class="ss"></div>
+<div class="hdr">
+  <div class="hdr-l"><div class="t">Agent HQ Pro</div><div class="s">40 House Blueprint</div></div>
+  <div class="hdr-r"><button class="dbtn" onclick="toggleDark()">🌙</button><div class="bdg">$3,308/avg</div></div>
+</div>
+<div class="scrl">
+
+<div id="scn-daily" class="scn on">
+  <div class="mg">
+    <div class="m"><div class="mv g" id="m-cv">0</div><div class="ml">Convos</div><div class="ms">Goal: 20</div><div class="pb"><div class="pf" id="p-cv" style="width:0%;background:var(--g);"></div></div></div>
+    <div class="m"><div class="mv b" id="m-dr">0</div><div class="ml">Doors</div><div class="ms">Goal: 20</div><div class="pb"><div class="pf" id="p-dr" style="width:0%;background:var(--bl);"></div></div></div>
+  </div>
+  <div class="card">
+    <div class="ch">Streak Calendar</div>
+    <div class="cal-h" style="margin-top:12px;"><div>S</div><div>M</div><div>T</div><div>W</div><div>T</div><div>F</div><div>S</div></div>
+    <div id="calendar" class="cal-grid"></div>
+  </div>
+  <div class="card"><div class="ch">Counters</div>
+    <div class="row"><div class="rc"><div class="rt">Conversations</div></div><div class="stp"><button class="sbtn" onclick="adj('cv',-1)">−</button><span class="sv" id="s-cv">0</span><button class="sbtn" onclick="adj('cv',1)">+</button></div></div>
+    <div class="row"><div class="rc"><div class="rt">Doors Knocked</div></div><div class="stp"><button class="sbtn" onclick="adj('dr',-1)">−</button><span class="sv" id="s-dr">0</span><button class="sbtn" onclick="adj('dr',1)">+</button></div></div>
+  </div>
+  <button class="btn bo" onclick="resetDay()">End Day / Reset</button>
+</div>
+
+<div id="scn-circle" class="scn">
+  <div class="card"><div class="ch">New Lead</div>
+    <div class="cb"><input type="text" id="cn" placeholder="Name"><select id="cs" style="margin-top:8px;"><option value="dyess">Dyess / Military</option><option value="warm">Warm Circle</option></select><button class="btn" style="margin-top:8px;" onclick="addContact()">Add Lead</button></div>
+  </div>
+  <div id="clist"></div>
+</div>
+
+<div id="scn-money" class="scn">
+  <div class="mg">
+    <div class="m"><div class="mv r" id="total-debt">$93,725</div><div class="ml">Freedom Total</div><div class="ms">Total Debt Remaining</div></div>
+    <div class="m"><div class="mv g" id="mc">0</div><div class="ml">Closings</div><div class="ms">Target: 40</div></div>
+    <div class="m"><div class="mv" id="me">$0</div><div class="ml">ZR1X Fund</div><div class="ms">50% Net</div></div>
+    <div class="m"><div class="mv b" id="msv">$0</div><div class="ml">Wealth Vault</div><div class="ms">20% No-Touch</div></div>
+  </div>
+  
+  <div class="card"><div class="ch">Monthly Closings</div><div class="cw"><canvas id="cpmChart"></canvas></div></div>
+
+  <div class="card"><div class="ch">Debt Breakdown (Avalanche Priority)</div><div class="cb">
+    <div class="dbk">
+      <div class="dbr"><span class="dbn">Sallie Mae (10.25%)</span><span id="ds" style="color:var(--rd);">$24,225</span></div>
+      <div class="pb"><div class="pf" id="dps" style="width:0%;background:var(--rd);"></div></div>
+    </div>
+    <div class="dbk" style="margin-top:12px;">
+      <div class="dbr"><span class="dbn">Federal (6.5%)</span><span id="df" style="color:var(--am);">$5,500</span></div>
+      <div class="pb"><div class="pf" id="dpf" style="width:0%;background:var(--am);"></div></div>
+    </div>
+    <div class="dbk" style="margin-top:12px;">
+      <div class="dbr"><span class="dbn">Truck (2.99%)</span><span id="dt" style="color:var(--tx3); font-size:11px;">$64,000</span></div>
+      <div class="pb" style="height:4px;"><div class="pf" id="dpt" style="width:0%;background:var(--tx3);"></div></div>
+    </div>
+  </div></div>
+
+  <div class="card"><div class="ch">Log Closing</div>
+    <div class="cb"><input type="text" id="cln" placeholder="Client Name"><input type="number" id="clp" placeholder="Price ($)" style="margin-top:8px;"><button class="btn" style="margin-top:8px;" onclick="logClose()">Record Closing</button></div>
+  </div>
+  
+  <div class="card"><div class="cb">
+    <div style="display:flex;justify-content:space-between;font-weight:700;"><span>ZR1X Goal Progress</span><span id="zs">$0 / $25,000</span></div>
+    <div class="zp"><div class="zf" id="zf" style="width:0%;"></div></div>
+  </div></div>
+</div>
+
+</div>
+<div class="tbar">
+  <div class="tab on" onclick="showScn('daily',this)"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/></svg><span class="tl">Daily</span></div>
+  <div class="tab" onclick="showScn('circle',this)"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg><span class="tl">Circle</span></div>
+  <div class="tab" onclick="showScn('money',this)"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><span class="tl">Money</span></div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+let S = JSON.parse(localStorage.getItem('AHQ_V4')) || {
+  dark:false, cv:0, dr:0, history:{}, contacts:[], closings:[], 
+  zr1x:0, savings:0, tax:0,
+  truck:64000, sallie:24225, federal:5500,
+  truckOrig:64000, sallieOrig:24225, federalOrig:5500
+};
+
+function save(){ localStorage.setItem('AHQ_V4', JSON.stringify(S)); render(); }
+function toggleDark(){ S.dark=!S.dark; document.documentElement.toggleAttribute('data-dark', S.dark); save(); }
+function showScn(id, el){ document.querySelectorAll('.scn, .tab').forEach(x=>x.classList.remove('on')); document.getElementById('scn-'+id).classList.add('on'); el.classList.add('on'); if(id==='money') initChart(); }
+function adj(k,d){ S[k]=Math.max(0,S[k]+d); let t = new Date().toISOString().split('T')[0]; S.history[t] = S.cv; save(); }
+
+function render(){
+  document.getElementById('m-cv').innerText = S.cv; document.getElementById('s-cv').innerText = S.cv;
+  document.getElementById('m-dr').innerText = S.dr; document.getElementById('s-dr').innerText = S.dr;
+  document.getElementById('p-cv').style.width = Math.min(100, (S.cv/20)*100)+'%';
+  document.getElementById('p-dr').style.width = Math.min(100, (S.dr/20)*100)+'%';
+  
+  // Money Tab
+  let totalD = S.truck + S.sallie + S.federal;
+  document.getElementById('total-debt').innerText = '$' + Math.round(totalD).toLocaleString();
+  document.getElementById('mc').innerText = S.closings.length;
+  document.getElementById('me').innerText = '$' + Math.round(S.zr1x).toLocaleString();
+  document.getElementById('msv').innerText = '$' + Math.round(S.savings).toLocaleString();
+  
+  // Debt Bars - Priority Logic
+  document.getElementById('ds').innerText = '$' + Math.round(S.sallie).toLocaleString();
+  document.getElementById('dps').style.width = (1 - S.sallie/S.sallieOrig)*100 + '%';
+  document.getElementById('df').innerText = '$' + Math.round(S.federal).toLocaleString();
+  document.getElementById('dpf').style.width = (1 - S.federal/S.federalOrig)*100 + '%';
+  document.getElementById('dt').innerText = '$' + Math.round(S.truck).toLocaleString();
+  document.getElementById('dpt').style.width = (1 - S.truck/S.truckOrig)*100 + '%';
+
+  // ZR1X Progress
+  let zp = Math.min(100, (S.zr1x/25000)*100);
+  document.getElementById('zs').innerText = `$${Math.round(S.zr1x).toLocaleString()} / $25,000`;
+  document.getElementById('zf').style.width = zp+'%';
+
+  renderCalendar(); renderContacts();
+}
+
+function renderCalendar(){
+  let cal = document.getElementById('calendar'); cal.innerHTML = '';
+  let now = new Date(); let first = new Date(now.getFullYear(), now.getMonth(), 1).getDay();
+  let days = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
+  for(let i=0; i<first; i++) cal.innerHTML += '<div></div>';
+  for(let d=1; d<=days; d++){
+    let dt = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    let hit = S.history[dt] >= 20; let isT = d === now.getDate();
+    cal.innerHTML += `<div class="cal-d ${hit?'hit':''} ${isT?'today':''}">${d}</div>`;
+  }
+}
+
+function addContact(){
+  let name = document.getElementById('cn').value; if(!name) return;
+  S.contacts.unshift({name, status: document.getElementById('cs').value, time: Date.now()});
+  document.getElementById('cn').value = ''; save();
+}
+
+function renderContacts(){
+  document.getElementById('clist').innerHTML = S.contacts.map((c,i)=> {
+    let stale = (Date.now()-c.time) > 172800000;
+    return `<div class="ci ${stale?'stale':''} row"><div class="rc" style="padding-left:16px"><div class="rt">${c.name}</div><div class="rs">${c.status} ${stale?'· TOUCH BASE':''}</div></div><button class="sbtn" onclick="remC(${i})">×</button></div>`;
+  }).join('');
+}
+
+function remC(i){ S.contacts.splice(i,1); save(); }
+
+function logClose(){
+  let name = document.getElementById('cln').value; 
+  let price = parseFloat(document.getElementById('clp').value) || 225000;
+  if(!name) return;
+  
+  let gross = price * 0.03 * 0.70; 
+  let tax = gross * 0.30; 
+  let net = gross * 0.70;
+  
+  let fund = net * 0.50;
+  let sav = net * 0.20; 
+  
+  S.zr1x += fund; 
+  S.savings += sav;
+  S.tax += tax;
+  
+  S.closings.push({name, date: new Date().toISOString()});
+  document.getElementById('cln').value=''; document.getElementById('clp').value='';
+  save();
+}
+
+function resetDay(){ S.cv=0; S.dr=0; save(); }
+
+let chart=null;
+function initChart(){
+  let ctx = document.getElementById('cpmChart').getContext('2d'); if(chart) chart.destroy();
+  let counts = Array(12).fill(0); S.closings.forEach(c => { counts[new Date(c.date).getMonth()]++; });
+  chart = new Chart(ctx, {type:'bar', data:{labels:['J','F','M','A','M','J','J','A','S','O','N','D'], datasets:[{data:counts, backgroundColor:'#1D9E75'}]}, options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}}});
+}
+
+window.onload = render;
+</script>
+</body>
+</html>.mv{font-size:28px;font-weight:700;letter-spacing:-.8px;line-height:1;}
 .mv.g{color:var(--g);}.mv.a{color:var(--am);}.mv.b{color:var(--bl);}.mv.r{color:var(--rd);}
 .ml{font-size:12px;color:var(--tx2);margin-top:4px;font-weight:500;}
 .ms{font-size:10px;color:var(--tx3);margin-top:2px;}
