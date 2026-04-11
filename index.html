@@ -5,8 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Agent HQ">
-<title>Agent HQ</title>
+<title>Agent HQ Ultra</title>
 <style>
 :root{
   --g:#1A2744;--gl:#F5EDD6;--gd:#0F1A2E;
@@ -25,7 +24,7 @@
   --ios-red:#FF453A; --ios-blue:#0A84FF;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0;}
-html,body{height:100%;overflow:hidden;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--tx);-webkit-font-smoothing:antialiased;}
+html,body{height:100%;overflow:hidden;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:var(--tx);-webkit-font-smoothing:antialiased;}
 body{display:flex;flex-direction:column;}
 .ss{height:var(--st);background:var(--card);flex-shrink:0;}
 .hdr{background:var(--card);padding:8px 16px 10px;border-bottom:.5px solid var(--br);flex-shrink:0;display:flex;justify-content:space-between;align-items:flex-end;}
@@ -49,17 +48,12 @@ body{display:flex;flex-direction:column;}
 .mg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
 .m{background:var(--card);border-radius:14px;padding:12px;box-shadow:0 1px 2px rgba(0,0,0,0.02);}
 .mv{font-size:26px;font-weight:700;letter-spacing:-.8px;line-height:1;}
-.mv.g{color:var(--g);} .mv.a{color:var(--am);} .mv.b{color:var(--bl);} .mv.r{color:var(--rd);}
+.mv.g{color:var(--g);} .mv.a{color:var(--am);} .mv.b{color:var(--ios-blue);} .mv.r{color:var(--rd);}
 .ml{font-size:11px;color:var(--tx2);margin-top:4px;font-weight:500;}
 .ms{font-size:10px;color:var(--tx3);margin-top:2px;}
 .row{display:flex;align-items:center;padding:12px 16px;gap:12px;border-bottom:.5px solid var(--br);}
-.rc{flex:1;min-width:0;}
 .rt{font-size:15px;color:var(--tx);}
 .rs{font-size:12px;color:var(--tx2);margin-top:2px;}
-.cb2{width:24px;height:24px;border-radius:50%;border:2px solid var(--tx3);flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer;}
-.cb2.ck{background:var(--g);border-color:var(--g);}
-.cb2.ck::after{content:'';width:12px;height:8px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translateY(-1px);display:block;}
-.rt.dn{color:var(--tx3);text-decoration:line-through;}
 .stp{display:flex;align-items:center;gap:12px;}
 .sbtn{width:32px;height:32px;border-radius:50%;background:var(--inp);border:none;font-size:20px;color:var(--ios-blue);cursor:pointer;display:flex;align-items:center;justify-content:center;}
 .sv{font-size:22px;font-weight:600;min-width:36px;text-align:center;}
@@ -69,48 +63,30 @@ body{display:flex;flex-direction:column;}
 .fc{flex-shrink:0;height:32px;padding:0 14px;border-radius:16px;border:.5px solid var(--br);font-size:13px;font-weight:500;cursor:pointer;background:var(--inp);color:var(--tx2);}
 .fc.on{background:var(--g);color:#fff;border-color:var(--g);}
 .ci{display:flex;align-items:center;padding:12px 16px;gap:12px;border-bottom:.5px solid var(--br);}
+.ci.selected{background:rgba(0,122,255,0.05);}
 .av{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;flex-shrink:0;}
 .stabs{display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;}
 .stab{flex-shrink:0;height:34px;padding:0 16px;border-radius:17px;border:none;font-size:13px;font-weight:600;cursor:pointer;background:var(--inp);color:var(--tx2);}
-.stab.on{background:var(--g);color:#fff;}
+.stab.on{background:var(--ios-blue);color:#fff;}
 .scard{background:var(--card);border-radius:14px;padding:16px;margin-bottom:12px;border:.5px solid var(--br);}
 .sst{font-size:11px;font-weight:800;color:var(--g);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;}
 .stxt{font-size:15px;color:var(--tx);line-height:1.5;margin-bottom:10px;}
 .stip{font-size:12px;color:var(--tx3);font-style:italic;padding-top:8px;border-top:.5px solid var(--br);}
-.zp{height:14px;background:var(--inp);border-radius:7px;overflow:hidden;margin:8px 0 5px;}
-.zf{height:100%;background:var(--g);border-radius:7px;transition:width .4s;}
 input,select,textarea{width:100%;border-radius:10px;border:none;background:var(--inp);padding:12px;font-size:16px;color:var(--tx);outline:none;}
 .btn{height:44px;border-radius:10px;border:none;background:var(--ios-blue);color:#fff;font-size:15px;font-weight:600;padding:0 20px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;}
 .bsm{height:32px;font-size:13px;padding:0 14px;border-radius:16px;}
 .bo{background:var(--inp);color:var(--ios-blue);}
-.cw{position:relative;height:180px;margin-top:10px;}
-.sel-box{width:22px;height:22px;border-radius:50%;border:2px solid var(--tx3);flex-shrink:0;transition:all .15s;}
-.ci.selected .sel-box{background:var(--g);border-color:var(--g);}
-#hustle-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:var(--bg);z-index:2000;display:none;padding:20px;flex-direction:column;}
-.h-card{background:var(--card);border-radius:24px;padding:30px;text-align:center;margin-top:40px;flex:1;display:flex;flex-direction:column;justify-content:center;}
-.aniv-badge{background:var(--ios-red);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;margin-left:6px;}
-.client-card{background:var(--card);border-radius:14px;padding:14px 16px;margin-bottom:10px;border:.5px solid var(--br);}
-.client-name{font-size:17px;font-weight:700;color:var(--tx);}
-.client-addr{font-size:13px;color:var(--tx2);margin-top:2px;}
-.client-row{display:flex;justify-content:space-between;margin-top:8px;font-size:12px;color:var(--tx3);}
-.client-val{font-weight:600;color:var(--tx2);}
-.aniv-row{display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:.5px solid var(--br);}
-.tag{font-size:10px;font-weight:600;padding:2px 8px;border-radius:6px;}
-.tag-mil{background:var(--bll);color:var(--bl);}
-.tag-fam{background:var(--gl);color:var(--gd);}
-.tag-inv{background:var(--pul);color:var(--pu);}
-.tag-ft{background:var(--al);color:var(--am);}
-.empty-state{text-align:center;padding:40px 20px;color:var(--tx3);font-size:14px;}
-#perf-tracker { transition: all 0.3s ease; }
+.sel-box{width:22px;height:22px;border-radius:50%;border:2px solid var(--tx3);flex-shrink:0;}
+.ci.selected .sel-box{background:var(--ios-blue);border-color:var(--ios-blue);}
 
-/* iOS CALENDAR STYLES */
+/* iOS CALENDAR */
 .ios-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px 8px; }
 .ios-month { font-size: 22px; font-weight: 700; color: var(--ios-red); }
 .ios-nav-btn { width: 32px; height: 32px; border-radius: 50%; border: none; background: var(--inp); color: var(--tx); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 18px; font-weight: bold; }
 .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); padding: 0 10px 10px; gap: 2px 0; }
 .cal-day-name { font-size: 10px; font-weight: 600; color: var(--tx3); text-align: center; padding-bottom: 8px; text-transform: uppercase; }
 .cal-d { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; cursor: pointer; padding-top: 4px; height: 44px; position: relative; }
-.cal-d-num { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 400; color: var(--tx); transition: all 0.2s; }
+.cal-d-num { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 400; color: var(--tx); }
 .cal-d.today .cal-d-num { background: var(--ios-red); color: #fff; font-weight: 600; }
 .cal-d.selected:not(.today) .cal-d-num { background: var(--tx); color: var(--bg); font-weight: 600; }
 .cal-dots { display: flex; gap: 3px; margin-top: 2px; height: 4px; justify-content: center; width: 100%; }
@@ -121,11 +97,14 @@ input,select,textarea{width:100%;border-radius:10px;border:none;background:var(-
 .tl-bar { width: 4px; border-radius: 2px; }
 .tl-content { flex: 1; padding-bottom: 4px; }
 .tl-title { font-size: 15px; font-weight: 600; color: var(--tx); line-height: 1.3; }
-.tl-sub { font-size: 13px; color: var(--tx2); margin-top: 2px; }
 
-/* VAULT STYLE */
+/* VAULT/CLIENTS */
+.client-card{background:var(--card);border-radius:14px;padding:14px 16px;margin-bottom:10px;border:.5px solid var(--br);}
 .file-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; border-bottom: .5px solid var(--br); }
-.file-name { font-size: 15px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 70%; }
+.tag{font-size:10px;font-weight:600;padding:2px 8px;border-radius:6px;}
+.tag-mil{background:var(--bll);color:var(--bl);}
+#hustle-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:var(--bg);z-index:2000;display:none;padding:20px;flex-direction:column;}
+.h-card{background:var(--card);border-radius:24px;padding:30px;text-align:center;margin-top:40px;flex:1;display:flex;flex-direction:column;justify-content:center;}
 </style>
 </head>
 <body>
@@ -133,191 +112,99 @@ input,select,textarea{width:100%;border-radius:10px;border:none;background:var(-
 <div id="hustle-overlay">
   <div style="display:flex;justify-content:space-between;align-items:center;">
     <div style="font-size:18px;font-weight:700;" id="h-count">Queue 1/20</div>
-    <button class="btn bo bsm" onclick="stopHustle()">Exit</button>
+    <button class="btn bo bsm" id="exit-hustle">Exit</button>
   </div>
   <div class="h-card">
     <div class="av" id="h-av" style="width:80px;height:80px;margin:0 auto 20px;font-size:32px;background:var(--gl);color:var(--gd);border-radius:50%;"></div>
     <div style="font-size:26px;font-weight:700;" id="h-name">Name</div>
     <div style="font-size:15px;color:var(--tx2);margin-top:10px;" id="h-note">No notes</div>
-    <div style="margin-top:6px;font-size:12px;font-weight:700;color:var(--g);" id="h-source"></div>
-    <button class="btn" style="width:100%;margin-top:40px;height:60px;font-size:18px;" onclick="hustleSend()">Send Text</button>
-    <button class="btn bo" style="width:100%;margin-top:12px;" onclick="nextHustle()">Next</button>
+    <button class="btn" style="width:100%;margin-top:40px;height:60px;font-size:18px;" id="h-send">Send Text</button>
+    <button class="btn bo" style="width:100%;margin-top:12px;" id="h-next">Next</button>
   </div>
 </div>
 
 <div class="ss"></div>
 <div class="hdr">
   <div class="hdr-l"><div class="t">Agent HQ</div><div class="s">Christian · $3,675/closing</div></div>
-  <div class="hdr-r"><button class="dbtn" onclick="toggleDark()">🌙</button><div class="bdg" style="background:var(--ios-blue);">$140K Goal</div></div>
+  <div class="hdr-r"><button class="dbtn" id="dark-toggle">🌙</button><div class="bdg" style="background:var(--ios-blue);">$140K Goal</div></div>
 </div>
 
 <div class="scrl">
 
 <div id="scn-daily" class="scn on">
   <div style="background:#1A2744;border-radius:16px;padding:20px 22px;margin-bottom:12px;text-align:center;">
-    <div style="font-size:10px;font-weight:700;letter-spacing:.14em;color:#C9A84C;text-transform:uppercase;margin-bottom:8px;">Focus the Energy</div>
-    <div style="font-size:20px;font-weight:700;color:#FFFFFF;letter-spacing:-.2px;line-height:1.3;" id="daily-quote">Every call is a closing waiting to happen.</div>
-    <div style="height:.5px;background:rgba(201,168,76,.3);margin:12px 0 10px;"></div>
-    <div style="font-size:12px;color:#C9A84C;font-weight:500;" id="todays-date"></div>
+    <div style="font-size:20px;font-weight:700;color:#FFFFFF;" id="daily-quote">Every call is a closing waiting to happen.</div>
+    <div style="font-size:12px;color:#C9A84C;margin-top:8px;" id="todays-date"></div>
   </div>
-  
+
   <div id="perf-tracker" style="background:var(--card);border-left:4px solid var(--rd);border-radius:12px;padding:14px 18px;margin-bottom:16px;font-size:13px;color:var(--tx2);">
-    <div style="color:var(--rd);font-weight:700;margin-bottom:2px;letter-spacing:-.2px;" id="perf-title">CONNECTING...</div>
-    <div id="perf-desc">Syncing with cloud database.</div>
+    <div style="color:var(--rd);font-weight:700;margin-bottom:2px;" id="perf-title">CONNECTING...</div>
+    <div id="perf-desc">Syncing cloud data.</div>
   </div>
 
   <div class="mg">
-    <div class="m"><div class="mv g" id="m-cv">0</div><div class="ml">Conversations</div><div class="ms" id="goal-label">Goal: 20 today</div><div class="pb"><div class="pf" id="p-cv" style="width:0%;background:#1A2744;"></div></div></div>
+    <div class="m"><div class="mv g" id="m-cv">0</div><div class="ml">Conversations</div><div class="ms" id="goal-label">Goal: 20</div><div class="pb"><div class="pf" id="p-cv" style="width:0%;background:#1A2744;"></div></div></div>
     <div class="m"><div class="mv r" id="m-debt">$93,432</div><div class="ml">Total Debt</div><div class="ms">Truck + Student Loans</div></div>
-    <div class="m"><div class="mv b" id="m-dr">0</div><div class="ml">Doors Knocked</div><div class="ms">Goal: 20 today</div><div class="pb"><div class="pf" id="p-dr" style="width:0%;background:var(--ios-blue);"></div></div></div>
-    <div class="m"><div class="mv a" id="m-nc">0</div><div class="ml">New Contacts</div><div class="ms">Goal: 20 today</div><div class="pb"><div class="pf" id="p-nc" style="width:0%;background:var(--am);"></div></div></div>
-  </div>
-  <div class="mg" style="grid-template-columns:1fr 1fr 1fr;">
-    <div class="m"><div class="mv" id="m-st">0</div><div class="ml">Day Streak</div><div class="ms">20+ convos</div></div>
-    <div class="m"><div class="mv g" id="m-cl">0</div><div class="ml">Closings</div><div class="ms">of 21 needed</div></div>
-    <div class="m"><div class="mv g" id="m-ne">$0</div><div class="ml">Net Earned</div><div class="ms">of $75K</div></div>
   </div>
 
   <div class="card"><div class="ch">Quick Counters</div>
-    <div class="row" style="padding:14px 16px;display:flex;justify-content:space-between;align-items:center;">
-      <div><div class="rt">Conversations</div><div class="rs">Real estate related chat</div></div>
+    <div class="row">
+      <div style="flex:1;"><div class="rt">Conversations</div></div>
       <div class="stp"><button class="sbtn" onclick="adj('cv',-1)">-</button><span class="sv" id="s-cv">0</span><button class="sbtn" onclick="adj('cv',1)">+</button></div>
     </div>
-    <div class="row" style="padding:14px 16px;display:flex;justify-content:space-between;align-items:center;">
-      <div><div class="rt">Doors Knocked</div><div class="rs">Neighborhood / near Dyess</div></div>
+    <div class="row">
+      <div style="flex:1;"><div class="rt">Doors Knocked</div></div>
       <div class="stp"><button class="sbtn" onclick="adj('dr',-1)">-</button><span class="sv" id="s-dr">0</span><button class="sbtn" onclick="adj('dr',1)">+</button></div>
-    </div>
-    <div class="row" style="padding:14px 16px;display:flex;justify-content:space-between;align-items:center;">
-      <div><div class="rt">New Contacts Added</div><div class="rs">Added to database today</div></div>
-      <div class="stp"><button class="sbtn" onclick="adj('nc',-1)">-</button><span class="sv" id="s-nc">0</span><button class="sbtn" onclick="adj('nc',1)">+</button></div>
     </div>
   </div>
 
-  <div class="card"><div class="ch">Non-Negotiables</div><div id="tlist"></div></div>
-
   <div class="card" style="overflow:visible; padding-bottom:0;">
-    <div class="ios-header">
-      <div class="ios-month" id="cal-month"></div>
-      <div style="display:flex;gap:12px;">
-        <button onclick="calNav(-1)" class="ios-nav-btn">‹</button>
-        <button onclick="calNav(1)" class="ios-nav-btn">›</button>
-      </div>
-    </div>
-    <div class="cal-grid" id="cal-names"></div>
-    <div class="cal-grid" id="cal-days"></div>
-    <div style="height:.5px;background:var(--br);width:100%;"></div>
-    <div style="background:var(--card);min-height:180px;border-radius:0 0 16px 16px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px 4px;">
-        <div id="cal-day-header" style="font-size:15px;font-weight:600;color:var(--tx2);"></div>
-        <button onclick="openAddEvent()" style="border:none;background:none;color:var(--ios-red);font-size:26px;font-weight:300;cursor:pointer;padding:0;">+</button>
-      </div>
-      <div id="cal-events-list"></div>
-      <div style="padding:14px 16px;">
-        <label class="btn bo bsm" style="width:100%;height:36px;cursor:pointer;margin:0;display:flex;justify-content:center;align-items:center;">
-          <input type="file" id="ics-upload" accept=".ics" multiple style="display:none;" onchange="importICS(this)">
-          Import .ics Schedule
-        </label>
-      </div>
-    </div>
+    <div class="ios-header"><div class="ios-month" id="cal-month"></div><div style="display:flex;gap:12px;"><button id="prev-month" class="ios-nav-btn">‹</button><button id="next-month" class="ios-nav-btn">›</button></div></div>
+    <div class="cal-grid" id="cal-names"></div><div class="cal-grid" id="cal-days"></div>
+    <div id="cal-day-header" style="padding:12px 16px 4px;font-size:15px;font-weight:600;color:var(--tx2);"></div>
+    <div id="cal-events-list"></div>
+    <div style="padding:14px 16px;"><label class="btn bo bsm" style="width:100%;cursor:pointer;"><input type="file" id="ics-upload" accept=".ics" multiple style="display:none;">Import .ics Schedule</label></div>
   </div>
 </div>
 
 <div id="scn-circle" class="scn">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-    <div style="font-size:22px;font-weight:800;">Warm Circle</div>
-    <button id="h-btn" class="btn bsm" style="background:var(--ios-blue);display:none;color:#fff;" onclick="launchHustle()">Start Hustle</button>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;"><h2>Circle</h2><button id="h-btn" class="btn bsm" style="display:none;">Start Hustle</button></div>
+  <div class="card">
+    <div class="sst">Quick Add</div>
+    <input type="text" id="cn" placeholder="Name" style="margin-bottom:8px;">
+    <input type="text" id="cp" placeholder="Phone" style="margin-bottom:8px;">
+    <button class="btn" id="add-contact-btn">Add Contact</button>
   </div>
-  <div class="card" style="padding:16px;margin-bottom:12px;">
-    <div class="sst" style="margin-bottom:10px;">Import from iPhone</div>
-    <label style="display:block;background:var(--inp);border-radius:12px;padding:14px;text-align:center;cursor:pointer;border:1px dashed var(--tx3);" for="vcf">
-      <div style="font-size:15px;font-weight:600;margin-bottom:4px;">Import .vcf file</div>
-      <div style="font-size:13px;color:var(--tx2);">Export contacts from phone & tap here</div>
-    </label>
-    <input type="file" id="vcf" accept=".vcf" style="display:none;" onchange="importVCF(this)">
-  </div>
-  <div class="card" style="padding:16px;margin-bottom:12px;">
-    <div class="sst" style="margin-bottom:10px;">Quick Add Contact</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
-      <input type="text" id="cn" placeholder="Name">
-      <input type="text" id="cp" placeholder="Phone">
-    </div>
-    <div style="display:grid;grid-template-columns:1.5fr 1fr;gap:8px;margin-bottom:8px;">
-      <input type="text" id="cnot" placeholder="Notes">
-      <input type="text" id="cref" placeholder="Source">
-    </div>
-    <div style="display:flex;gap:8px;">
-      <select id="ctype" style="flex:1;">
-        <option value="general">General</option>
-        <option value="military">Military</option>
-        <option value="firsttime">First-Time</option>
-        <option value="investor">Investor</option>
-        <option value="fsbo">FSBO</option>
-        <option value="expired">Expired</option>
-      </select>
-      <button class="btn" style="background:var(--ios-blue);" onclick="addContact()">Add</button>
-    </div>
-  </div>
-  <div class="fst" id="filter-tabs">
-    <button class="fc on" data-filter="all" onclick="setFilter('all',this)">All</button>
-    <button class="fc" data-filter="new" onclick="setFilter('new',this)">New</button>
-  </div>
-  <div class="card" id="clist"></div>
-</div>
-
-<div id="scn-clients" class="scn">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-    <div style="font-size:22px;font-weight:800;">My Clients</div>
-    <div style="font-size:13px;color:var(--tx2);" id="aniv-count"></div>
-  </div>
-  <div class="card" style="padding:16px;margin-bottom:12px;">
-    <div class="sst" style="margin-bottom:10px;">Log a Closing</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
-      <input type="text" id="cli-name" placeholder="Client Name">
-      <input type="text" id="cli-addr" placeholder="Property Address">
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
-      <input type="number" id="cli-price" placeholder="Sale Price">
-      <input type="date" id="cli-date">
-    </div>
-    <button class="btn" onclick="addClient()">Log Closing</button>
-  </div>
-  <div id="aniv-alert" style="display:none;background:var(--rl);border-radius:12px;padding:14px 16px;margin-bottom:12px;border:.5px solid var(--ios-red);">
-    <div style="font-size:13px;font-weight:700;color:var(--ios-red);">Anniversaries coming up</div>
-    <div style="font-size:12px;color:var(--ios-red);margin-top:4px;" id="aniv-list"></div>
-  </div>
-  <div id="client-list"></div>
+  <div class="fst"><button class="fc on" onclick="setFilter('all')">All</button><button class="fc" onclick="setFilter('military')">Military</button></div>
+  <div id="clist"></div>
 </div>
 
 <div id="scn-vault" class="scn">
-  <div style="font-size:22px;font-weight:800;margin-bottom:12px;">Cloud Vault</div>
+  <h2>Cloud Vault</h2>
   <div class="card">
-    <div class="sst" style="margin-bottom:10px;">Upload to Storage</div>
-    <div style="background:var(--inp);border-radius:12px;padding:20px;text-align:center;border:1px dashed var(--tx3);">
-      <input type="file" id="vault-input" style="display:none;" onchange="uploadToVault(this)">
-      <button class="btn" onclick="document.getElementById('vault-input').click()">Choose File / Camera</button>
-      <div style="font-size:12px;color:var(--tx2);margin-top:10px;">Contracts, Inspection Reports, or P1S logs</div>
-    </div>
+    <input type="file" id="vault-input" style="display:none;">
+    <button class="btn" onclick="document.getElementById('vault-input').click()">Upload Document / Photo</button>
   </div>
-  <div class="card"><div class="ch">Cloud Files</div><div id="file-list"></div></div>
-</div>
-
-<div id="scn-scripts" class="scn">
-  <div style="font-size:22px;font-weight:800;margin-bottom:15px;">Scripts</div>
-  <div class="stabs">
-    <button class="stab on" onclick="showS('sphere',this)">Sphere</button>
-    <button class="stab" onclick="showS('fsbo',this)">FSBO</button>
-  </div>
-  <div id="scontent"></div>
+  <div class="card"><div id="file-list"></div></div>
 </div>
 
 <div id="scn-money" class="scn">
-  <div style="font-size:22px;font-weight:800;margin-bottom:14px;">Money</div>
+  <h2>Money</h2>
   <div class="mg">
     <div class="m"><div class="mv g" id="me">$0</div><div class="ml">Net Earned</div></div>
-    <div class="m"><div class="mv b" id="msav-grid" style="color:var(--ios-blue);">$0</div><div class="ml">Savings</div></div>
-    <div class="m"><div class="mv r" id="mt-grid">$0</div><div class="ml">Tax Vault</div></div>
+    <div class="m"><div class="mv b" id="msav-grid">$0</div><div class="ml">Savings</div></div>
   </div>
-  <div class="card"><div class="ch">Progress to $140K Target</div><div class="cw"><canvas id="rchart"></canvas></div></div>
+  <div class="card"><div class="cw" style="height:200px;"><canvas id="rchart"></canvas></div></div>
+</div>
+
+<div id="scn-scripts" class="scn">
+  <h2>Scripts</h2>
+  <div class="stabs">
+    <button class="stab on" onclick="showS('sphere')">Sphere</button>
+    <button class="stab" onclick="showS('fsbo')">FSBO</button>
+    <button class="stab" onclick="showS('military')">Military</button>
+  </div>
+  <div id="scontent"></div>
 </div>
 
 </div>
@@ -327,30 +214,7 @@ input,select,textarea{width:100%;border-radius:10px;border:none;background:var(-
   <div class="tab" onclick="showScn('circle',this)"><svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="4"/><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/></svg><span class="tl">Circle</span></div>
   <div class="tab" onclick="showScn('vault',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg><span class="tl">Vault</span></div>
   <div class="tab" onclick="showScn('money',this)"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><span class="tl">Money</span></div>
-</div>
-
-<div id="cal-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.45);z-index:3000;align-items:flex-end;">
-    <div style="background:var(--card);border-radius:20px 20px 0 0;padding:20px 20px 40px;width:100%;">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-        <div style="font-size:17px;font-weight:700;" id="modal-date-title">Add Event</div>
-        <button onclick="closeModal()" style="border:none;background:none;font-size:22px;color:var(--tx3);cursor:pointer;">×</button>
-      </div>
-      <div style="display:grid;gap:10px;">
-        <select id="ev-type">
-          <option value="showing">Showing</option>
-          <option value="prospecting">Prospecting</option>
-          <option value="class">Class</option>
-          <option value="other">Other</option>
-        </select>
-        <input type="text" id="ev-title" placeholder="Address...">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-          <input type="time" id="ev-start">
-          <input type="time" id="ev-end">
-        </div>
-        <button class="btn" style="width:100%;" onclick="saveEvent()">Add Event</button>
-      </div>
-      <div id="existing-events"></div>
-    </div>
+  <div class="tab" onclick="showScn('scripts',this)"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span class="tl">Scripts</span></div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
@@ -378,47 +242,132 @@ const storage = getStorage(app);
 const rc = getRemoteConfig(app);
 const analytics = getAnalytics(app);
 
-// STATE
+// APP STATE
 let S = { 
-  dark: false, cv: 0, dr: 0, nc: 0, streak: 0, history: {}, 
-  calEvents: {}, tasks: [], contacts: [], clients: [], closings: [],
-  sallie: 24225, federal: 5500, zr1x: 0, manualTax: 0, manualSav: 0
+  dark:false, cv:0, dr:0, nc:0, history:{}, calEvents:{}, 
+  tasks:[], contacts:[], clients:[], closings:[], 
+  sallie:24225, zr1x:0 
 };
 let dailyGoal = 20;
 let calYear = new Date().getFullYear();
 let calMonth = new Date().getMonth();
 let activeDateStr = new Date().toISOString().split('T')[0];
+let selectedContacts = [];
+let hIdx = 0;
 
-const QUOTES = ["Every call is a closing waiting to happen.", "Discipline beats motivation.", "Consistency compounds."];
+const SCRIPTS = {
+  sphere: [{s:'Announcement', t:'"Hey! It\'s Christian Carter — I just joined the Tonya Harbin Team here in Abilene as a licensed real estate agent. If you know someone looking to buy or sell, I\'d love to help!"'}],
+  fsbo: [{s:'The Opener', t:'"I noticed your home is for sale by owner. I actually have buyers looking in this area—would you be open to a showing?"'}],
+  military: [{s:'Dyess Intro', t:'"Hey! I work with a lot of military families at Dyess. I know the PCS timeline is tight—when do your orders become effective?"'}]
+};
 
-// FIREBASE SYNC
+// INITIAL LOAD
 onValue(ref(db, 'agent_hq_data'), (snap) => {
-  const data = snap.val(); if(data) { S = data; updateUI(); renderCal(); renderMoney(); renderContacts(); renderClients(); }
+  const data = snap.val();
+  if(data) { S = data; updateUI(); renderCal(); renderMoney(); renderContacts(); }
 });
 
-rc.settings.minimumFetchIntervalMillis = 60000;
 fetchAndActivate(rc).then(() => {
   dailyGoal = getValue(rc, "daily_convo_goal").asNumber() || 20;
   updateUI();
 });
 
-window.save = () => { set(ref(db, 'agent_hq_data'), S); localStorage.setItem('ahq_v5_ios', JSON.stringify(S)); };
+// CORE FUNCTIONS
+window.save = () => {
+  set(ref(db, 'agent_hq_data'), S);
+  localStorage.setItem('ahq_save', JSON.stringify(S));
+};
 
 window.adj = (k, d) => {
   S[k] = Math.max(0, (S[k]||0) + d);
-  const today = new Date().toISOString().split('T')[0];
-  S.history[today] = S.cv;
+  S.history[new Date().toISOString().split('T')[0]] = S.cv;
   save(); updateUI();
 };
 
 window.showScn = (id, el) => {
-  logEvent(analytics, 'screen_view', { screen_name: id });
   document.querySelectorAll('.scn').forEach(s => s.classList.remove('on'));
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
-  document.getElementById('scn-' + id).classList.add('on'); el.classList.add('on');
+  document.getElementById('scn-'+id).classList.add('on');
+  if(el) el.classList.add('on');
   if(id === 'vault') loadFileList();
 };
 
+function updateUI() {
+  document.getElementById('m-cv').textContent = S.cv;
+  document.getElementById('s-cv').textContent = S.cv;
+  document.getElementById('m-dr').textContent = S.dr;
+  document.getElementById('s-dr').textContent = S.dr;
+  document.getElementById('goal-label').textContent = `Goal: ${dailyGoal}`;
+  document.getElementById('p-cv').style.width = Math.min(100, (S.cv / dailyGoal) * 100) + '%';
+  
+  const pt = document.getElementById('perf-title'), pd = document.getElementById('perf-desc'), pb = document.getElementById('perf-tracker');
+  if(S.cv >= dailyGoal) {
+    pt.textContent = "DAILY GOAL MET"; pt.style.color = "var(--g)";
+    pd.textContent = "Pushing 120% efficiency now."; pb.style.borderLeftColor = "var(--g)";
+  } else {
+    pt.textContent = S.cv === 0 ? "NO ACTIVITY" : "FALLING BEHIND"; 
+    pt.style.color = "var(--ios-red)";
+    pd.textContent = `Dial now. ${dailyGoal - S.cv} more to hit the standard.`; pb.style.borderLeftColor = "var(--ios-red)";
+  }
+}
+
+// CIRCLE & HUSTLE
+window.addContact = () => {
+  const n = document.getElementById('cn').value;
+  const p = document.getElementById('cp').value;
+  if(!n) return;
+  S.contacts.unshift({id: Date.now(), name: n, phone: p, type: 'general'});
+  document.getElementById('cn').value = ''; document.getElementById('cp').value = '';
+  save(); renderContacts();
+};
+
+function renderContacts() {
+  const el = document.getElementById('clist');
+  el.innerHTML = S.contacts.map(c => `
+    <div class="ci ${selectedContacts.includes(c.id)?'selected':''}" onclick="togSel(${c.id})">
+      <div class="sel-box"></div>
+      <div class="av" style="background:var(--gl); color:var(--gd); margin-right:12px;">${c.name[0]}</div>
+      <div style="flex:1;"><b>${c.name}</b><div style="font-size:12px;color:var(--tx2)">${c.phone||'No Phone'}</div></div>
+    </div>`).join('');
+  document.getElementById('h-btn').style.display = selectedContacts.length ? 'block' : 'none';
+}
+
+window.togSel = (id) => {
+  if(selectedContacts.includes(id)) selectedContacts = selectedContacts.filter(x=>x!==id);
+  else selectedContacts.push(id);
+  renderContacts();
+};
+
+window.launchHustle = () => {
+  hIdx = 0; document.getElementById('hustle-overlay').style.display = 'flex';
+  showHustle();
+};
+
+function showHustle() {
+  const c = S.contacts.find(x => x.id === selectedContacts[hIdx]);
+  document.getElementById('h-name').textContent = c.name;
+  document.getElementById('h-count').textContent = `Queue ${hIdx+1}/${selectedContacts.length}`;
+}
+
+document.getElementById('h-send').onclick = () => {
+  const c = S.contacts.find(x => x.id === selectedContacts[hIdx]);
+  const msg = "Hey! It's Christian Carter with the Tonya Harbin Team...";
+  window.location.href = `sms:${c.phone}&body=${encodeURIComponent(msg)}`;
+  adj('cv', 1);
+  setTimeout(() => { hIdx++; if(hIdx >= selectedContacts.length) exitHustle(); else showHustle(); }, 1000);
+};
+
+const exitHustle = () => { document.getElementById('hustle-overlay').style.display = 'none'; selectedContacts=[]; renderContacts(); };
+document.getElementById('exit-hustle').onclick = exitHustle;
+document.getElementById('h-next').onclick = () => { hIdx++; if(hIdx >= selectedContacts.length) exitHustle(); else showHustle(); };
+
+// SCRIPTS
+window.showS = (k) => {
+  document.getElementById('scontent').innerHTML = SCRIPTS[k].map(s => `
+    <div class="scard"><div class="sst">${s.s}</div><div class="stxt">${s.t}</div></div>`).join('');
+};
+
+// VAULT
 window.uploadToVault = async (inp) => {
   const file = inp.files[0]; if(!file) return;
   const storageRef = sRef(storage, 'vault/' + file.name);
@@ -432,31 +381,7 @@ async function loadFileList() {
   const el = document.getElementById('file-list'); el.innerHTML = '';
   for (const item of res.items) {
     const url = await getDownloadURL(item);
-    el.innerHTML += `<div class="file-row"><div class="file-name">${item.name}</div><a href="${url}" target="_blank" style="color:var(--ios-blue);font-weight:600;">Open</a></div>`;
-  }
-}
-
-function updateUI() {
-  document.getElementById('m-cv').textContent = S.cv;
-  document.getElementById('s-cv').textContent = S.cv;
-  document.getElementById('m-dr').textContent = S.dr;
-  document.getElementById('s-dr').textContent = S.dr;
-  document.getElementById('m-nc').textContent = S.nc;
-  document.getElementById('s-nc').textContent = S.nc;
-  document.getElementById('goal-label').textContent = `Goal: ${dailyGoal} today`;
-  document.getElementById('p-cv').style.width = Math.min(100, (S.cv / dailyGoal) * 100) + '%';
-  document.getElementById('p-dr').style.width = Math.min(100, (S.dr / 20) * 100) + '%';
-  document.getElementById('p-nc').style.width = Math.min(100, (S.nc / 20) * 100) + '%';
-  
-  const pt = document.getElementById('perf-title'), pd = document.getElementById('perf-desc'), pb = document.getElementById('perf-tracker');
-  if(S.cv >= dailyGoal) {
-    pt.textContent = "DAILY GOAL MET"; pt.style.color = "var(--g)";
-    pd.textContent = "120% effort required. Keep going."; pb.style.borderLeftColor = "var(--g)";
-  } else {
-    pt.textContent = S.cv === 0 ? "NO ACTIVITY" : "FALLING BEHIND"; 
-    pt.style.color = "var(--ios-red)";
-    pd.textContent = `Standard is ${dailyGoal} conversations. Dial now.`;
-    pb.style.borderLeftColor = "var(--ios-red)";
+    el.innerHTML += `<div class="file-row"><span>${item.name}</span><a href="${url}" target="_blank" style="color:var(--ios-blue)">View</a></div>`;
   }
 }
 
@@ -464,7 +389,6 @@ function updateUI() {
 window.renderCal = () => {
   const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
   document.getElementById('cal-month').textContent=months[calMonth]+' '+calYear;
-  document.getElementById('cal-names').innerHTML=['S','M','T','W','T','F','S'].map(d=>`<div class="cal-day-name">${d}</div>`).join('');
   const first=new Date(calYear,calMonth,1).getDay(), total=new Date(calYear,calMonth+1,0).getDate();
   let html=''; for(let i=0;i<first;i++) html+='<div></div>';
   for(let d=1;d<=total;d++){
@@ -478,55 +402,59 @@ window.renderCal = () => {
 };
 
 window.selectDate = (k) => { activeDateStr = k; renderCal(); };
-window.calNav = (dir) => { calMonth+=dir; if(calMonth>11){calMonth=0;calYear++;} if(calMonth<0){calMonth=11;calYear--;} renderCal(); };
+document.getElementById('prev-month').onclick = () => { calMonth--; if(calMonth<0){calMonth=11;calYear--;} renderCal(); };
+document.getElementById('next-month').onclick = () => { calMonth++; if(calMonth>11){calMonth=0;calYear++;} renderCal(); };
 
 function renderEvents(){
   const evs = S.calEvents[activeDateStr]||[];
   document.getElementById('cal-day-header').textContent = new Date(activeDateStr+'T12:00:00').toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
   document.getElementById('cal-events-list').innerHTML = evs.length ? evs.map(e=>`
     <div class="tl-row">
-      <div class="tl-time">${e.start || '--'}</div>
-      <div class="tl-bar" style="background:var(--ios-blue)"></div>
+      <div class="tl-time">${e.start || '--'}</div><div class="tl-bar" style="background:var(--ios-blue)"></div>
       <div class="tl-content"><div class="tl-title">${e.title}</div></div>
     </div>`).join('') : '<div style="padding:20px;text-align:center;color:var(--tx3)">No events</div>';
 }
 
-// ICS
-window.importICS = (inp) => {
-  const files = inp.files; if (!files.length) return;
+// ICS IMPORT
+document.getElementById('ics-upload').onchange = (e) => {
+  const files = e.target.files;
   Array.from(files).forEach(f => {
-    const r = new FileReader(); r.onload = e => {
-      const evs = e.target.result.split('BEGIN:VEVENT');
-      evs.forEach(ev => {
-        if(!ev.includes('END:VEVENT')) return;
-        const sum = (ev.match(/SUMMARY:(.*)/)||[])[1]?.trim();
-        const start = (ev.match(/DTSTART.*:(\d{8})T(\d{6})/)||[]);
+    const r = new FileReader(); r.onload = ev => {
+      const parts = ev.target.result.split('BEGIN:VEVENT');
+      parts.forEach(p => {
+        if(!p.includes('END:VEVENT')) return;
+        const sum = (p.match(/SUMMARY:(.*)/)||[])[1]?.trim();
+        const start = (p.match(/DTSTART.*:(\d{8})T(\d{6})/)||[]);
         if(start.length){
           const key = `${start[1].substring(0,4)}-${start[1].substring(4,6)}-${start[1].substring(6,8)}`;
           if(!S.calEvents[key]) S.calEvents[key] = [];
           S.calEvents[key].push({title:sum, start: `${start[2].substring(0,2)}:${start[2].substring(2,4)}`});
         }
       });
-      save(); renderCal(); alert("Imported.");
+      save(); renderCal();
     }; r.readAsText(f);
   });
 };
 
-// GLOBAL HANDLERS
-window.toggleDark = () => { S.dark=!S.dark; document.documentElement.toggleAttribute('data-dark', S.dark); save(); };
-window.openAddEvent = () => { document.getElementById('ev-title').value=''; document.getElementById('cal-modal').style.display='flex'; };
-window.closeModal = () => document.getElementById('cal-modal').style.display='none';
-window.saveEvent = () => {
-  const t=document.getElementById('ev-type').value, title=document.getElementById('ev-title').value.trim(), s=document.getElementById('ev-start').value;
-  if(!title) return; if(!S.calEvents[activeDateStr]) S.calEvents[activeDateStr]=[];
-  S.calEvents[activeDateStr].push({type:t, title, start:s}); save(); renderCal(); closeModal();
+// MONEY
+window.renderMoney = () => {
+  const net = S.closings.reduce((a,c)=>a+c.net,0);
+  document.getElementById('me').textContent = '$'+Math.round(net).toLocaleString();
+  if(window.myChart) window.myChart.destroy();
+  const ctx = document.getElementById('rchart').getContext('2d');
+  window.myChart = new Chart(ctx, { type:'line', data:{labels:['Apr','May','Jun','Jul','Aug','Sep'], datasets:[{data:[0,5000,12000,25000,45000,75000],borderColor:'#007AFF',tension:0.3}]}, options:{plugins:{legend:{display:false}},maintainAspectRatio:false}});
 };
 
+// ATTACH GLOBAL
+window.toggleDark = () => { S.dark=!S.dark; document.documentElement.toggleAttribute('data-dark', S.dark); save(); };
+document.getElementById('dark-toggle').onclick = window.toggleDark;
+document.getElementById('add-contact-btn').onclick = window.addContact;
+document.getElementById('h-btn').onclick = window.launchHustle;
+
 window.onload = () => {
-  const d = JSON.parse(localStorage.getItem('ahq_v5_ios') || '{}'); Object.assign(S, d);
-  document.getElementById('daily-quote').textContent = QUOTES[Math.floor(Math.random()*QUOTES.length)];
+  const d = JSON.parse(localStorage.getItem('ahq_save') || '{}'); Object.assign(S, d);
   document.getElementById('todays-date').textContent = new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
-  updateUI(); renderCal(); renderMoney();
+  updateUI(); renderCal(); renderMoney(); showS('sphere');
 };
 </script>
 </body>
