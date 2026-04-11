@@ -25,7 +25,7 @@
   --ios-red:#FF453A; --ios-blue:#0A84FF;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0;}
-html,body{height:100%;overflow:hidden;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,sans-serif;color:var(--tx);-webkit-font-smoothing:antialiased;}
+html,body{height:100%;overflow:hidden;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--tx);-webkit-font-smoothing:antialiased;}
 body{display:flex;flex-direction:column;}
 .ss{height:var(--st);background:var(--card);flex-shrink:0;}
 .hdr{background:var(--card);padding:8px 16px 10px;border-bottom:.5px solid var(--br);flex-shrink:0;display:flex;justify-content:space-between;align-items:flex-end;}
@@ -38,7 +38,7 @@ body{display:flex;flex-direction:column;}
 .tbar{position:fixed;bottom:0;left:0;right:0;height:var(--th);background:var(--card);border-top:.5px solid var(--br);display:flex;align-items:flex-start;padding-top:10px;z-index:100;}
 .tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:0 2px;}
 .tab svg{width:22px;height:22px;stroke:var(--tx2);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
-.tab .tl{font-size:9px;font-weight:500;color:var(--tx2);}
+.tab .tl{font-size:9px;font-weight:500;color:var(--tx3);}
 .tab.on svg{stroke:var(--ios-blue);} .tab.on .tl{color:var(--ios-blue);}
 .scn{display:none;} .scn.on{display:block;animation:su .18s ease;}
 @keyframes su{from{transform:translateY(14px);opacity:0;}to{transform:translateY(0);opacity:1;}}
@@ -55,14 +55,30 @@ body{display:flex;flex-direction:column;}
 .row{display:flex;align-items:center;padding:12px 16px;gap:12px;border-bottom:.5px solid var(--br);}
 .rt{font-size:15px;color:var(--tx);}
 .rs{font-size:12px;color:var(--tx2);margin-top:2px;}
+.cb2{width:24px;height:24px;border-radius:50%;border:2px solid var(--tx3);flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+.cb2.ck{background:var(--g);border-color:var(--g);}
+.cb2.ck::after{content:'';width:12px;height:8px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translateY(-1px);display:block;}
+.rt.dn{color:var(--tx3);text-decoration:line-through;}
 .stp{display:flex;align-items:center;gap:12px;}
-.sbtn{width:32px;height:32px;border-radius:50%;background:var(--inp);border:none;font-size:20px;color:var(--ios-blue);cursor:pointer;}
+.sbtn{width:32px;height:32px;border-radius:50%;background:var(--inp);border:none;font-size:20px;color:var(--ios-blue);cursor:pointer;display:flex;align-items:center;justify-content:center;}
 .sv{font-size:22px;font-weight:600;min-width:36px;text-align:center;}
 .pb{height:6px;background:var(--inp);border-radius:3px;overflow:hidden;margin-top:6px;}
 .pf{height:100%;border-radius:3px;transition:width .4s;}
+.stabs{display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;}
+.stab{flex-shrink:0;height:34px;padding:0 16px;border-radius:17px;border:none;font-size:13px;font-weight:600;cursor:pointer;background:var(--inp);color:var(--tx2);}
+.stab.on{background:var(--g);color:#fff;}
+.scard{background:var(--card);border-radius:14px;padding:16px;margin-bottom:12px;border:.5px solid var(--br);}
+.sst{font-size:11px;font-weight:800;color:var(--g);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;}
+.stxt{font-size:15px;color:var(--tx);line-height:1.5;margin-bottom:10px;}
+.stip{font-size:12px;color:var(--tx3);font-style:italic;padding-top:8px;border-top:.5px solid var(--br);}
+.zp{height:14px;background:var(--inp);border-radius:7px;overflow:hidden;margin:8px 0 5px;}
+.zf{height:100%;background:var(--g);border-radius:7px;transition:width .4s;}
+input,select,textarea{width:100%;border-radius:10px;border:none;background:var(--inp);padding:12px;font-size:16px;color:var(--tx);outline:none;}
 .btn{height:44px;border-radius:10px;border:none;background:var(--ios-blue);color:#fff;font-size:15px;font-weight:600;padding:0 20px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;}
 .bsm{height:32px;font-size:13px;padding:0 14px;border-radius:16px;}
 .bo{background:var(--inp);color:var(--ios-blue);}
+.cw{position:relative;height:180px;margin-top:10px;}
+.empty-state{text-align:center;padding:40px 20px;color:var(--tx3);font-size:14px;}
 
 /* iOS CALENDAR STYLES */
 .ios-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px 8px; }
@@ -76,6 +92,7 @@ body{display:flex;flex-direction:column;}
 .cal-d.selected:not(.today) .cal-d-num { background: var(--tx); color: var(--bg); font-weight: 600; }
 .cal-dots { display: flex; gap: 3px; margin-top: 2px; height: 4px; justify-content: center; width: 100%; }
 .cal-dot { width: 4.5px; height: 4.5px; border-radius: 50%; }
+.cal-d.hit .cal-d-num { box-shadow: 0 0 0 2px #34D399; }
 .tl-row { display: flex; align-items: stretch; gap: 12px; padding: 10px 16px; border-bottom: .5px solid var(--br); }
 .tl-time { width: 55px; flex-shrink: 0; text-align: right; padding-top: 2px; font-size: 12px; font-weight: 600; color: var(--tx2); }
 .tl-bar { width: 4px; border-radius: 2px; }
@@ -83,9 +100,9 @@ body{display:flex;flex-direction:column;}
 .tl-title { font-size: 15px; font-weight: 600; color: var(--tx); line-height: 1.3; }
 .tl-sub { font-size: 13px; color: var(--tx2); margin-top: 2px; }
 
-/* VAULT STYLES */
+/* VAULT STYLE */
 .file-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; border-bottom: .5px solid var(--br); }
-.file-name { font-size: 15px; font-weight: 500; }
+.file-name { font-size: 15px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 70%; }
 </style>
 </head>
 <body>
@@ -93,35 +110,65 @@ body{display:flex;flex-direction:column;}
 <div class="ss"></div>
 <div class="hdr">
   <div class="hdr-l"><div class="t">Agent HQ Ultra</div><div class="s">Christian · $3,675/closing</div></div>
-  <div class="hdr-r"><button class="dbtn" onclick="toggleDark()">🌙</button><div class="bdg" style="background:var(--ios-blue);">$140K Goal</div></div>
+  <div class="hdr-r"><button class="dbtn" onclick="toggleDark()">🌙</button><div class="bdg" id="goal-badge" style="background:var(--ios-blue);">$140K Goal</div></div>
 </div>
 
 <div class="scrl">
 
 <div id="scn-daily" class="scn on">
-  <div id="perf-tracker" style="background:var(--card);border-left:4px solid var(--rd);border-radius:12px;padding:14px 18px;margin-bottom:16px;">
-    <div id="perf-title" style="font-weight:700;">CONNECTING...</div>
-    <div id="perf-desc" style="font-size:13px;color:var(--tx2);">Initializing cloud engines.</div>
+  <div style="background:#1A2744;border-radius:16px;padding:20px 22px;margin-bottom:12px;text-align:center;">
+    <div style="font-size:10px;font-weight:700;letter-spacing:.14em;color:#C9A84C;text-transform:uppercase;margin-bottom:8px;">Focus the Energy</div>
+    <div style="font-size:20px;font-weight:700;color:#FFFFFF;letter-spacing:-.2px;line-height:1.3;" id="daily-quote">Every call is a closing waiting to happen.</div>
+    <div style="height:.5px;background:rgba(201,168,76,.3);margin:12px 0 10px;"></div>
+    <div style="font-size:12px;color:#C9A84C;font-weight:500;" id="todays-date"></div>
+  </div>
+  
+  <div id="perf-tracker" style="background:var(--card);border-left:4px solid var(--rd);border-radius:12px;padding:14px 18px;margin-bottom:16px;font-size:13px;color:var(--tx2);">
+    <div style="color:var(--rd);font-weight:700;margin-bottom:2px;letter-spacing:-.2px;" id="perf-title">CONNECTING...</div>
+    <div id="perf-desc">Syncing with cloud database.</div>
   </div>
 
   <div class="mg">
-    <div class="m"><div class="mv g" id="m-cv">0</div><div class="ml">Conversations</div><div class="ms" id="goal-label">Goal: 20</div><div class="pb"><div class="pf" id="p-cv" style="width:0%;background:#1A2744;"></div></div></div>
+    <div class="m"><div class="mv g" id="m-cv">0</div><div class="ml">Conversations</div><div class="ms" id="goal-label">Goal: 20 today</div><div class="pb"><div class="pf" id="p-cv" style="width:0%;background:#1A2744;"></div></div></div>
     <div class="m"><div class="mv r" id="m-debt">$93,432</div><div class="ml">Total Debt</div><div class="ms">Truck + Student Loans</div></div>
+    <div class="m"><div class="mv b" id="m-dr">0</div><div class="ml">Doors Knocked</div><div class="ms">Goal: 20 today</div><div class="pb"><div class="pf" id="p-dr" style="width:0%;background:var(--ios-blue);"></div></div></div>
+    <div class="m"><div class="mv a" id="m-nc">0</div><div class="ml">New Contacts</div><div class="ms">Goal: 20 today</div><div class="pb"><div class="pf" id="p-nc" style="width:0%;background:var(--am);"></div></div></div>
   </div>
 
   <div class="card"><div class="ch">Quick Counters</div>
-    <div class="row"><div style="flex:1;"><div class="rt">Conversations</div><div class="rs">Daily prospecting target</div></div><div class="stp"><button class="sbtn" onclick="adj('cv',-1)">-</button><span class="sv" id="s-cv">0</span><button class="sbtn" onclick="adj('cv',1)">+</button></div></div>
-    <div class="row"><div style="flex:1;"><div class="rt">Doors Knocked</div><div class="rs">Field work near Dyess</div></div><div class="stp"><button class="sbtn" onclick="adj('dr',-1)">-</button><span class="sv" id="s-dr">0</span><button class="sbtn" onclick="adj('dr',1)">+</button></div></div>
+    <div class="row" style="padding:14px 16px;display:flex;justify-content:space-between;align-items:center;">
+      <div><div class="rt">Conversations</div><div class="rs">Real estate related chat</div></div>
+      <div class="stp"><button class="sbtn" onclick="adj('cv',-1)">-</button><span class="sv" id="s-cv">0</span><button class="sbtn" onclick="adj('cv',1)">+</button></div>
+    </div>
+    <div class="row" style="padding:14px 16px;display:flex;justify-content:space-between;align-items:center;">
+      <div><div class="rt">Doors Knocked</div><div class="rs">Field work near Dyess</div></div>
+      <div class="stp"><button class="sbtn" onclick="adj('dr',-1)">-</button><span class="sv" id="s-dr">0</span><button class="sbtn" onclick="adj('dr',1)">+</button></div>
+    </div>
   </div>
 
   <div class="card" style="overflow:visible; padding-bottom:0;">
-    <div class="ios-header"><div class="ios-month" id="cal-month"></div><div style="display:flex;gap:12px;"><button onclick="calNav(-1)" class="ios-nav-btn">‹</button><button onclick="calNav(1)" class="ios-nav-btn">›</button></div></div>
-    <div class="cal-grid" id="cal-names"></div><div class="cal-grid" id="cal-days"></div>
+    <div class="ios-header">
+      <div class="ios-month" id="cal-month"></div>
+      <div style="display:flex;gap:12px;">
+        <button onclick="calNav(-1)" class="ios-nav-btn">‹</button>
+        <button onclick="calNav(1)" class="ios-nav-btn">›</button>
+      </div>
+    </div>
+    <div class="cal-grid" id="cal-names"></div>
+    <div class="cal-grid" id="cal-days"></div>
     <div style="height:.5px;background:var(--br);width:100%;"></div>
-    <div style="background:var(--card);min-height:150px;border-radius:0 0 16px 16px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px 4px;"><div id="cal-day-header" style="font-size:15px;font-weight:600;color:var(--tx2);"></div><button onclick="openAddEvent()" style="border:none;background:none;color:var(--ios-red);font-size:26px;">+</button></div>
+    <div style="background:var(--card);min-height:180px;border-radius:0 0 16px 16px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px 4px;">
+        <div id="cal-day-header" style="font-size:15px;font-weight:600;color:var(--tx2);"></div>
+        <button onclick="openAddEvent()" style="border:none;background:none;color:var(--ios-red);font-size:26px;font-weight:300;cursor:pointer;">+</button>
+      </div>
       <div id="cal-events-list"></div>
-      <div style="padding:14px 16px;"><label class="btn bo bsm" style="width:100%;cursor:pointer;"><input type="file" id="ics-upload" accept=".ics" multiple style="display:none;" onchange="importICS(this)">Import .ics Schedule</label></div>
+      <div style="padding:14px 16px;">
+        <label class="btn bo bsm" style="width:100%;height:36px;cursor:pointer;margin:0;display:flex;justify-content:center;align-items:center;">
+          <input type="file" id="ics-upload" accept=".ics" multiple style="display:none;" onchange="importICS(this)">
+          Import .ics Schedule
+        </label>
+      </div>
     </div>
   </div>
 </div>
@@ -129,11 +176,17 @@ body{display:flex;flex-direction:column;}
 <div id="scn-vault" class="scn">
   <div style="font-size:22px;font-weight:800;margin-bottom:12px;">Cloud Vault</div>
   <div class="card">
-    <div class="sst" style="margin-bottom:10px;">Upload Contracts / Maintenance Photos</div>
-    <input type="file" id="vault-input" style="display:none;" onchange="uploadToVault(this)">
-    <button class="btn" onclick="document.getElementById('vault-input').click()">Choose File / Camera</button>
+    <div class="sst" style="margin-bottom:10px;">Upload to Storage</div>
+    <div style="background:var(--inp);border-radius:12px;padding:20px;text-align:center;border:1px dashed var(--tx3);">
+      <input type="file" id="vault-input" style="display:none;" onchange="uploadToVault(this)">
+      <button class="btn" onclick="document.getElementById('vault-input').click()">Choose File / Snap Photo</button>
+      <div style="font-size:12px;color:var(--tx2);margin-top:10px;">Contracts, Inspection Reports, or P1S logs</div>
+    </div>
   </div>
-  <div class="card"><div class="ch">Cloud Files</div><div id="file-list"></div></div>
+  <div class="card">
+    <div class="ch">Your Cloud Files</div>
+    <div id="file-list"></div>
+  </div>
 </div>
 
 <div id="scn-money" class="scn">
@@ -151,6 +204,30 @@ body{display:flex;flex-direction:column;}
   <div class="tab on" onclick="showScn('daily',this)"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span class="tl">Daily</span></div>
   <div class="tab" onclick="showScn('vault',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg><span class="tl">Vault</span></div>
   <div class="tab" onclick="showScn('money',this)"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><span class="tl">Money</span></div>
+</div>
+
+<div id="cal-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.45);z-index:3000;align-items:flex-end;">
+    <div style="background:var(--card);border-radius:20px 20px 0 0;padding:20px 20px 40px;width:100%;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+        <div style="font-size:17px;font-weight:700;" id="modal-date-title">Add Event</div>
+        <button onclick="closeModal()" style="border:none;background:none;font-size:22px;color:var(--tx3);cursor:pointer;">×</button>
+      </div>
+      <div style="display:grid;gap:10px;">
+        <select id="ev-type">
+          <option value="showing">Showing</option>
+          <option value="prospecting">Prospecting</option>
+          <option value="class">Class</option>
+          <option value="other">Other</option>
+        </select>
+        <input type="text" id="ev-title" placeholder="Event name...">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <input type="time" id="ev-start">
+          <input type="time" id="ev-end">
+        </div>
+        <button class="btn" style="width:100%;" onclick="saveEvent()">Add Event</button>
+      </div>
+      <div id="existing-events"></div>
+    </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
@@ -188,11 +265,16 @@ let calYear = new Date().getFullYear();
 let calMonth = new Date().getMonth();
 let activeDateStr = new Date().toISOString().split('T')[0];
 
-// CLOUD INITIALIZATION
+// CLOUD DATABASE SYNC
 onValue(ref(db, 'agent_hq_data'), (snap) => {
-  const data = snap.val(); if(data) { S = data; updateUI(); renderCal(); renderMoney(); }
+  const data = snap.val();
+  if(data) {
+    S = data;
+    updateUI(); renderCal(); renderMoney();
+  }
 });
 
+// REMOTE CONFIG
 rc.settings.minimumFetchIntervalMillis = 60000;
 fetchAndActivate(rc).then(() => {
   dailyGoal = getValue(rc, "daily_convo_goal").asNumber() || 20;
@@ -200,7 +282,10 @@ fetchAndActivate(rc).then(() => {
 });
 
 // FUNCTIONS
-window.save = () => { set(ref(db, 'agent_hq_data'), S); localStorage.setItem('ahq_save', JSON.stringify(S)); };
+window.save = () => {
+  set(ref(db, 'agent_hq_data'), S);
+  localStorage.setItem('ahq_save', JSON.stringify(S));
+};
 
 window.adj = (k, d) => {
   S[k] = Math.max(0, (S[k]||0) + d);
@@ -212,15 +297,16 @@ window.showScn = (id, el) => {
   logEvent(analytics, 'screen_view', { screen_name: id });
   document.querySelectorAll('.scn').forEach(s => s.classList.remove('on'));
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
-  document.getElementById('scn-'+id).classList.add('on'); el.classList.add('on');
-  if(id==='vault') loadFileList();
+  document.getElementById('scn-'+id).classList.add('on');
+  el.classList.add('on');
+  if(id === 'vault') loadFileList();
 };
 
 window.uploadToVault = async (inp) => {
   const file = inp.files[0]; if(!file) return;
   const storageRef = sRef(storage, 'vault/' + file.name);
   await uploadBytes(storageRef, file);
-  alert("File Uploaded to Cloud."); loadFileList();
+  alert("Uploaded to Cloud Storage."); loadFileList();
 };
 
 async function loadFileList() {
@@ -229,7 +315,7 @@ async function loadFileList() {
   const el = document.getElementById('file-list'); el.innerHTML = '';
   for (const item of res.items) {
     const url = await getDownloadURL(item);
-    el.innerHTML += `<div class="file-row"><span>${item.name}</span><a href="${url}" target="_blank" style="color:var(--ios-blue);font-weight:600;">View</a></div>`;
+    el.innerHTML += `<div class="file-row"><div class="file-name">${item.name}</div><a href="${url}" target="_blank" style="color:var(--ios-blue);font-weight:600;">Open</a></div>`;
   }
 }
 
@@ -242,10 +328,11 @@ function updateUI() {
   const pt = document.getElementById('perf-title'), pd = document.getElementById('perf-desc'), pb = document.getElementById('perf-tracker');
   if(S.cv >= dailyGoal) {
     pt.textContent = "GOAL MET"; pt.style.color = "var(--g)";
-    pd.textContent = "Great work. Now push for 120%."; pb.style.borderLeftColor = "var(--g)";
+    pd.textContent = "You hit the standard. Now give 120%."; pb.style.borderLeftColor = "var(--g)";
   } else {
-    pt.textContent = "KEEP PUSHING"; pt.style.color = "var(--ios-red)";
-    pd.textContent = `Need ${dailyGoal - S.cv} more conversations.`; pb.style.borderLeftColor = "var(--ios-red)";
+    pt.textContent = S.cv === 0 ? "NO ACTIVITY" : "KEEP PUSHING";
+    pt.style.color = "var(--ios-red)";
+    pd.textContent = `You need ${dailyGoal - S.cv} more conversations today.`; pb.style.borderLeftColor = "var(--ios-red)";
   }
 }
 
@@ -271,22 +358,32 @@ window.calNav = (dir) => { calMonth+=dir; if(calMonth>11){calMonth=0;calYear++;}
 
 function renderEvents(){
   const evs = S.calEvents[activeDateStr]||[];
+  const evLabels={showing:'Showing',prospecting:'Prospecting',class:'Class',other:'Other'};
   document.getElementById('cal-day-header').textContent = new Date(activeDateStr+'T12:00:00').toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
-  document.getElementById('cal-events-list').innerHTML = evs.length ? evs.map(e=>`<div class="tl-row"><div class="tl-time">${e.start||'--'}</div><div class="tl-bar" style="background:var(--ios-blue)"></div><div class="tl-content"><div class="tl-title">${e.title}</div></div></div>`).join('') : '<div style="padding:20px;text-align:center;color:var(--tx3)">No events</div>';
+  document.getElementById('cal-events-list').innerHTML = evs.length ? evs.sort((a,b)=>a.start.localeCompare(b.start)).map((e,i)=>`
+    <div class="tl-row" onclick="openModal('${activeDateStr}', ${i})">
+      <div class="tl-time">${e.start||'--'}</div>
+      <div class="tl-bar" style="background:var(--ios-blue)"></div>
+      <div class="tl-content"><div class="tl-title">${e.title}</div><div class="tl-sub">${evLabels[e.type]||e.type}</div></div>
+    </div>`).join('') : '<div style="padding:20px;text-align:center;color:var(--tx3);font-size:14px;">No events</div>';
 }
 
-// MONEY LOGIC
-window.renderMoney = () => {
-  const net = S.closings.reduce((a,c)=>a+c.net,0);
-  document.getElementById('me').textContent = '$'+Math.round(net).toLocaleString();
-  renderChart();
+window.openModal = (dateKey, editIdx = null) => {
+  document.getElementById('cal-modal').style.display='flex';
+  if(editIdx !== null) {
+    document.getElementById('existing-events').innerHTML = `<button onclick="deleteEvent('${dateKey}',${editIdx})" style="width:100%;height:44px;border-radius:10px;border:none;background:var(--rl);color:var(--ios-red);font-weight:600;margin-top:20px;cursor:pointer;">Delete Event</button>`;
+  } else {
+    document.getElementById('existing-events').innerHTML = '';
+  }
 };
-
-function renderChart(){
-  if(window.myChart) window.myChart.destroy();
-  const ctx = document.getElementById('rchart').getContext('2d');
-  window.myChart = new Chart(ctx, { type:'line', data:{labels:['Apr','May','Jun','Jul','Aug','Sep'], datasets:[{data:[0,5000,12000,25000,45000,75000],borderColor:'#007AFF',tension:0.3}]}, options:{plugins:{legend:{display:false}},scales:{y:{display:false},x:{grid:{display:false}}}}});
-}
+window.closeModal = () => document.getElementById('cal-modal').style.display='none';
+window.openAddEvent = () => { document.getElementById('ev-title').value=''; window.openModal(activeDateStr); };
+window.saveEvent = () => {
+  const t=document.getElementById('ev-type').value, title=document.getElementById('ev-title').value.trim(), s=document.getElementById('ev-start').value, e=document.getElementById('ev-end').value;
+  if(!title) return; if(!S.calEvents[activeDateStr]) S.calEvents[activeDateStr]=[];
+  S.calEvents[activeDateStr].push({type:t, title, start:s, end:e}); save(); renderCal(); closeModal();
+};
+window.deleteEvent = (k,i) => { S.calEvents[k].splice(i,1); save(); renderCal(); closeModal(); };
 
 window.importICS = (inp) => {
   const files = inp.files; if (!files.length) return;
@@ -300,18 +397,31 @@ window.importICS = (inp) => {
         if(start.length){
           const key = `${start[1].substring(0,4)}-${start[1].substring(4,6)}-${start[1].substring(6,8)}`;
           if(!S.calEvents[key]) S.calEvents[key] = [];
-          S.calEvents[key].push({title:sum, start: `${start[2].substring(0,2)}:${start[2].substring(2,4)}`});
+          S.calEvents[key].push({title:sum, start: `${start[2].substring(0,2)}:${start[2].substring(2,4)}`, type:'other'});
         }
       });
-      save(); renderCal();
+      save(); renderCal(); alert("ICS Schedule Imported.");
     }; r.readAsText(f);
   });
 };
 
+window.renderMoney = () => {
+  const net = S.closings.reduce((a,c)=>a+c.net,0);
+  document.getElementById('me').textContent = '$'+Math.round(net).toLocaleString();
+  if(window.myChart) window.myChart.destroy();
+  const ctx = document.getElementById('rchart').getContext('2d');
+  window.myChart = new Chart(ctx, { type:'line', data:{labels:['Apr','May','Jun','Jul','Aug','Sep'], datasets:[{data:[0,5000,12000,25000,45000,75000],borderColor:'#007AFF',tension:0.3}]}, options:{plugins:{legend:{display:false}},scales:{y:{display:false},x:{grid:{display:false}}}}});
+};
+
+window.toggleDark = () => { S.dark=!S.dark; document.documentElement.toggleAttribute('data-dark', S.dark); save(); };
+
 window.onload = () => {
   const d = JSON.parse(localStorage.getItem('ahq_save') || '{}'); Object.assign(S, d);
-  renderCal(); renderMoney(); updateUI();
-  document.getElementById('todays-date').textContent = new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+  const quotes = ["Every call is a closing waiting to happen.", "The grind today is the glory tomorrow.", "Discipline beats motivation every single time."];
+  const day = Math.floor((new Date() - new Date(new Date().getFullYear(),0,1)) / 86400000);
+  document.getElementById('daily-quote').textContent = quotes[day % quotes.length];
+  document.getElementById('todays-date').textContent = new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+  updateUI(); renderCal(); renderMoney();
 };
 </script>
 </body>
