@@ -105,7 +105,7 @@ input,select,textarea{width:100%;border-radius:10px;border:none;background:var(-
 <div class="ss"></div>
 <div class="hdr">
   <div class="hdr-l"><div class="t">Agent HQ</div><div class="s">Christian · Pro 20 Sprint</div></div>
-  <div class="hdr-r"><button class="dbtn" id="dbtn" onclick="toggleDark()">🌙</button><div class="bdg">$3,308/cl</div></div>
+  <div class="hdr-r"><button class="dbtn" id="dbtn" onclick="toggleDark()">🌙</button><div class="bdg">$3,675/cl</div></div>
 </div>
 
 <div class="scrl">
@@ -189,7 +189,7 @@ input,select,textarea{width:100%;border-radius:10px;border:none;background:var(-
     <div class="m"><div class="mv" id="mn">21</div><div class="ml">Goal Left</div></div>
   </div>
   
-  <div class="card"><div class="ch">Cumulative Net vs Target ($69K)</div><div class="cw"><canvas id="rchart"></canvas></div></div>
+  <div class="card"><div class="ch">Cumulative Net vs Target ($77K)</div><div class="cw"><canvas id="rchart"></canvas></div></div>
   
   <div class="card" style="padding:16px;"><div class="sst">Log a Closing</div>
     <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-top:10px;">
@@ -248,15 +248,21 @@ input,select,textarea{width:100%;border-radius:10px;border:none;background:var(-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script src="quotes.js"></script>
 <script>
-const IRS=.70, NPC=3308;
+const IRS=.70, NPC=3675;
 const MOS=['Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-const TARGETS=[0, 3308, 9924, 19848, 29772, 39696, 49620, 59544, 69852];
+const TARGETS=[0, 3675, 11025, 22050, 33075, 44100, 55125, 66150, 77175];
 let rChart=null, selectedContacts=[], hIdx=0;
+
+const initialContacts = [
+  {id:1, name:'Staci Boren', phone:'', note:'Tonya Harbin Team', source:'Work', status:'not-contacted', lt:Date.now()},
+  {id:2, name:'HSU Lab Partner', phone:'', note:'Mech Eng Dept', source:'School', status:'not-contacted', lt:Date.now()},
+  {id:3, name:'Bambu Customer', phone:'', note:'3D Print Client', source:'Business', status:'not-contacted', lt:Date.now()}
+];
 
 const S={
   dark:false,cv:0,dr:0,streak:0,history:{},
-  tasks:[{id:'t1',t:'20 conversations',d:false},{id:'t2',t:'1hr door knocking',d:false},{id:'t3',t:'Post 4 TikToks',d:false}],
-  contacts:[],closings:[], schedule:Array(13).fill(''),
+  tasks:[{id:'t1',t:'20 conversations',d:false},{id:'t2',t:'1hr door knocking',d:false},{id:'t3',t:'Add 20 new contacts',d:false}],
+  contacts: initialContacts, closings:[], schedule:Array(13).fill(''),
   sallie:24225,federal:5500,zr1x:0,manualTax:0,manualSav:0
 };
 
@@ -284,10 +290,10 @@ const allScripts = {
   ]
 };
 
-function save(){localStorage.setItem('ahq_final_build_v3',JSON.stringify(S));}
+function save(){localStorage.setItem('ahq_final_build_v4',JSON.stringify(S));}
 function load(){
-  const d=JSON.parse(localStorage.getItem('ahq_final_build_v3')||'{}');
-  Object.assign(S,d);
+  const d=JSON.parse(localStorage.getItem('ahq_final_build_v4')||'{}');
+  if(Object.keys(d).length>0) Object.assign(S,d);
   if(!S.schedule) S.schedule=Array(13).fill('');
   if(typeof S.manualTax === 'undefined') S.manualTax=0;
   if(typeof S.manualSav === 'undefined') S.manualSav=0;
@@ -385,7 +391,7 @@ function showHustle(){
 function hustleSend(){
   const c=S.contacts.find(x=>x.id===selectedContacts[hIdx]);
   const msg="Hey! Checking in — have you heard of anyone thinking about buying or selling? Would love any introductions if you think of someone!";
-  window.location.href=`sms:${c.phone.replace(/\D/g,'')}&body=${encodeURIComponent(msg)}`;
+  window.location.href=`sms:${c.phone?c.phone.replace(/\D/g,''):'0000000000'}&body=${encodeURIComponent(msg)}`;
   adj('cv',1);
 }
 function nextHustle(){ hIdx++; if(hIdx >= selectedContacts.length) stopHustle(); else showHustle(); }
