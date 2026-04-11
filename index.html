@@ -178,25 +178,42 @@ input,select,textarea{width:100%;border-radius:10px;border:none;background:var(-
 
   <div class="card"><div class="ch">Non-Negotiables</div><div id="tlist"></div></div>
 
-  <div class="card">
-    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px 0;">
-      <div class="ch" style="padding:0;font-size:12px;font-weight:600;color:var(--tx2);text-transform:uppercase;letter-spacing:.06em;">Calendar — <span id="cal-month"></span></div>
-      <div style="display:flex;gap:8px;">
-        <button onclick="calNav(-1)" style="width:28px;height:28px;border-radius:50%;border:none;background:var(--inp);color:var(--tx2);font-size:14px;cursor:pointer;">‹</button>
-        <button onclick="calNav(1)" style="width:28px;height:28px;border-radius:50%;border:none;background:var(--inp);color:var(--tx2);font-size:14px;cursor:pointer;">›</button>
-      </div>
+  <div class="card" style="overflow:visible;">
+    <!-- Month nav -->
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px 8px;">
+      <button onclick="calNav(-1)" style="width:32px;height:32px;border-radius:50%;border:none;background:none;color:var(--tx2);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;">‹</button>
+      <div style="font-size:16px;font-weight:700;color:var(--tx);" id="cal-month"></div>
+      <button onclick="calNav(1)" style="width:32px;height:32px;border-radius:50%;border:none;background:none;color:var(--tx2);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;">›</button>
     </div>
-    <div class="cal-grid" id="cal-names"></div>
-    <div class="cal-grid" id="cal-days" style="padding-top:0;"></div>
-    <div id="cal-events-list" style="padding:0 14px 14px;"></div>
+
+    <!-- Day name headers -->
+    <div style="display:grid;grid-template-columns:repeat(7,1fr);padding:0 10px 4px;" id="cal-names"></div>
+
+    <!-- Day grid -->
+    <div style="display:grid;grid-template-columns:repeat(7,1fr);padding:0 10px 10px;gap:2px;" id="cal-days"></div>
+
+    <!-- Divider -->
+    <div style="height:.5px;background:var(--br);margin:0 16px;"></div>
+
+    <!-- Selected day events -->
+    <div id="cal-day-header" style="padding:12px 16px 4px;font-size:13px;font-weight:600;color:var(--tx2);"></div>
+    <div id="cal-events-list" style="padding:0 16px 4px;min-height:60px;"></div>
+
+    <!-- Add event button -->
+    <div style="padding:8px 16px 14px;">
+      <button onclick="openAddEvent()" class="btn bo" style="width:100%;height:36px;font-size:13px;">+ Add Event</button>
+    </div>
   </div>
 
-  <!-- Event Add Modal -->
-  <div id="cal-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:3000;align-items:flex-end;">
-    <div style="background:var(--card);border-radius:24px 24px 0 0;padding:24px 20px 40px;">
-      <div style="font-size:18px;font-weight:700;margin-bottom:16px;" id="modal-date-title">Add Event</div>
-      <div style="display:grid;gap:8px;">
-        <select id="ev-type" style="width:100%;">
+  <!-- Add Event Sheet -->
+  <div id="cal-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.45);z-index:3000;align-items:flex-end;">
+    <div style="background:var(--card);border-radius:20px 20px 0 0;padding:20px 20px 40px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+        <div style="font-size:17px;font-weight:700;" id="modal-date-title"></div>
+        <button onclick="closeModal()" style="border:none;background:none;font-size:22px;color:var(--tx3);cursor:pointer;">×</button>
+      </div>
+      <div style="display:grid;gap:10px;">
+        <select id="ev-type">
           <option value="openhouse">Open House</option>
           <option value="showing">Showing</option>
           <option value="listing">Listing Appointment</option>
@@ -206,17 +223,14 @@ input,select,textarea{width:100%;border-radius:10px;border:none;background:var(-
           <option value="class">Class</option>
           <option value="other">Other</option>
         </select>
-        <input type="text" id="ev-title" placeholder="Description (address, client name...)">
+        <input type="text" id="ev-title" placeholder="Address, client name...">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-          <input type="time" id="ev-start" placeholder="Start time">
-          <input type="time" id="ev-end" placeholder="End time">
+          <input type="time" id="ev-start">
+          <input type="time" id="ev-end">
         </div>
-        <div style="display:flex;gap:8px;margin-top:4px;">
-          <button class="btn" style="flex:1;" onclick="saveEvent()">Add Event</button>
-          <button class="btn bo" style="flex:1;" onclick="closeModal()">Cancel</button>
-        </div>
+        <button class="btn" style="width:100%;" onclick="saveEvent()">Add Event</button>
       </div>
-      <div id="existing-events" style="margin-top:16px;"></div>
+      <div id="existing-events" style="margin-top:14px;"></div>
     </div>
   </div>
 </div>
