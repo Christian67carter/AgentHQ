@@ -33,7 +33,6 @@ body{display:flex;flex-direction:column;}
 .card{background:var(--card);border-radius:16px;margin-bottom:12px;overflow:hidden;}
 .ch{padding:12px 16px 0;font-size:12px;font-weight:600;color:var(--tx2);text-transform:uppercase;letter-spacing:.06em;}
 .cb{padding:12px 16px 16px;}
-.dv{height:.5px;background:var(--br);margin:0 16px;}
 .mg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
 .m{background:var(--card);border-radius:14px;padding:12px;}
 .mv{font-size:28px;font-weight:700;letter-spacing:-.8px;line-height:1;}
@@ -45,42 +44,23 @@ body{display:flex;flex-direction:column;}
 .rc{flex:1;min-width:0;}
 .rt{font-size:16px;color:var(--tx);}
 .rs{font-size:12px;color:var(--tx2);margin-top:2px;}
-.rr{display:flex;align-items:center;gap:8px;flex-shrink:0;}
-.cb2{width:24px;height:24px;border-radius:50%;border:2px solid var(--tx3);flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;}
-.cb2.ck{background:var(--g);border-color:var(--g);}
-.cb2.ck::after{content:'';width:12px;height:8px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translateY(-1px);display:block;}
-.rt.dn{color:var(--tx3);text-decoration:line-through;}
 .stp{display:flex;align-items:center;gap:12px;}
 .sbtn{width:32px;height:32px;border-radius:50%;background:var(--inp);border:none;font-size:20px;color:var(--g);cursor:pointer;display:flex;align-items:center;justify-content:center;}
 .sv{font-size:22px;font-weight:600;min-width:36px;text-align:center;}
 .pb{height:6px;background:var(--inp);border-radius:3px;overflow:hidden;margin-top:8px;}
 .pf{height:100%;border-radius:3px;transition:width .4s;}
-.ws{display:flex;gap:6px;padding:10px 16px 14px;overflow-x:auto;}
-.dp{flex-shrink:0;width:38px;text-align:center;}
-.dn2{font-size:10px;color:var(--tx3);font-weight:500;margin-bottom:5px;}
-.dc{width:38px;height:38px;border-radius:50%;background:var(--inp);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:var(--tx2);}
-.dc.td{background:var(--g);color:#fff;}
-.dc.hi{background:var(--gl);color:var(--gd);border:1.5px solid var(--g);}
-.dc.td.hi{background:var(--g);color:#fff;}
-.stl{font-size:20px;font-weight:700;letter-spacing:-.3px;margin-bottom:12px;}
-.fst{display:flex;gap:6px;margin-bottom:10px;overflow-x:auto;padding-bottom:2px;}
-.fc{flex-shrink:0;height:32px;padding:0 14px;border-radius:16px;border:none;font-size:13px;font-weight:500;cursor:pointer;background:var(--inp);color:var(--tx2);}
-.fc.on{background:var(--g);color:#fff;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;padding:12px;}
+.cal-d{aspect-ratio:1;border-radius:4px;background:var(--inp);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:var(--tx3);}
+.cal-d.hit{background:var(--g);color:#fff;}
+.cal-d.today{border:1.5px solid var(--g);}
+.cal-h{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;font-size:10px;font-weight:700;color:var(--tx3);margin-bottom:4px;padding:0 12px;}
 .ci{display:flex;align-items:center;padding:10px 16px;gap:12px;border-bottom:.5px solid var(--br);}
 .ci:last-child{border-bottom:none;}
-.ci.stale{background:rgba(226,75,74,.06);}
 .av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:600;flex-shrink:0;}
 .cnm{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .cdt{font-size:12px;color:var(--tx2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .cas{display:flex;gap:5px;}
 .ab{width:32px;height:32px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;}
-.stabs{display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;padding-bottom:2px;}
-.stab{flex-shrink:0;height:32px;padding:0 14px;border-radius:16px;border:none;font-size:13px;font-weight:500;cursor:pointer;background:var(--inp);color:var(--tx2);}
-.stab.on{background:var(--g);color:#fff;}
-.scard{background:var(--inp);border-radius:12px;padding:14px;margin-bottom:10px;}
-.sst{font-size:11px;font-weight:700;color:var(--tx2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;}
-.stxt{font-size:14px;color:var(--tx);line-height:1.55;font-style:italic;}
-.stip{font-size:12px;color:var(--g);margin-top:8px;font-weight:500;}
 .dbk{margin-bottom:14px;}
 .dbr{display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px;}
 .dbn{font-weight:600;}
@@ -88,494 +68,242 @@ body{display:flex;flex-direction:column;}
 .zf{height:100%;background:linear-gradient(90deg,var(--g),#34D399);border-radius:7px;transition:width .6s;}
 .cli{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;border-bottom:.5px solid var(--br);}
 .cli:last-child{border-bottom:none;}
-.mli{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;border-bottom:.5px solid var(--br);}
-.mli:last-child{border-bottom:none;}
 input,select{height:44px;border-radius:10px;border:none;background:var(--inp);padding:0 14px;font-size:16px;color:var(--tx);outline:none;-webkit-appearance:none;width:100%;}
-input::placeholder{color:var(--tx3);}
-.ir{display:flex;gap:8px;padding:0 16px 12px;flex-wrap:wrap;}
-.btn{height:44px;border-radius:10px;border:none;background:var(--g);color:#fff;font-size:15px;font-weight:600;padding:0 18px;cursor:pointer;white-space:nowrap;}
-.bsm{height:34px;border-radius:8px;font-size:13px;padding:0 12px;}
+.btn{height:44px;border-radius:10px;border:none;background:var(--g);color:#fff;font-size:15px;font-weight:600;padding:0 18px;cursor:pointer;}
 .bo{background:var(--inp);color:var(--g);}
-.br2{background:var(--rl);color:var(--rd);}
-.bbl{background:var(--bll);color:var(--bl);}
 .ta{background:var(--al);border-radius:14px;padding:14px 16px;margin-bottom:12px;}
 .ta-t{font-size:15px;font-weight:700;color:var(--am);margin-bottom:4px;}
 .ta-b{font-size:13px;color:var(--tx2);line-height:1.5;}
-.cw{position:relative;height:200px;margin:8px 0 4px;}
-.es{text-align:center;padding:32px 20px;color:var(--tx3);font-size:14px;}
-.ri{display:flex;align-items:center;padding:10px 16px;gap:12px;border-bottom:.5px solid var(--br);}
-.ri:last-child{border-bottom:none;}
-.rk{width:28px;height:28px;border-radius:50%;background:var(--gl);color:var(--gd);font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.dbtn2{width:100%;padding:14px;border-radius:12px;border:none;background:var(--bll);color:var(--bl);font-size:15px;font-weight:600;cursor:pointer;margin-bottom:8px;text-align:left;display:flex;justify-content:space-between;align-items:center;}
-.pa{background:var(--rl);border-radius:12px;padding:10px 14px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;}
-.pn{font-size:14px;font-weight:600;color:var(--rd);}
-.pd{font-size:12px;color:var(--rd);}
+.cw{position:relative;height:180px;margin:8px 0 4px;}
+.cb2{width:24px;height:24px;border-radius:50%;border:2px solid var(--tx3);display:flex;align-items:center;justify-content:center;cursor:pointer;}
+.cb2.ck{background:var(--g);border-color:var(--g);}
+.cb2.ck::after{content:'';width:10px;height:6px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translateY(-1px);display:block;}
+.rt.dn{color:var(--tx3);text-decoration:line-through;}
 </style>
 </head>
 <body>
 <div class="ss"></div>
 <div class="hdr">
-  <div class="hdr-l"><div class="t">Agent HQ</div><div class="s">Christian · Tonya Harbin Team</div></div>
+  <div class="hdr-l"><div class="t">Agent HQ</div><div class="s">Christian · 40 House Sprint</div></div>
   <div class="hdr-r"><button class="dbtn" id="dbtn" onclick="toggleDark()">🌙</button><div class="bdg">$3,308/close</div></div>
 </div>
 <div class="scrl">
 
 <div id="scn-daily" class="scn on">
   <div class="mg">
-    <div class="m"><div class="mv g" id="m-cv">0</div><div class="ml">Conversations</div><div class="ms">Goal: 20 today</div><div class="pb"><div class="pf" id="p-cv" style="width:0%;background:var(--g);"></div></div></div>
-    <div class="m"><div class="mv b" id="m-dr">0</div><div class="ml">Doors knocked</div><div class="ms">Near Dyess</div><div class="pb"><div class="pf" id="p-dr" style="width:0%;background:var(--bl);"></div></div></div>
-    <div class="m"><div class="mv a" id="m-fu">0</div><div class="ml">Follow ups</div><div class="ms">Zero fall through</div><div class="pb"><div class="pf" id="p-fu" style="width:0%;background:var(--am);"></div></div></div>
-    <div class="m"><div class="mv" id="m-st">0</div><div class="ml">Day streak</div><div class="ms">Days at 20+ convos</div></div>
+    <div class="m"><div class="mv g" id="m-cv">0</div><div class="ml">Convos</div><div class="ms">Goal: 20</div><div class="pb"><div class="pf" id="p-cv" style="width:0%;background:var(--g);"></div></div></div>
+    <div class="m"><div class="mv b" id="m-dr">0</div><div class="ml">Doors</div><div class="ms">Goal: 20</div><div class="pb"><div class="pf" id="p-dr" style="width:0%;background:var(--bl);"></div></div></div>
   </div>
-  <div id="tax-banner"></div>
-  <div class="card"><div class="ch">Counters</div>
-    <div class="row"><div class="rc"><div class="rt">Conversations</div><div class="rs">Every real talk about real estate</div></div><div class="stp"><button class="sbtn" onclick="adj('cv',-1)">−</button><span class="sv" id="s-cv">0</span><button class="sbtn" onclick="adj('cv',1)">+</button></div></div>
-    <div class="dv"></div>
-    <div class="row"><div class="rc"><div class="rt">Doors knocked</div><div class="rs">Just Sold · Just Listed · Dyess area</div></div><div class="stp"><button class="sbtn" onclick="adj('dr',-1)">−</button><span class="sv" id="s-dr">0</span><button class="sbtn" onclick="adj('dr',1)">+</button></div></div>
-    <div class="dv"></div>
-    <div class="row"><div class="rc"><div class="rt">CRM follow ups</div><div class="rs">Same-day response every time</div></div><div class="stp"><button class="sbtn" onclick="adj('fu',-1)">−</button><span class="sv" id="s-fu">0</span><button class="sbtn" onclick="adj('fu',1)">+</button></div></div>
+  <div class="card">
+    <div class="ch">Streak Calendar</div>
+    <div id="cal-mo-label" style="text-align:center;font-size:14px;font-weight:700;margin:8px 0;">Month</div>
+    <div class="cal-h"><div>S</div><div>M</div><div>T</div><div>W</div><div>T</div><div>F</div><div>S</div></div>
+    <div id="calendar" class="cal-grid"></div>
   </div>
-  <div class="card"><div class="ch">Non-negotiables</div><div id="tlist"></div></div>
-  <div class="card"><div class="ch">This week</div><div class="ws" id="wstrip"></div></div>
-  <button class="btn bo" style="width:100%;margin-top:4px;" onclick="resetDay()">Reset today</button>
-</div>
-
-<div id="scn-circle" class="scn">
-  <div class="stl">Warm circle</div>
-  <div id="stale-alerts"></div>
-  <div class="card" style="margin-bottom:10px;"><div class="ch">Import from iPhone</div>
-    <div class="cb">
-      <p style="font-size:13px;color:var(--tx2);margin-bottom:10px;">iPhone Contacts → select → Share → Export vCard (.vcf) → import here.</p>
-      <label style="display:block;background:var(--inp);border-radius:12px;padding:14px;text-align:center;cursor:pointer;border:1.5px dashed var(--tx3);" for="vcf">
-        <div style="font-size:15px;font-weight:600;margin-bottom:3px;">Import .vcf file</div>
-        <div style="font-size:13px;color:var(--tx2);">Tap to select exported contacts</div>
-      </label>
-      <input type="file" id="vcf" accept=".vcf" style="display:none;" onchange="importVCF(this)">
-      <p style="font-size:11px;color:var(--tx3);margin-top:8px;text-align:center;">Stays on your device only.</p>
-    </div>
+  <div class="card"><div class="ch">Today's Hunt</div>
+    <div class="row"><div class="rc"><div class="rt">Conversations</div><div class="rs">Talk real estate with 20 people</div></div><div class="stp"><button class="sbtn" onclick="adj('cv',-1)">−</button><span class="sv" id="s-cv">0</span><button class="sbtn" onclick="adj('cv',1)">+</button></div></div>
+    <div class="row"><div class="rc"><div class="rt">Door Knocks</div><div class="rs">Targeting Dyess area</div></div><div class="stp"><button class="sbtn" onclick="adj('dr',-1)">−</button><span class="sv" id="s-dr">0</span><button class="sbtn" onclick="adj('dr',1)">+</button></div></div>
   </div>
-  <div class="card" style="margin-bottom:8px;"><div class="ch">Add manually</div>
-    <div class="ir" style="padding-top:10px;gap:8px;">
-      <input type="text" id="cn" placeholder="Full name" style="flex:1;min-width:110px;">
-      <input type="text" id="cp" placeholder="Phone" style="flex:1;min-width:90px;">
-    </div>
-    <div class="ir" style="padding-top:0;gap:8px;">
-      <select id="cs" style="flex:1;">
-        <option value="not-contacted">Not contacted</option>
-        <option value="contacted">Contacted</option>
-        <option value="interested">Interested</option>
-        <option value="referral">Gave referral</option>
-        <option value="dyess">Dyess / military</option>
-      </select>
-      <button class="btn" onclick="addContact()">Add</button>
-    </div>
-  </div>
-  <div class="fst">
-    <button class="fc on" onclick="setFilter('all',this)">All</button>
-    <button class="fc" onclick="setFilter('not-contacted',this)">Not contacted</button>
-    <button class="fc" onclick="setFilter('contacted',this)">Contacted</button>
-    <button class="fc" onclick="setFilter('interested',this)">Interested</button>
-    <button class="fc" onclick="setFilter('dyess',this)">Dyess</button>
-    <button class="fc" onclick="setFilter('referral',this)">Referral</button>
-  </div>
-  <div class="card"><div id="clist"><div class="es">No contacts yet</div></div></div>
-</div>
-
-<div id="scn-scripts" class="scn">
-  <div class="stl">Scripts & templates</div>
-  <div class="card" style="margin-bottom:10px;"><div class="ch">Dyess quick send</div>
-    <div class="cb">
-      <button class="dbtn2" onclick="sendD('pcs')">PCS intro message <span>→</span></button>
-      <button class="dbtn2" onclick="sendD('va')">VA loan talking points <span>→</span></button>
-      <button class="dbtn2" onclick="sendD('followup')">30-day follow up <span>→</span></button>
-      <button class="dbtn2" onclick="sendD('referral')">Referral ask <span>→</span></button>
-    </div>
-  </div>
-  <div class="stabs">
-    <button class="stab on" onclick="showS('door',this)">Door knocking</button>
-    <button class="stab" onclick="showS('dyess',this)">Dyess</button>
-    <button class="stab" onclick="showS('open',this)">Open house</button>
-    <button class="stab" onclick="showS('warm',this)">Warm circle</button>
-    <button class="stab" onclick="showS('obj',this)">Objections</button>
-  </div>
-  <div id="scontent"></div>
+  <div class="card"><div class="ch">Non-Negotiables</div><div id="tlist"></div></div>
+  <button class="btn bo" style="width:100%;margin-top:4px;" onclick="resetDay()">Reset Today</button>
 </div>
 
 <div id="scn-money" class="scn">
-  <div class="stl">Money dashboard</div>
-  <div id="tax-money"></div>
-  <div class="mg">
-    <div class="m"><div class="mv g" id="mc">0</div><div class="ml">Closings</div><div class="ms">Goal: 17 by Dec</div></div>
-    <div class="m"><div class="mv g" id="me">$0</div><div class="ml">Net earned</div><div class="ms">After split + tax</div></div>
-    <div class="m"><div class="mv a" id="mt">$0</div><div class="ml">Tax reserve</div><div class="ms">30% set aside</div></div>
-    <div class="m"><div class="mv" id="msv">$0</div><div class="ml">20% Savings</div><div class="ms">Personal wealth</div></div>
+  <div class="stl" style="padding:0 16px;">Money Dashboard</div>
+  <div class="mg" style="padding:14px;">
+    <div class="m"><div class="mv g" id="mc">0</div><div class="ml">Closings</div><div class="ms">40 House Goal</div></div>
+    <div class="m"><div class="mv g" id="me">$0</div><div class="ml">ZR1X Fund</div><div class="ms">50% Stack</div></div>
+    <div class="m"><div class="mv a" id="mt">$0</div><div class="ml">Tax Reserve</div><div class="ms">30% Set Aside</div></div>
+    <div class="m"><div class="mv b" id="msv">$0</div><div class="ml">No-Touch Sav</div><div class="ms">20% Wealth Vault</div></div>
   </div>
-  <div class="card"><div class="ch">Revenue vs $82K target</div><div class="cw"><canvas id="rchart" role="img" aria-label="Revenue vs target line chart">Revenue progress</canvas></div></div>
-  <div class="card"><div class="ch">Pipeline funnel</div>
-    <div style="display:flex;align-items:center;gap:12px;padding:12px 16px 16px;">
-      <div style="width:110px;height:110px;flex-shrink:0;"><canvas id="fchart" role="img" aria-label="Pipeline funnel donut chart">Funnel</canvas></div>
-      <div id="fleg" style="flex:1;font-size:12px;color:var(--tx2);line-height:2;"></div>
-    </div>
+  
+  <div class="card">
+    <div class="ch">Closings Per Month (40 House Target)</div>
+    <div class="cw"><canvas id="cpmChart"></canvas></div>
   </div>
-  <div class="card"><div class="ch">Log a closing</div>
-    <div class="ir" style="padding-top:10px;flex-wrap:wrap;gap:8px;">
-      <input type="text" id="cln" placeholder="Client name" style="flex:1;min-width:110px;">
-      <input type="number" id="clp" placeholder="Sale price ($)" style="flex:1;min-width:110px;">
-      <input type="number" id="clr" placeholder="Referral fee paid ($)" style="flex:1;min-width:110px;">
-      <button class="btn" onclick="logClose()">Log</button>
+
+  <div class="card"><div class="ch">Log a Closing</div>
+    <div style="padding:16px;display:grid;gap:8px;">
+      <input type="text" id="cln" placeholder="Client Name">
+      <input type="number" id="clp" placeholder="Sale Price ($)">
+      <button class="btn" style="width:100%" onclick="logClose()">Log Closing</button>
     </div>
-    <p style="font-size:11px;color:var(--tx3);padding:0 16px 10px;">Referral fee is auto-subtracted from your net</p>
     <div id="clist2"></div>
   </div>
-  <div class="card"><div class="ch">Referral partner leaderboard</div>
-    <div class="ir" style="padding-top:10px;gap:8px;">
-      <input type="text" id="rn" placeholder="Partner name" style="flex:1.5;">
-      <input type="text" id="rd2" placeholder="Deal sent" style="flex:1;">
-      <button class="btn" onclick="addRef()">Add</button>
-    </div>
-    <div id="rlist"></div>
-  </div>
-  <div class="card"><div class="ch">Debt payoff tracker</div><div class="cb">
+
+  <div class="card"><div class="ch">Debt Payoff Tracker</div><div class="cb">
     <div class="dbk">
-      <div class="dbr"><span class="dbn">Sallie Mae — 10.25%</span><span id="ds" style="color:var(--rd);">$24,225 left</span></div>
-      <div class="pb" style="height:8px;"><div class="pf" id="dps" style="width:0%;background:var(--rd);"></div></div>
-      <div style="display:flex;gap:8px;margin-top:10px;"><input type="number" id="ps" placeholder="Payment ($)" style="flex:1;"><button class="btn bsm" onclick="pay('s')">Apply</button></div>
+      <div class="dbr"><span class="dbn">Sallie Mae (10.25%)</span><span id="ds" style="color:var(--rd);">$24,225 left</span></div>
+      <div class="pb"><div class="pf" id="dps" style="width:0%;background:var(--rd);"></div></div>
     </div>
-    <div style="height:1px;background:var(--br);margin:12px 0;"></div>
     <div class="dbk">
-      <div class="dbr"><span class="dbn">Federal loans — 6.5%</span><span id="df" style="color:var(--am);">$5,500 left</span></div>
-      <div class="pb" style="height:8px;"><div class="pf" id="dpf" style="width:0%;background:var(--am);"></div></div>
-      <div style="display:flex;gap:8px;margin-top:10px;"><input type="number" id="pf2" placeholder="Payment ($)" style="flex:1;"><button class="btn bsm" onclick="pay('f')">Apply</button></div>
+      <div class="dbr"><span class="dbn">Federal (6.5%)</span><span id="df" style="color:var(--am);">$5,500 left</span></div>
+      <div class="pb"><div class="pf" id="dpf" style="width:0%;background:var(--am);"></div></div>
     </div>
   </div></div>
+
   <div class="card"><div class="cb">
     <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;">
-      <span style="font-size:16px;font-weight:700;">ZR1X Fund</span>
+      <span style="font-size:16px;font-weight:700;">ZR1X Fund Status</span>
       <span style="font-size:22px;font-weight:700;color:var(--g);" id="zs">$0</span>
     </div>
     <div class="zp"><div class="zf" id="zf" style="width:0%;"></div></div>
-    <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--tx3);margin-bottom:12px;"><span>$0</span><span id="zpct">0%</span><span>$25,000</span></div>
-    <div style="display:flex;gap:8px;"><input type="number" id="za" placeholder="Add to fund ($)" style="flex:1;"><button class="btn" onclick="addZ()">Stack it</button></div>
-    <p style="font-size:12px;color:var(--tx2);margin-top:10px;" id="znote"></p>
+    <div style="font-size:12px;color:var(--tx3);text-align:center;" id="znote">Loading...</div>
   </div></div>
-  <div style="display:flex;gap:8px;margin-top:4px;">
-    <button class="btn bo" style="flex:1;font-size:13px;" onclick="exportBak()">Export backup</button>
-    <label class="btn bbl" style="flex:1;font-size:13px;display:flex;align-items:center;justify-content:center;cursor:pointer;" for="ibak">Import backup</label>
-    <input type="file" id="ibak" accept=".json" style="display:none;" onchange="importBak(this)">
-  </div>
 </div>
 
-<div id="scn-miles" class="scn">
-  <div class="stl">Mileage log</div>
-  <div class="mg">
-    <div class="m"><div class="mv g" id="mit">0</div><div class="ml">Total miles</div><div class="ms">2026 business</div></div>
-    <div class="m"><div class="mv g" id="mid">$0</div><div class="ml">Tax deduction</div><div class="ms">$0.70/mile IRS 2026</div></div>
-    <div class="m"><div class="mv" id="mip">0</div><div class="ml">Total trips</div><div class="ms">logged this year</div></div>
-    <div class="m"><div class="mv a" id="mim">0</div><div class="ml">This month</div><div class="ms">miles driven</div></div>
-  </div>
-  <div class="card"><div class="ch">Log a trip</div>
-    <div class="ir" style="padding-top:10px;flex-direction:column;gap:8px;">
-      <select id="mpur">
-        <option>Door knocking — Dyess area</option><option>Showing homes</option><option>Open house</option>
-        <option>Listing appointment</option><option>Buyer consultation</option><option>Dyess housing office</option>
-        <option>Referral partner meeting</option><option>Closing / title company</option><option>Inspection</option><option>Other business drive</option>
-      </select>
-      <div style="display:flex;gap:8px;">
-        <input type="number" id="mmi" placeholder="Miles driven" style="flex:1;" step="0.1">
-        <input type="text" id="mno" placeholder="Note (optional)" style="flex:1.5;">
-        <button class="btn" onclick="logMile()">Log</button>
-      </div>
+<div id="scn-circle" class="scn">
+  <div class="stl" style="padding:16px;">Warm Circle</div>
+  <div class="card"><div class="ch">Add Lead</div>
+    <div style="padding:16px;display:grid;gap:8px;">
+      <input type="text" id="cn" placeholder="Name">
+      <select id="cs"><option value="dyess">Dyess/Military</option><option value="interested">Interested</option></select>
+      <button class="btn" onclick="addContact()">Add Lead</button>
     </div>
-    <p style="font-size:11px;color:var(--tx3);padding:0 16px 12px;">Every mile = $0.70 off your tax bill. Log every drive.</p>
   </div>
-  <div class="card"><div id="mlist"></div></div>
-  <div style="display:flex;gap:8px;margin-top:4px;">
-    <button class="btn bo" style="flex:1;font-size:13px;" onclick="exportMiles()">Export for CPA</button>
-    <button class="btn br2" style="flex:1;font-size:13px;" onclick="clearMiles()">Clear all</button>
-  </div>
+  <div id="clist"></div>
 </div>
 
 </div>
+
 <div class="tbar">
-  <div class="tab on" id="tab-daily" onclick="showScn('daily',this)"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="4" x2="9" y2="9"/><line x1="15" y1="4" x2="15" y2="9"/></svg><span class="tl">Daily</span></div>
-  <div class="tab" id="tab-circle" onclick="showScn('circle',this)"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg><span class="tl">Circle</span></div>
-  <div class="tab" id="tab-scripts" onclick="showScn('scripts',this)"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span class="tl">Scripts</span></div>
-  <div class="tab" id="tab-money" onclick="showScn('money',this)"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><span class="tl">Money</span></div>
-  <div class="tab" id="tab-miles" onclick="showScn('miles',this)"><svg viewBox="0 0 24 24"><rect x="1" y="10" width="22" height="8" rx="2"/><path d="M5 10V7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v3"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg><span class="tl">Miles</span></div>
+  <div class="tab on" onclick="showScn('daily',this)"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/></svg><span class="tl">Daily</span></div>
+  <div class="tab" onclick="showScn('circle',this)"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg><span class="tl">Circle</span></div>
+  <div class="tab" onclick="showScn('money',this)"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><span class="tl">Money</span></div>
 </div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
-const IRS=.70,TGT=82000;
-const MOS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-const TXD=[{m:3,d:15,l:'Q1 — Apr 15'},{m:5,d:15,l:'Q2 — Jun 15'},{m:8,d:15,l:'Q3 — Sep 15'},{m:11,d:15,l:'Q4 — Jan 15'}];
-let rChart=null,fChart=null;
-const S={dark:false,cv:0,dr:0,fu:0,streak:0,weekData:Array(7).fill(0),
-  tasks:[
-    {id:'t1',t:'20 conversations logged today',d:false},
-    {id:'t2',t:'1 hour door knocking near Dyess',d:false},
-    {id:'t3',t:'All CRM follow ups done',d:false},
-    {id:'t4',t:'30% of commission to tax reserve',d:false},
-    {id:'t5',t:'Open house this weekend scheduled',d:false},
-    {id:'t6',t:'1 referral partner touched',d:false},
-    {id:'t7',t:'1 Dyess community touchpoint',d:false},
-  ],
-  contacts:[],cf:'all',closings:[],referrals:[],
-  sallie:24225,sO:24225,federal:5500,fO:5500,
-  zr1x:0,savings:0,zTarget:25000,miles:[]};
-function save(){try{localStorage.setItem('ahq-sav',JSON.stringify(S));}catch(e){}}
-function load(){try{const d=JSON.parse(localStorage.getItem('ahq-sav')||'{}');Object.assign(S,d);if(!S.miles)S.miles=[];if(!S.referrals)S.referrals=[];if(!S.contacts)S.contacts=[];if(S.savings===undefined)S.savings=0;}catch(e){}}
-function toggleDark(){S.dark=!S.dark;applyDark();save();}
-function applyDark(){document.documentElement.toggleAttribute('data-dark',S.dark);document.getElementById('dbtn').textContent=S.dark?'☀️':'🌙';if(rChart||fChart){setTimeout(renderMoney,50);}}
-function showScn(id,el){
-  document.querySelectorAll('.scn').forEach(s=>s.classList.remove('on'));
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
-  document.getElementById('scn-'+id).classList.add('on');
-  (el||document.getElementById('tab-'+id)).classList.add('on');
-  if(id==='money')renderMoney();
-  if(id==='circle'){renderContacts();renderStale();}
-  if(id==='miles')renderMiles();
-  if(id==='scripts')showS('door',document.querySelector('.stab'));
-  if(id==='daily')renderTaxBanner();
-}
-function nextTax(){
-  const now=new Date();
-  for(const d of TXD){const dl=new Date(now.getFullYear(),d.m,d.d);if(dl>now)return{l:d.l,days:Math.ceil((dl-now)/864e5)};}
-  return{l:'Q4 — Jan 15',days:0};
-}
-function renderTaxBanner(){
-  const tax=S.closings.reduce((a,c)=>a+c.tax,0);
-  const el=document.getElementById('tax-banner');
-  if(!el||!tax){if(el)el.innerHTML='';return;}
-  const{l,days}=nextTax();const urg=days<=14;
-  el.innerHTML=`<div class="ta" style="${urg?'background:var(--rl);':''}"><div class="ta-t" style="${urg?'color:var(--rd);':''}">Tax due in ${days} days — ${l}</div><div class="ta-b">$${Math.round(tax).toLocaleString()} in your reserve. Keep it in a separate account.</div></div>`;
-}
-function adj(k,d){S[k]=Math.max(0,S[k]+d);updateC();save();}
-function updateC(){
-  ['cv','dr','fu'].forEach(k=>{document.getElementById('m-'+k).textContent=S[k];document.getElementById('s-'+k).textContent=S[k];});
-  document.getElementById('m-st').textContent=S.streak;
-  document.getElementById('p-cv').style.width=Math.min(100,(S.cv/20)*100)+'%';
-  document.getElementById('p-dr').style.width=Math.min(100,(S.dr/20)*100)+'%';
-  document.getElementById('p-fu').style.width=Math.min(100,(S.fu/10)*100)+'%';
-  S.weekData[new Date().getDay()]=S.cv;renderWeek();
-}
-function renderTasks(){
-  document.getElementById('tlist').innerHTML=S.tasks.map(t=>`<div class="row" onclick="togTask('${t.id}')"><div class="cb2 ${t.d?'ck':''}"></div><div class="rc"><div class="rt ${t.d?'dn':''}">${t.t}</div></div></div>`).join('');
-}
-function togTask(id){const t=S.tasks.find(x=>x.id===id);if(t){t.d=!t.d;renderTasks();save();}}
-function renderWeek(){
-  const days=['S','M','T','W','T','F','S'];const today=new Date().getDay();
-  document.getElementById('wstrip').innerHTML=days.map((d,i)=>`<div class="dp"><div class="dn2">${d}</div><div class="dc ${i===today?'td':''} ${S.weekData[i]>=20?'hi':''}">${S.weekData[i]||'·'}</div></div>`).join('');
-}
-function resetDay(){S.cv=0;S.dr=0;S.fu=0;S.tasks.forEach(t=>t.d=false);updateC();renderTasks();save();}
-const SC={
-  'not-contacted':['#F2F2F7','#6C6C70','Not contacted'],
-  'contacted':['#E6F1FB','#185FA5','Contacted'],
-  'interested':['#EAF3DE','#27500A','Interested'],
-  'referral':['#EEEDFE','#3C3489','Referral'],
-  'dyess':['#E1F5EE','#0F6E56','Dyess'],
+let S = JSON.parse(localStorage.getItem('AHQ_ULTIMATE')) || {
+  dark:false, cv:0, dr:0, history:{}, contacts:[], closings:[], sallie:24225, federal:5500, zr1x:0, savings:0,
+  tasks:[{id:'t1',t:'20 Convos Logged',d:false},{id:'t2',t:'1hr Door Knocking',d:false},{id:'t3',t:'CRM Updated',d:false}]
 };
-const AVB=['#EAF3DE','#E6F1FB','#FAEEDA','#E1F5EE','#EEEDFE','#FCEBEB'];
-const AVT=['#27500A','#0C447C','#633806','#0F6E56','#3C3489','#791F1F'];
-function ini(n){return n.split(' ').map(w=>w[0]||'').join('').slice(0,2).toUpperCase();}
-function isStale(c){if(!c.lt)return true;return (Date.now()-c.lt)/36e5>48&&c.status==='not-contacted';}
-function renderStale(){
-  const stale=S.contacts.filter(isStale).slice(0,3);
-  const el=document.getElementById('stale-alerts');
-  if(!stale.length){el.innerHTML='';return;}
-  el.innerHTML=stale.map(c=>`<div class="pa"><div><div class="pn">${c.name}</div><div class="pd">Not contacted 48+ hrs</div></div><button class="btn bsm" style="background:var(--rd);color:#fff;" onclick="markT('${c.id}')">Mark contacted</button></div>`).join('');
+
+function save(){ localStorage.setItem('AHQ_ULTIMATE', JSON.stringify(S)); render(); }
+
+function toggleDark(){ S.dark=!S.dark; document.documentElement.toggleAttribute('data-dark', S.dark); save(); }
+
+function showScn(id, el){
+  document.querySelectorAll('.scn, .tab').forEach(x=>x.classList.remove('on'));
+  document.getElementById('scn-'+id).classList.add('on'); el.classList.add('on');
+  if(id==='money') initCPMChart();
 }
-function markT(id){const c=S.contacts.find(x=>x.id==id);if(c){c.lt=Date.now();c.status='contacted';renderContacts();renderStale();save();}}
-function addContact(){
-  const name=document.getElementById('cn').value.trim();
-  const phone=document.getElementById('cp').value.trim();
-  const status=document.getElementById('cs').value;
-  if(!name)return;
-  S.contacts.unshift({id:Date.now(),name,phone,status,lt:Date.now(),date:new Date().toLocaleDateString()});
-  document.getElementById('cn').value='';document.getElementById('cp').value='';
-  renderContacts();save();
+
+function adj(k,d){ S[k]=Math.max(0,S[k]+d); 
+  let today = new Date().toISOString().split('T')[0];
+  S.history[today] = S.cv; save(); 
 }
-function setFilter(f,el){S.cf=f;document.querySelectorAll('.fc').forEach(c=>c.classList.remove('on'));el.classList.add('on');renderContacts();}
-function renderContacts(){
-  const fl=S.cf==='all'?S.contacts:S.contacts.filter(c=>c.status===S.cf);
-  const el=document.getElementById('clist');
-  if(!fl.length){el.innerHTML='<div class="es">No contacts in this category</div>';return;}
-  el.innerHTML=fl.map(c=>{
-    const ci=S.contacts.indexOf(c);const ai=ci%AVB.length;
-    const[bg,dk,lbl]=SC[c.status]||['#F2F2F7','#6C6C70','Unknown'];
-    const stale=isStale(c);const ph=c.phone?c.phone.replace(/\D/g,''):'';
-    return`<div class="ci ${stale?'stale':''}">
-      <div class="av" style="background:${AVB[ai]};color:${AVT[ai]};">${ini(c.name)}</div>
-      <div style="flex:1;min-width:0;">
-        <div class="cnm">${c.name}${stale?' 🔴':''}</div>
-        <div class="cdt"><span style="background:${bg};color:${dk};padding:1px 7px;border-radius:6px;font-size:11px;font-weight:600;">${lbl}</span>${c.phone?' · '+c.phone:''}</div>
-      </div>
-      <div class="cas">
-        ${ph?`<a href="tel:${ph}" class="ab" style="background:var(--gl);text-decoration:none;font-size:15px;" onclick="touch(${ci})">📞</a>`:''}
-        ${ph?`<a href="sms:${ph}" class="ab" style="background:var(--bll);text-decoration:none;font-size:15px;" onclick="touch(${ci})">💬</a>`:''}
-        <button class="ab" style="background:var(--inp);font-size:11px;color:var(--tx2);" onclick="cycStat(${ci})">↻</button>
-        <button class="ab" style="background:var(--rl);color:var(--rd);font-size:16px;font-weight:700;" onclick="remC(${ci})">×</button>
-      </div>
-    </div>`;
-  }).join('');
+
+function render(){
+  document.getElementById('m-cv').innerText = S.cv;
+  document.getElementById('m-dr').innerText = S.dr;
+  document.getElementById('s-cv').innerText = S.cv;
+  document.getElementById('s-dr').innerText = S.dr;
+  document.getElementById('p-cv').style.width = Math.min(100, (S.cv/20)*100)+'%';
+  document.getElementById('p-dr').style.width = Math.min(100, (S.dr/20)*100)+'%';
+  
+  // Money
+  document.getElementById('mc').innerText = S.closings.length;
+  document.getElementById('me').innerText = '$' + Math.round(S.zr1x).toLocaleString();
+  document.getElementById('msv').innerText = '$' + Math.round(S.savings).toLocaleString();
+  let tax = S.closings.reduce((a,c)=>a+c.tax,0);
+  document.getElementById('mt').innerText = '$' + Math.round(tax).toLocaleString();
+  
+  // Progress
+  let zp = Math.min(100, (S.zr1x/25000)*100);
+  document.getElementById('zs').innerText = '$' + Math.round(S.zr1x).toLocaleString();
+  document.getElementById('zf').style.width = zp+'%';
+  document.getElementById('znote').innerText = S.zr1x >= 25000 ? 'Goal Reached - Order ZR1X' : `$${Math.round(25000-S.zr1x).toLocaleString()} to go`;
+
+  renderCalendar();
+  renderTList();
 }
-function touch(i){S.contacts[i].lt=Date.now();save();}
-function cycStat(i){const o=['not-contacted','contacted','interested','referral','dyess'];S.contacts[i].status=o[(o.indexOf(S.contacts[i].status)+1)%o.length];S.contacts[i].lt=Date.now();renderContacts();save();}
-function remC(i){if(confirm('Remove '+S.contacts[i].name+'?')){S.contacts.splice(i,1);renderContacts();save();}}
-function importVCF(inp){
-  const f=inp.files[0];if(!f)return;
-  const r=new FileReader();
-  r.onload=e=>{
-    const cards=e.target.result.split('BEGIN:VCARD');let n=0;
-    cards.forEach(card=>{
-      if(!card.includes('END:VCARD'))return;
-      const nm=card.match(/FN:(.*)/i)||card.match(/N:(.*)/i);
-      const ph=card.match(/TEL[^:]*:([\d\s\(\)\-\+]+)/i);
-      if(nm){const name=nm[1].trim().replace(/;/g,' ').trim();const phone=ph?ph[1].trim():'';
-        if(name&&name.length>1&&!S.contacts.find(c=>c.name===name)){S.contacts.push({id:Date.now()+n,name,phone,status:'not-contacted',lt:Date.now(),date:'Imported'});n++;}}
-    });
-    renderContacts();save();alert(`Imported ${n} contacts!`);
-  };
-  r.readAsText(f);inp.value='';
+
+function renderCalendar(){
+  let cal = document.getElementById('calendar');
+  let label = document.getElementById('cal-mo-label');
+  let now = new Date();
+  label.innerText = now.toLocaleString('default', { month: 'long', year: 'numeric' });
+  
+  cal.innerHTML = '';
+  let first = new Date(now.getFullYear(), now.getMonth(), 1).getDay();
+  let days = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
+  
+  for(let i=0; i<first; i++) cal.innerHTML += '<div></div>';
+  for(let d=1; d<=days; d++){
+    let dt = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    let hit = S.history[dt] >= 20;
+    let isToday = d === now.getDate();
+    cal.innerHTML += `<div class="cal-d ${hit?'hit':''} ${isToday?'today':''}">${d}</div>`;
+  }
 }
-const DS={
-  pcs:"Hey [Name] — Christian here from the Tonya Harbin Team. I specialize in helping military families with PCS moves to Abilene. I know the VA loan process and Dyess inside out. If you have any questions about the housing market or just want to know what's available near the base, I'm happy to help. No pressure at all.",
-  va:"Quick note on VA loans — zero down payment, no PMI, competitive rates, and the seller can often cover closing costs. If you're using a VA loan for your PCS move I can connect you with a lender who closes fast and knows military timelines. Just let me know!",
-  followup:"Hey [Name], just checking in! It was great connecting with you. Have you had a chance to look at any listings? Abilene's market moves fast and I want to make sure you have first look at anything that fits. Let me know if you'd like to schedule a showing!",
-  referral:"[Name], I'm always looking to help more military families in your unit who might be getting PCS orders. If you know anyone moving to Dyess soon I'd love an introduction. A quick text connecting us would mean a lot. You know I'll take great care of them.",
-};
-function sendD(t){window.location.href='sms:?&body='+encodeURIComponent(DS[t]);}
-const scripts={
-  door:[
-    {s:'Just sold approach',t:'"Hey, sorry to bother you — I\'m Christian. I just helped a family close on a home on [Street] and wanted to let the neighbors know. Wanted to see if you had any questions about what\'s been happening in the market around here."',tip:'Stop talking. Let them respond. Follow wherever they go.'},
-    {s:'They say they\'re not moving',t:'"Totally understand — I\'m not here to push anything. Do you know anyone in the neighborhood who might be thinking about it?"',tip:'Dead end becomes a referral ask.'},
-    {s:'They just bought',t:'"Oh congratulations! Who did you use? Was it a smooth process?"',tip:'Future client in 3–5 years when they sell.'},
-    {s:'Door starts closing',t:'"No problem at all — here\'s my card if anything changes. Have a great day."',tip:'Never chase. Leave them feeling respected.'},
-  ],
-  dyess:[
-    {s:'Introducing yourself',t:'"I specialize in helping military families with PCS moves — I know the VA loan process inside out and I\'ve built relationships at the Dyess housing office. Are you or anyone you know connected to the base?"',tip:'You\'re identifying a pain you solve.'},
-    {s:'VA loan talking point',t:'"Zero down payment, no PMI, competitive rates, and the seller can cover closing costs. I work with VA lenders who close fast and know military timelines."',tip:'Know this better than anyone in Abilene.'},
-    {s:'After closing — referral ask',t:'"The biggest favor you could do for me is introducing me to three other families in your unit who might be getting orders."',tip:'Military communities are tight. One family becomes five closings.'},
-  ],
-  open:[
-    {s:'When they walk in — never "Can I help you?"',t:'"Hey welcome in — I\'m Christian. Feel free to look around. Before you do — are you familiar with this part of Abilene or are you looking to get to know the area?"',tip:'Invites a real answer.'},
-    {s:'The four qualifying questions',t:'"Familiar with this area?" → "Renting or own?" → "What\'s bringing you to look at homes?" → "Working with an agent yet?" (only after rapport)',tip:'Listen completely before asking the next one.'},
-    {s:'They have an agent',t:'"That\'s great — who are you working with? Are they showing you a lot of options?"',tip:'Never compete. Plant a seed.'},
-  ],
-  warm:[
-    {s:'The announcement text — send to everyone',t:'"Hey [Name]! Big news — I just got my real estate license and joined the Tonya Harbin Team in Abilene. I specialize in helping military families and anyone buying or selling. If you or anyone you know needs anything real estate related I\'d love to help!"',tip:'Send to 150 people this week.'},
-    {s:'The referral ask',t:'"Honestly the biggest thing that would help me right now is just an introduction — if you know anyone thinking about buying or selling, would you be comfortable connecting us?"',tip:'You\'re asking for an intro, not a sale.'},
-  ],
-  obj:[
-    {s:'"I\'m already working with someone"',t:'"No problem at all — I completely respect that. If things ever change or you know someone else who needs help, I\'d love to be a resource."',tip:'Never push. Be gracious.'},
-    {s:'"Now isn\'t a good time"',t:'"Totally understand. Would it be okay if I checked back in with you in a few months?"',tip:'Get permission to follow up.'},
-    {s:'"I want to wait for rates to drop"',t:'"When rates drop everyone jumps in and prices go up. Buy now, refinance later. Marry the house, date the rate."',tip:'Confident, not pushy.'},
-    {s:'"Your commission is too high"',t:'"My job is to get you the best possible price and make sure the transaction closes smoothly. What I save clients far exceeds what I charge."',tip:'Don\'t apologize for your value.'},
-  ],
-};
-function showS(k,el){
-  document.querySelectorAll('.stab').forEach(t=>t.classList.remove('on'));if(el)el.classList.add('on');
-  document.getElementById('scontent').innerHTML=(scripts[k]||[]).map(s=>`<div class="scard"><div class="sst">${s.s}</div><div class="stxt">${s.t}</div><div class="stip">→ ${s.tip}</div></div>`).join('');
-}
+
 function logClose(){
-  const name=document.getElementById('cln').value.trim();
-  const price=parseFloat(document.getElementById('clp').value)||225000;
-  const ref=parseFloat(document.getElementById('clr').value)||0;
-  if(!name)return;
-  const gross=price*.03;const afterSplit=gross*.70;
-  const net_total=afterSplit*.70;
-  const net_after_ref=Math.max(0,net_total-ref);
-  const tax=afterSplit*.30;
-  const sav=net_total*.20;
-  const forVette=net_after_ref-sav;
-  S.closings.unshift({name,price,net:forVette,tax,sav,ref,date:new Date().toLocaleDateString(),month:new Date().getMonth()});
-  S.savings+=sav;
-  renderMoney();save();
+  let name = document.getElementById('cln').value;
+  let price = parseFloat(document.getElementById('clp').value) || 225000;
+  if(!name) return;
+  
+  let netAfterSplit = (price * 0.03) * 0.70;
+  let tax = netAfterSplit * 0.30;
+  let net = netAfterSplit * 0.70;
+  
+  let fund = net * 0.50;
+  let sav = net * 0.20; // 20% No-Touch
+  
+  S.closings.unshift({name, price, tax, date: new Date().toISOString()});
+  S.zr1x += fund; S.savings += sav;
+  document.getElementById('cln').value = ''; document.getElementById('clp').value = '';
+  save();
 }
-function pay(t){
-  const v=parseFloat(document.getElementById(t==='s'?'ps':'pf2').value)||0;
-  if(t==='s')S.sallie=Math.max(0,S.sallie-v);else S.federal=Math.max(0,S.federal-v);
-  document.getElementById(t==='s'?'ps':'pf2').value='';renderMoney();save();
+
+function addContact(){
+  let name = document.getElementById('cn').value;
+  if(!name) return;
+  S.contacts.unshift({name, status: document.getElementById('cs').value});
+  document.getElementById('cn').value = ''; save();
 }
-function addZ(){const v=parseFloat(document.getElementById('za').value)||0;S.zr1x=Math.min(S.zTarget,S.zr1x+v);document.getElementById('za').value='';renderMoney();save();}
-function addRef(){
-  const name=document.getElementById('rn').value.trim();const deal=document.getElementById('rd2').value.trim();
-  if(!name)return;
-  const ex=S.referrals.find(r=>r.name.toLowerCase()===name.toLowerCase());
-  if(ex)ex.deals.push({deal,date:new Date().toLocaleDateString()});
-  else S.referrals.push({name,deals:[{deal,date:new Date().toLocaleDateString()}]});
-  S.referrals.sort((a,b)=>b.deals.length-a.deals.length);
-  document.getElementById('rn').value='';document.getElementById('rd2').value='';renderMoney();save();
+
+function resetDay(){ S.cv=0; S.dr=0; S.tasks.forEach(t=>t.d=false); save(); }
+
+function renderTList(){
+  document.getElementById('tlist').innerHTML = S.tasks.map(t=>`
+    <div class="row" onclick="togT('${t.id}')">
+      <div class="cb2 ${t.d?'ck':''}"></div>
+      <div class="rc"><div class="rt ${t.d?'dn':''}">${t.t}</div></div>
+    </div>
+  `).join('');
 }
-function renderMoney(){
-  const tn=S.closings.reduce((a,c)=>a+c.net,0);const tt=S.closings.reduce((a,c)=>a+c.tax,0);
-  document.getElementById('mc').textContent=S.closings.length;
-  document.getElementById('me').textContent='$'+Math.round(tn).toLocaleString();
-  document.getElementById('mt').textContent='$'+Math.round(tt).toLocaleString();
-  document.getElementById('msv').textContent='$'+Math.round(S.savings).toLocaleString();
-  const{l,days}=nextTax();const el=document.getElementById('tax-money');
-  if(tt>0){const urg=days<=14;el.innerHTML=`<div class="ta" style="${urg?'background:var(--rl);':''}"><div class="ta-t" style="${urg?'color:var(--rd);':''}">Tax due in ${days} days — ${l}</div><div class="ta-b">$${Math.round(tt).toLocaleString()} should be in your tax reserve right now.</div></div>`;}else el.innerHTML='';
-  const cl=document.getElementById('clist2');
-  cl.innerHTML=S.closings.length?S.closings.map(c=>`<div class="cli"><div><div style="font-size:15px;">${c.name}</div><div style="font-size:11px;color:var(--tx3);">${c.date} · $${Math.round(c.price).toLocaleString()}${c.ref?` · -$${c.ref} ref`:''}</div></div><div style="text-align:right;"><div style="font-size:17px;font-weight:700;color:var(--g);">+$${Math.round(c.net).toLocaleString()}</div><div style="font-size:10px;color:var(--tx3);">$${Math.round(c.tax).toLocaleString()} tax · $${Math.round(c.sav).toLocaleString()} sv</div></div></div>`).join(''):'<div style="padding:14px 16px;font-size:13px;color:var(--tx3);">No closings yet</div>';
-  const sp=Math.round((1-S.sallie/S.sO)*100);const fp=Math.round((1-S.federal/S.fO)*100);
-  document.getElementById('ds').textContent='$'+Math.round(S.sallie).toLocaleString()+' left';document.getElementById('dps').style.width=sp+'%';
-  document.getElementById('df').textContent='$'+Math.round(S.federal).toLocaleString()+' left';document.getElementById('dpf').style.width=fp+'%';
-  const zp=Math.round((S.zr1x/S.zTarget)*100);const zl=S.zTarget-S.zr1x;
-  document.getElementById('zs').textContent='$'+Math.round(S.zr1x).toLocaleString();
-  document.getElementById('zf').style.width=zp+'%';document.getElementById('zpct').textContent=zp+'% of $25,000';
-  const avgNetForVette = ((225000*0.03*0.7*0.7)-((225000*0.03*0.7*0.7)*0.2));
-  document.getElementById('znote').textContent=zl>0?`$${Math.round(zl).toLocaleString()} to go · ${Math.ceil(zl/avgNetForVette)} more closings (with 20% savings)`:'Goal reached — order that ZR1X.';
-  const rl=document.getElementById('rlist');
-  rl.innerHTML=S.referrals.length?S.referrals.slice(0,8).map((r,i)=>`<div class="ri"><div class="rk">${i+1}</div><div style="flex:1;"><div style="font-size:15px;">${r.name}</div><div style="font-size:12px;color:var(--tx2);">${r.deals.length} deal${r.deals.length!==1?'s':''} sent</div></div><div style="font-size:11px;color:var(--tx3);">${r.deals.length>=2?'☕ Buy coffee':''}</div></div>`).join(''):'<div style="padding:14px 16px;font-size:13px;color:var(--tx3);">Add your loan officers and inspectors</div>';
-  renderCharts();
+function togT(id){ let t=S.tasks.find(x=>x.id===id); t.d=!t.d; save(); }
+
+let cpmChart = null;
+function initCPMChart(){
+  let ctx = document.getElementById('cpmChart').getContext('2d');
+  if(cpmChart) cpmChart.destroy();
+  
+  let months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  let counts = Array(12).fill(0);
+  S.closings.forEach(c => { let m = new Date(c.date).getMonth(); counts[m]++; });
+  
+  cpmChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: months,
+      datasets: [{
+        label: 'Closings',
+        data: counts,
+        backgroundColor: '#1D9E75',
+        borderRadius: 5
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      scales: { y: { beginAtZero: true, grid: { display: false } }, x: { grid: { display: false } } },
+      plugins: { legend: { display: false } }
+    }
+  });
 }
-function renderCharts(){
-  const dark=S.dark;const tc=dark?'rgba(255,255,255,.5)':'rgba(60,60,67,.5)';const gc=dark?'rgba(255,255,255,.07)':'rgba(0,0,0,.05)';
-  const mNet=Array(12).fill(0);S.closings.forEach(c=>{if(c.month>=0&&c.month<12)mNet[c.month]+=c.net;});
-  const base=600*4;const cum=[];let sum=0;mNet.forEach(v=>{sum+=v+base;cum.push(Math.round(sum));});
-  const tgt=Array(12).fill(0).map((_,i)=>Math.round(TGT/12*(i+1)));
-  if(rChart){rChart.destroy();rChart=null;}
-  const rc=document.getElementById('rchart');
-  if(rc){rChart=new Chart(rc,{type:'line',data:{labels:MOS,datasets:[
-    {label:'Actual',data:cum,borderColor:'#1D9E75',backgroundColor:'rgba(29,158,117,.1)',tension:.4,pointRadius:3,fill:true},
-    {label:'Target',data:tgt,borderColor:'#BA7517',backgroundColor:'transparent',tension:0,pointRadius:0,borderDash:[5,4]},
-  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:tc,font:{size:10}},grid:{color:gc}},y:{ticks:{color:tc,font:{size:10},callback:v=>'$'+Math.round(v/1000)+'K'},grid:{color:gc}}}}});}
-  const leads=S.contacts.length;const active=S.contacts.filter(c=>['active','interested','dyess'].includes(c.status)).length;const closes=S.closings.length;
-  if(fChart){fChart.destroy();fChart=null;}
-  const fc=document.getElementById('fchart');
-  if(fc&&(leads+active+closes)>0){fChart=new Chart(fc,{type:'doughnut',data:{labels:['Leads','Active','Closings'],datasets:[{data:[Math.max(1,leads),Math.max(0,active),Math.max(0,closes)],backgroundColor:['#E6F1FB','#EAF3DE','#1D9E75'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'65%',plugins:{legend:{display:false}}}});
-  document.getElementById('fleg').innerHTML=`<div>🔵 <b>${leads}</b> total leads</div><div>🟢 <b>${active}</b> active</div><div>✅ <b>${closes}</b> closings</div>`;}
-}
-function logMile(){
-  const miles=parseFloat(document.getElementById('mmi').value)||0;if(miles<=0)return;
-  const now=new Date();
-  S.miles.unshift({id:Date.now(),miles,purpose:document.getElementById('mpur').value,note:document.getElementById('mno').value.trim(),date:now.toLocaleDateString(),month:now.getMonth(),year:now.getFullYear(),ded:+(miles*IRS).toFixed(2)});
-  document.getElementById('mmi').value='';document.getElementById('mno').value='';renderMiles();save();
-}
-function renderMiles(){
-  S.miles=S.miles||[];const now=new Date();
-  const tot=S.miles.reduce((a,m)=>a+m.miles,0);const mon=S.miles.filter(m=>m.month===now.getMonth()&&m.year===now.getFullYear()).reduce((a,m)=>a+m.miles,0);
-  document.getElementById('mit').textContent=Math.round(tot).toLocaleString();document.getElementById('mid').textContent='$'+Math.round(tot*IRS).toLocaleString();document.getElementById('mip').textContent=S.miles.length;document.getElementById('mim').textContent=Math.round(mon).toLocaleString();
-  const el=document.getElementById('mlist');
-  if(!S.miles.length){el.innerHTML='<div class="es">No trips logged yet</div>';return;}
-  el.innerHTML=S.miles.map((m,i)=>`<div class="mli"><div style="flex:1;min-width:0;"><div style="font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${m.purpose}</div><div style="font-size:11px;color:var(--tx3);margin-top:2px;">${m.date}${m.note?' · '+m.note:''}</div></div><div style="text-align:right;margin-left:10px;flex-shrink:0;"><div style="font-size:15px;font-weight:600;">${m.miles} mi</div><div style="font-size:11px;color:var(--g);">-$${m.ded}</div></div><button onclick="delM(${i})" style="margin-left:8px;width:26px;height:26px;border-radius:50%;border:none;background:var(--rl);color:var(--rd);font-size:13px;cursor:pointer;flex-shrink:0;">×</button></div>`).join('');
-}
-function delM(i){S.miles.splice(i,1);renderMiles();save();}
-function clearMiles(){if(confirm('Clear all mileage?')){S.miles=[];renderMiles();save();}}
-function exportMiles(){
-  const tot=S.miles.reduce((a,m)=>a+m.miles,0);
-  let csv='Date,Purpose,Miles,Deduction ($),Note\n';
-  S.miles.forEach(m=>{csv+=`${m.date},"${m.purpose}",${m.miles},${m.ded},"${m.note||''}"\n`;});
-  csv+=`\nTOTAL,,${tot.toFixed(1)},${(tot*IRS).toFixed(2)},\nIRS Rate,$${IRS}/mile,,,\n`;
-  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='Christian_Miles_2026.csv';a.click();
-}
-function exportBak(){
-  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(S,null,2)],{type:'application/json'}));a.download='AgentHQ_'+new Date().toISOString().slice(0,10)+'.json';a.click();
-}
-function importBak(inp){
-  const f=inp.files[0];if(!f)return;
-  const r=new FileReader();r.onload=e=>{try{Object.assign(S,JSON.parse(e.target.result));save();updateC();renderTasks();renderWeek();renderContacts();renderMiles();renderMoney();applyDark();alert('Backup restored!');}catch(e){alert('Invalid file.');}};r.readAsText(f);inp.value='';
-}
-load();applyDark();updateC();renderTasks();renderWeek();renderContacts();renderMiles();renderMoney();renderTaxBanner();showS('door',document.querySelector('.stab'));
+
+window.onload = () => { render(); if(S.dark) applyDark(); };
 </script>
 </body>
 </html>
