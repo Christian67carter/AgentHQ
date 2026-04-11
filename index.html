@@ -104,9 +104,28 @@ input::placeholder{color:var(--tx3);}
 .pn{font-size:14px;font-weight:600;color:var(--rd);}
 .pd{font-size:11px;color:var(--rd);}
 .savings-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px;}
+.sel-box{width:20px;height:20px;border-radius:50%;border:2px solid var(--tx3);flex-shrink:0;margin-right:4px;}
+.ci.selected .sel-box{background:var(--g);border-color:var(--g);}
+.ci.selected .sel-box::after{content:'';display:block;width:10px;height:6px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translate(3px, 2px);}
+#hustle-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:var(--bg);z-index:2000;display:none;padding:20px;}
+.h-card{background:var(--card);border-radius:20px;padding:30px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,0.1);margin-top:40px;}
 </style>
 </head>
 <body>
+<div id="hustle-overlay">
+  <div style="display:flex;justify-content:space-between;align-items:center;">
+    <div style="font-size:18px;font-weight:700;" id="h-count">Hustle 1/20</div>
+    <button class="btn bo bsm" onclick="stopHustle()">Quit</button>
+  </div>
+  <div class="h-card">
+    <div class="av" id="h-av" style="width:80px;height:80px;margin:0 auto 15px;font-size:28px;"></div>
+    <div style="font-size:24px;font-weight:700;" id="h-name">Name</div>
+    <div style="font-size:14px;color:var(--tx2);margin-top:5px;" id="h-note">Note</div>
+    <button class="btn" style="width:100%;margin-top:30px;height:60px;font-size:18px;" onclick="hustleSend()">Send Text 💬</button>
+    <button class="btn bo" style="width:100%;margin-top:10px;" onclick="nextHustle()">Skip / Next →</button>
+  </div>
+</div>
+
 <div class="ss"></div>
 <div class="hdr">
   <div class="hdr-l"><div class="t">Agent HQ</div><div class="s">Christian · Pro 20 Sprint</div></div>
@@ -126,41 +145,31 @@ input::placeholder{color:var(--tx3);}
   <div class="card"><div class="ch">Counters</div>
     <div class="row"><div class="rc"><div class="rt">Conversations</div><div class="rs">Every real talk about real estate</div></div><div class="stp"><button class="sbtn" onclick="adj('cv',-1)">−</button><span class="sv" id="s-cv">0</span><button class="sbtn" onclick="adj('cv',1)">+</button></div></div>
     <div class="dv"></div>
-    <div class="row"><div class="rc"><div class="rt">Doors knocked</div><div class="rs">Just Sold · Just Listed · near base</div></div><div class="stp"><button class="sbtn" onclick="adj('dr',-1)">−</button><span class="sv" id="s-dr">0</span><button class="sbtn" onclick="adj('dr',1)">+</button></div></div>
-    <div class="dv"></div>
-    <div class="row"><div class="rc"><div class="rt">CRM follow ups</div><div class="rs">Same-day response every time</div></div><div class="stp"><button class="sbtn" onclick="adj('fu',-1)">−</button><span class="sv" id="s-fu">0</span><button class="sbtn" onclick="adj('fu',1)">+</button></div></div>
+    <div class="row"><div class="rc"><div class="rt">Doors knocked</div><div class="rs">Near base</div></div><div class="stp"><button class="sbtn" onclick="adj('dr',-1)">−</button><span class="sv" id="s-dr">0</span><button class="sbtn" onclick="adj('dr',1)">+</button></div></div>
   </div>
   <div class="card"><div class="ch">Non-negotiables</div><div id="tlist"></div></div>
   <div class="card"><div class="ch">Activity calendar — <span id="cal-month"></span></div><div class="cal-grid" id="cal-names"></div><div class="cal-grid" id="cal-days" style="padding-top:0;"></div></div>
 </div>
 
 <div id="scn-circle" class="scn">
-  <div style="font-size:20px;font-weight:700;letter-spacing:-.3px;margin-bottom:12px;">Warm circle</div>
-  <div id="stale-alerts"></div>
-  <div class="card" style="margin-bottom:10px;"><div class="ch">Import from iPhone</div>
-    <div class="cb">
-      <p style="font-size:13px;color:var(--tx2);margin-bottom:10px;">iPhone Contacts → select → Share → Export vCard (.vcf) → import here.</p>
-      <label style="display:block;background:var(--inp);border-radius:12px;padding:14px;text-align:center;cursor:pointer;border:1.5px dashed var(--tx3);" for="vcf">
-        <div style="font-size:15px;font-weight:600;margin-bottom:3px;">Import .vcf file</div>
-        <div style="font-size:13px;color:var(--tx2);">Tap to select exported contacts</div>
-      </label>
-      <input type="file" id="vcf" accept=".vcf" style="display:none;height:auto;border-radius:0;background:transparent;padding:0;" onchange="importVCF(this)">
-    </div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+    <div style="font-size:20px;font-weight:700;letter-spacing:-.3px;">Warm circle</div>
+    <button id="h-btn" class="btn" style="background:var(--gd);display:none;" onclick="launchHustle()">Start Hustle Queue</button>
   </div>
-  <div class="card" style="margin-bottom:8px;"><div class="ch">Add manually</div>
+  <div id="stale-alerts"></div>
+  <div class="card" style="margin-bottom:10px;"><div class="ch">Add Lead</div>
     <div class="ir" style="padding-top:10px;gap:8px;">
       <input type="text" id="cn" placeholder="Full name" style="flex:1;min-width:110px;">
       <input type="text" id="cp" placeholder="Phone" style="flex:1;min-width:90px;">
     </div>
     <div class="ir" style="padding-top:0;gap:8px;">
-      <input type="text" id="cnot" placeholder="Quick note (e.g., Met at HSU, PCSing in July)" style="flex:1;">
+      <input type="text" id="cnot" placeholder="Quick note (e.g., Met at HSU)" style="flex:1;">
     </div>
     <div class="ir" style="padding-top:0;gap:8px;">
       <select id="cs" style="flex:1;">
-        <option value="not-contacted">Not contacted</option>
+        <option value="not-contacted">New Lead</option>
         <option value="contacted">Contacted</option>
         <option value="interested">Interested</option>
-        <option value="referral">Gave referral</option>
         <option value="military">Military / PCS</option>
       </select>
       <button class="btn" onclick="addContact()">Add</button>
@@ -168,11 +177,8 @@ input::placeholder{color:var(--tx3);}
   </div>
   <div class="fst">
     <button class="fc on" onclick="setFilter('all',this)">All</button>
-    <button class="fc" onclick="setFilter('not-contacted',this)">Not contacted</button>
-    <button class="fc" onclick="setFilter('contacted',this)">Contacted</button>
-    <button class="fc" onclick="setFilter('interested',this)">Interested</button>
+    <button class="fc" onclick="setFilter('not-contacted',this)">New</button>
     <button class="fc" onclick="setFilter('military',this)">Military</button>
-    <button class="fc" onclick="setFilter('referral',this)">Referral</button>
   </div>
   <div class="card"><div id="clist"><div class="es">No contacts yet</div></div></div>
 </div>
@@ -182,9 +188,7 @@ input::placeholder{color:var(--tx3);}
   <div class="stabs">
     <button class="stab on" onclick="showS('door',this)">Door knocking</button>
     <button class="stab" onclick="showS('military',this)">Military</button>
-    <button class="stab" onclick="showS('open',this)">Open house</button>
     <button class="stab" onclick="showS('warm',this)">Warm circle</button>
-    <button class="stab" onclick="showS('obj',this)">Objections</button>
   </div>
   <div id="scontent"></div>
 </div>
@@ -198,91 +202,41 @@ input::placeholder{color:var(--tx3);}
     <div class="m"><div class="mv a" id="mt">$0</div><div class="ml">Tax vault</div></div>
     <div class="m"><div class="mv g" id="mz">$0</div><div class="ml">ZR1X fund</div></div>
     <div class="m"><div class="mv b" id="msav">$0</div><div class="ml">Savings</div></div>
-    <div class="m"><div class="mv" id="mn">20</div><div class="ml">Closes left</div></div>
+    <div class="m"><div class="mv" id="mn">20</div><div class="ml">Goal Left</div></div>
   </div>
-  <div class="card"><div class="ch">Cumulative Revenue vs Target</div><div class="cw"><canvas id="rchart" role="img" aria-label="Revenue vs target">Chart</canvas></div></div>
-  <div class="card"><div class="ch">Pipeline funnel</div>
-    <div style="display:flex;align-items:center;gap:12px;padding:12px 16px 16px;">
-      <div style="width:110px;height:110px;flex-shrink:0;"><canvas id="fchart" role="img" aria-label="Pipeline funnel">Funnel</canvas></div>
-      <div id="fleg" style="flex:1;font-size:12px;color:var(--tx2);line-height:2;"></div>
-    </div>
-  </div>
-  <div class="card"><div class="ch">Log a closing</div>
-    <div class="ir" style="padding-top:10px;flex-wrap:wrap;gap:8px;">
-      <input type="text" id="cln" placeholder="Client name" style="flex:1;min-width:110px;">
-      <input type="text" id="cla" placeholder="Property address" style="flex:1;min-width:140px;">
-      <input type="number" id="clp" placeholder="Sale price ($)" style="flex:1;min-width:110px;">
-      <input type="number" id="clr" placeholder="Referral fee paid ($)" style="flex:1;min-width:110px;">
+  <div class="card"><div class="ch">Revenue vs Target ($69K)</div><div class="cw"><canvas id="rchart" role="img">Chart</canvas></div></div>
+  <div class="card"><div class="ch">Log Closing</div>
+    <div class="ir" style="padding-top:10px;gap:8px;">
+      <input type="text" id="cln" placeholder="Client name" style="flex:1;">
+      <input type="number" id="clp" placeholder="Sale price ($)" style="flex:1;">
       <button class="btn" onclick="logClose()">Log</button>
     </div>
-    <p style="font-size:11px;color:var(--tx3);padding:0 16px 10px;">Net auto-splits: 50% → ZR1X fund · 20% → savings · 30% → tax vault</p>
-    <div id="clist2"></div>
-  </div>
-  <div class="card"><div class="ch">Debt payoff tracker</div><div class="cb">
-    <div class="dbk">
-      <div class="dbr"><span class="dbn">Sallie Mae — 10.25%</span><span id="ds" style="color:var(--rd);">$24,225 left</span></div>
-      <div class="pb" style="height:8px;"><div class="pf" id="dps" style="width:0%;background:var(--rd);"></div></div>
-      <div style="display:flex;gap:8px;margin-top:10px;"><input type="number" id="ps" placeholder="Payment ($)" style="flex:1;"><button class="btn bsm" onclick="pay('s')">Apply</button></div>
-    </div>
-    <div class="dbk">
-      <div class="dbr"><span class="dbn">Federal loans — 6.5%</span><span id="df2" style="color:var(--am);">$5,500 left</span></div>
-      <div class="pb" style="height:8px;"><div class="pf" id="dpf" style="width:0%;background:var(--am);"></div></div>
-      <div style="display:flex;gap:8px;margin-top:10px;"><input type="number" id="pf3" placeholder="Payment ($)" style="flex:1;"><button class="btn bsm" onclick="pay('f')">Apply</button></div>
-    </div>
-  </div></div>
-  <div class="card"><div class="cb">
-    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;">
-      <span style="font-size:16px;font-weight:700;">ZR1X Fund</span>
-      <span style="font-size:22px;font-weight:700;color:var(--g);" id="zs">$0</span>
-    </div>
-    <div class="zp"><div class="zf" id="zf" style="width:0%;"></div></div>
-    <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--tx3);margin-bottom:12px;"><span>$0</span><span id="zpct">0%</span><span>$25,000</span></div>
-    <div style="display:flex;gap:8px;"><input type="number" id="za" placeholder="Add to fund ($)" style="flex:1;"><button class="btn" onclick="addZ()">Stack it</button></div>
-  </div></div>
-  <div style="display:flex;gap:8px;margin-top:4px;">
-    <button class="btn bo" style="flex:1;font-size:13px;" onclick="exportBak()">Export backup</button>
-    <label class="btn bbl" style="flex:1;font-size:13px;display:flex;align-items:center;justify-content:center;cursor:pointer;" for="ibak">Import backup</label>
-    <input type="file" id="ibak" accept=".json" style="display:none;" onchange="importBak(this)">
   </div>
 </div>
 
 <div id="scn-miles" class="scn">
   <div style="font-size:20px;font-weight:700;letter-spacing:-.3px;margin-bottom:12px;">Mileage log</div>
   <div class="mg">
-    <div class="m"><div class="mv g" id="mit">0</div><div class="ml">Total miles</div><div class="ms">2026 business</div></div>
-    <div class="m"><div class="mv g" id="mid">$0</div><div class="ml">Tax deduction</div><div class="ms">$0.70/mile IRS 2026</div></div>
-    <div class="m"><div class="mv" id="mip">0</div><div class="ml">Total trips</div></div>
-    <div class="m"><div class="mv a" id="mim">0</div><div class="ml">This month</div></div>
+    <div class="m"><div class="mv g" id="mit">0</div><div class="ml">Total miles</div></div>
+    <div class="m"><div class="mv g" id="mid">$0</div><div class="ml">Tax deduction</div></div>
   </div>
-  <div class="card"><div class="ch">Log a trip</div>
-    <div class="ir" style="padding-top:10px;flex-direction:column;gap:8px;">
-      <select id="mpur">
-        <option>Door knocking — near base</option><option>Showing homes</option><option>Open house</option>
-        <option>Listing appointment</option><option>Buyer consultation</option><option>Housing office visit</option>
-        <option>Referral partner meeting</option><option>Closing / title company</option><option>Inspection</option><option>Other business drive</option>
-      </select>
-      <div style="display:flex;gap:8px;">
-        <input type="number" id="mmi" placeholder="Miles driven" style="flex:1;" step="0.1">
-        <input type="text" id="mno" placeholder="Note (optional)" style="flex:1.5;">
-        <button class="btn" onclick="logMile()">Log</button>
-      </div>
+  <div class="card"><div class="ch">Log Trip</div>
+    <div class="ir" style="padding-top:10px;gap:8px;">
+      <input type="number" id="mmi" placeholder="Miles driven" style="flex:1;">
+      <button class="btn" onclick="logMile()">Log</button>
     </div>
   </div>
   <div class="card"><div id="mlist"></div></div>
-  <div style="display:flex;gap:8px;margin-top:4px;">
-    <button class="btn bo" style="flex:1;font-size:13px;" onclick="exportMiles()">Export for CPA</button>
-    <button class="btn br2" style="flex:1;font-size:13px;" onclick="clearMiles()">Clear all</button>
-  </div>
 </div>
 
 </div>
 
 <div class="tbar">
-  <div class="tab on" id="tab-daily" onclick="showScn('daily',this)"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="4" x2="9" y2="9"/><line x1="15" y1="4" x2="15" y2="9"/></svg><span class="tl">Daily</span></div>
+  <div class="tab on" id="tab-daily" onclick="showScn('daily',this)"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/></svg><span class="tl">Daily</span></div>
   <div class="tab" id="tab-circle" onclick="showScn('circle',this)"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg><span class="tl">Circle</span></div>
-  <div class="tab" id="tab-scripts" onclick="showScn('scripts',this)"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span class="tl">Scripts</span></div>
+  <div class="tab" id="tab-scripts" onclick="showScn('scripts',this)"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2z"/></svg><span class="tl">Scripts</span></div>
   <div class="tab" id="tab-money" onclick="showScn('money',this)"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><span class="tl">Money</span></div>
-  <div class="tab" id="tab-miles" onclick="showScn('miles',this)"><svg viewBox="0 0 24 24"><rect x="1" y="10" width="22" height="8" rx="2"/><path d="M5 10V7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v3"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg><span class="tl">Miles</span></div>
+  <div class="tab" id="tab-miles" onclick="showScn('miles',this)"><svg viewBox="0 0 24 24"><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/><path d="M5 10V7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v3"/></svg><span class="tl">Miles</span></div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
@@ -290,32 +244,21 @@ input::placeholder{color:var(--tx3);}
 <script>
 const IRS=.70,NPC=3308;
 const MOS=['Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-const GAMEPLAN_TARGETS = [0, 3308, 9924, 19848, 29772, 39696, 49620, 59544, 69852];
-let rChart=null,fChart=null;
+const TARGETS=[0, 3308, 9924, 19848, 29772, 39696, 49620, 59544, 69852];
+let rChart=null, selectedContacts=[], hIdx=0;
 
 const S={
-  dark:false,cv:0,dr:0,fu:0,streak:0,
-  history:{},
-  tasks:[
-    {id:'t1',t:'20 conversations logged today',d:false},
-    {id:'t2',t:'1 hour door knocking',d:false},
-    {id:'t3',t:'All CRM follow ups done',d:false},
-    {id:'t4',t:'30% of commission to tax vault',d:false},
-    {id:'t5',t:'Open house this weekend scheduled',d:false},
-    {id:'t6',t:'1 referral partner touched',d:false},
-    {id:'t7',t:'1 military community touchpoint',d:false},
-  ],
-  contacts:[],cf:'all',
-  closings:[],referrals:[],
-  sallie:24225,sO:24225,federal:5500,fO:5500,
-  zr1x:0,savings:0,zTarget:25000,
-  miles:[]
+  dark:false,cv:0,dr:0,streak:0,history:{},
+  tasks:[{id:'t1',t:'20 conversations',d:false},{id:'t2',t:'1hr door knocking',d:false},{id:'t3',t:'Follow up CRM',d:false}],
+  contacts:[],closings:[],miles:[],
+  sallie:24225,federal:5500,zr1x:0,savings:0
 };
 
-function save(){try{localStorage.setItem('ahq6',JSON.stringify(S));}catch(e){}}
-function load(){try{const d=JSON.parse(localStorage.getItem('ahq6')||'{}');Object.assign(S,d);['miles','referrals','contacts','tasks'].forEach(k=>{if(!S[k])S[k]=[];});}catch(e){}}
+function save(){localStorage.setItem('ahq_final',JSON.stringify(S));}
+function load(){const d=JSON.parse(localStorage.getItem('ahq_final')||'{}');Object.assign(S,d);updateC();}
+
 function toggleDark(){S.dark=!S.dark;applyDark();save();}
-function applyDark(){document.documentElement.toggleAttribute('data-dark',S.dark);document.getElementById('dbtn').textContent=S.dark?'☀️':'🌙';if(rChart||fChart)setTimeout(renderMoney,60);}
+function applyDark(){document.documentElement.toggleAttribute('data-dark',S.dark);if(rChart)renderCharts();}
 
 function showScn(id,el){
   document.querySelectorAll('.scn').forEach(s=>s.classList.remove('on'));
@@ -323,15 +266,12 @@ function showScn(id,el){
   document.getElementById('scn-'+id).classList.add('on');
   (el||document.getElementById('tab-'+id)).classList.add('on');
   if(id==='money')renderMoney();
-  if(id==='circle'){renderContacts();renderStale();}
-  if(id==='miles')renderMiles();
-  if(id==='daily'){renderTaxBanner();renderCal();}
+  if(id==='circle')renderContacts();
 }
 
 function adj(k,d){
   S[k]=Math.max(0,S[k]+d);
-  const today=new Date().toISOString().split('T')[0];
-  S.history[today]=S.cv;
+  S.history[new Date().toISOString().split('T')[0]]=S.cv;
   updateC();save();
 }
 
@@ -339,111 +279,98 @@ function updateC(){
   document.getElementById('m-cv').textContent=S.cv;
   document.getElementById('s-cv').textContent=S.cv;
   document.getElementById('s-dr').textContent=S.dr;
-  document.getElementById('s-fu').textContent=S.fu;
   document.getElementById('m-dr').textContent=S.dr;
-  document.getElementById('m-st').textContent=S.streak;
   document.getElementById('p-cv').style.width=Math.min(100,(S.cv/20)*100)+'%';
-  document.getElementById('p-dr').style.width=Math.min(100,(S.dr/20)*100)+'%';
-  const totalDebt=S.sallie+S.federal+63707;
-  document.getElementById('m-debt').textContent='$'+Math.round(totalDebt).toLocaleString();
+  document.getElementById('m-debt').textContent='$'+Math.round(S.sallie+S.federal+63707).toLocaleString();
+  renderTasks();
 }
 
 function renderTasks(){
   document.getElementById('tlist').innerHTML=S.tasks.map(t=>`
-    <div class="row" onclick="togTask('${t.id}')">
-      <div class="cb2 ${t.d?'ck':''}"></div>
-      <div class="rc"><div class="rt ${t.d?'dn':''}">${t.t}</div></div>
+    <div class="row" onclick="togT('${t.id}')">
+      <div class="cb2 ${t.d?'ck':''}"></div><div class="rt ${t.d?'dn':''}">${t.t}</div>
     </div>`).join('');
 }
-
-function togTask(id){const t=S.tasks.find(x=>x.id===id);if(t){t.d=!t.d;renderTasks();save();}}
-
-function renderCal(){
-  const now=new Date();
-  document.getElementById('cal-month').textContent=new Date(now.getFullYear(), now.getMonth(), 1).toLocaleString('default', { month: 'short' })+' '+now.getFullYear();
-  const dayNames=['Su','Mo','Tu','We','Th','Fr','Sa'];
-  document.getElementById('cal-names').innerHTML=dayNames.map(d=>`<div class="cal-day-name">${d}</div>`).join('');
-  const first=new Date(now.getFullYear(),now.getMonth(),1).getDay();
-  const days=new Date(now.getFullYear(),now.getMonth()+1,0).getDate();
-  let html='';
-  for(let i=0;i<first;i++)html+='<div></div>';
-  for(let d=1;d<=days;d++){
-    const dt=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const hit=(S.history[dt]||0)>=20;
-    html+=`<div class="cal-d ${d===now.getDate()?'today':''} ${hit?'hit':''}">${d}</div>`;
-  }
-  document.getElementById('cal-days').innerHTML=html;
-}
-
-function renderTaxBanner(){
-  const tax=S.closings.reduce((a,c)=>a+c.tax,0);
-  const el=document.getElementById('tax-banner');
-  if(!el||!tax){if(el)el.innerHTML='';return;}
-  const deadline=new Date(2027,3,15);
-  const days=Math.ceil((deadline-new Date())/864e5);
-  el.innerHTML=`<div class="ta"><div class="ta-t">Tax deadline: Apr 15, 2027 — ${days} days left</div><div class="ta-b">$${Math.round(tax).toLocaleString()} in your tax vault. Do not touch.</div></div>`;
-}
+function togT(id){const t=S.tasks.find(x=>x.id===id);t.d=!t.d;renderTasks();save();}
 
 function addContact(){
-  const name=document.getElementById('cn').value.trim();
-  const phone=document.getElementById('cp').value.trim();
-  const note=document.getElementById('cnot').value.trim();
-  const status=document.getElementById('cs').value;
-  if(!name)return;
-  S.contacts.unshift({id:Date.now(),name,phone,note,status,lt:Date.now(),date:new Date().toLocaleDateString()});
+  const n=document.getElementById('cn').value, p=document.getElementById('cp').value, nt=document.getElementById('cnot').value, st=document.getElementById('cs').value;
+  if(!n)return;
+  S.contacts.unshift({id:Date.now(),name:n,phone:p,note:nt,status:st,lt:Date.now()});
   document.getElementById('cn').value='';document.getElementById('cp').value='';document.getElementById('cnot').value='';
   renderContacts();save();
 }
 
 function renderContacts(){
-  const fl=S.cf==='all'?S.contacts:S.contacts.filter(c=>c.status===S.cf);
   const el=document.getElementById('clist');
-  if(!fl.length){el.innerHTML='<div class="es">No contacts yet</div>';return;}
-  el.innerHTML=fl.map(c=>{
-    const ci=S.contacts.indexOf(c); const ai=ci%AVB.length;
-    const stale=(Date.now()-c.lt)/36e5>48 && c.status==='not-contacted';
-    const[bg,dk,lbl]=SC[c.status]||['#F2F2F7','#6C6C70','Unknown'];
-    return`<div class="ci ${stale?'stale':''}">
-      <div class="av" style="background:${AVB[ai]};color:${AVT[ai]};">${ini(c.name)}</div>
-      <div style="flex:1;min-width:0;">
-        <div style="font-size:15px;">${c.name}${stale?' 🔴':''}</div>
-        <div style="font-size:12px;color:var(--tx2);margin-top:2px;"><span style="background:${bg};color:${dk};padding:1px 7px;border-radius:6px;font-size:11px;font-weight:600;">${lbl}</span> ${c.phone}</div>
-        ${c.note?`<div style="font-size:11px;color:var(--tx3);margin-top:3px;">📝 ${c.note}</div>`:''}
+  el.innerHTML=S.contacts.map((c,i)=>`
+    <div class="ci ${selectedContacts.includes(c.id)?'selected':''}" onclick="togSel(${c.id})">
+      <div class="sel-box"></div>
+      <div class="av" style="background:var(--gl);color:var(--gd);">${c.name[0]}</div>
+      <div class="rc">
+        <div style="font-weight:600;">${c.name}</div>
+        <div style="font-size:12px;color:var(--tx2);">${c.status} · ${c.phone}</div>
+        ${c.note?`<div style="font-size:11px;color:var(--tx3);">📝 ${c.note}</div>`:''}
       </div>
-      <div class="cas">
-        <a href="tel:${c.phone.replace(/\D/g,'')}" class="ab" style="background:var(--gl);text-decoration:none;">📞</a>
-        <button class="ab" style="background:var(--rl);color:var(--rd);" onclick="remC(${ci})">×</button>
-      </div>
-    </div>`;
-  }).join('');
+    </div>`).join('');
+  document.getElementById('h-btn').style.display=selectedContacts.length?'block':'none';
 }
 
-function setFilter(f,el){S.cf=f;document.querySelectorAll('.fc').forEach(c=>c.classList.remove('on'));el.classList.add('on');renderContacts();}
-function ini(n){return n.split(' ').map(w=>w[0]||'').join('').slice(0,2).toUpperCase();}
-function remC(i){if(confirm('Remove?')){S.contacts.splice(i,1);renderContacts();save();}}
+function togSel(id){
+  if(selectedContacts.includes(id)) selectedContacts=selectedContacts.filter(x=>x!==id);
+  else selectedContacts.push(id);
+  renderContacts();
+}
+
+function launchHustle(){
+  hIdx=0;
+  showHustle();
+  document.getElementById('hustle-overlay').style.display='block';
+}
+
+function showHustle(){
+  const c=S.contacts.find(x=>x.id===selectedContacts[hIdx]);
+  document.getElementById('h-count').textContent=`Hustle ${hIdx+1}/${selectedContacts.length}`;
+  document.getElementById('h-name').textContent=c.name;
+  document.getElementById('h-note').textContent=c.note||'No notes';
+  document.getElementById('h-av').textContent=c.name[0];
+  document.getElementById('h-av').style.background='var(--gl)';
+}
+
+function hustleSend(){
+  const c=S.contacts.find(x=>x.id===selectedContacts[hIdx]);
+  const msg="Hey! Checking in — have you heard of anyone thinking about buying or selling? Would love any introductions if you think of someone!";
+  window.location.href=`sms:${c.phone.replace(/\D/g,'')}&body=${encodeURIComponent(msg)}`;
+  adj('cv',1);
+}
+
+function nextHustle(){
+  hIdx++;
+  if(hIdx >= selectedContacts.length) stopHustle();
+  else showHustle();
+}
+
+function stopHustle(){
+  document.getElementById('hustle-overlay').style.display='none';
+  selectedContacts=[];
+  renderContacts();
+}
 
 function logClose(){
-  const name=document.getElementById('cln').value.trim(), addr=document.getElementById('cla').value.trim(), price=parseFloat(document.getElementById('clp').value)||225000, ref=parseFloat(document.getElementById('clr').value)||0;
-  if(!name)return;
-  const gross=price*.03, afterSplit=gross*.70, net=Math.max(0,(afterSplit*.70)-ref), tax=afterSplit*.30;
-  S.zr1x=Math.min(25000,S.zr1x+(net*.50)); S.savings+=(net*.20);
-  S.closings.unshift({name,addr,price,net,tax,ref,date:new Date().toLocaleDateString(),month:new Date().getMonth()});
-  document.getElementById('cln').value='';document.getElementById('cla').value='';document.getElementById('clp').value='';document.getElementById('clr').value='';
+  const p=parseFloat(document.getElementById('clp').value)||0;
+  if(p<=0)return;
+  const net=(p*.03)*.70*.70;
+  S.closings.push({net,date:new Date().toISOString()});
+  S.zr1x+=net*.5; S.savings+=net*.2;
   renderMoney();save();
 }
 
 function renderMoney(){
-  const tn=S.closings.reduce((a,c)=>a+c.net,0), tt=S.closings.reduce((a,c)=>a+c.tax,0);
+  const net=S.closings.reduce((a,c)=>a+c.net,0);
+  document.getElementById('me').textContent='$'+Math.round(net).toLocaleString();
   document.getElementById('mc').textContent=S.closings.length;
-  document.getElementById('me').textContent='$'+Math.round(tn).toLocaleString();
-  document.getElementById('mt').textContent='$'+Math.round(tt).toLocaleString();
   document.getElementById('mz').textContent='$'+Math.round(S.zr1x).toLocaleString();
   document.getElementById('msav').textContent='$'+Math.round(S.savings).toLocaleString();
-  document.getElementById('mn').textContent=Math.max(0,20-S.closings.length);
-  document.getElementById('ds').textContent='$'+Math.round(S.sallie).toLocaleString()+' left';
-  document.getElementById('df2').textContent='$'+Math.round(S.federal).toLocaleString()+' left';
-  document.getElementById('zs').textContent='$'+Math.round(S.zr1x).toLocaleString();
-  document.getElementById('zf').style.width=Math.min(100,(S.zr1x/25000)*100)+'%';
   renderCharts();
 }
 
@@ -456,42 +383,22 @@ function renderCharts(){
   });
   const cum=[]; let sum=0; mNet.forEach(v=>{sum+=v;cum.push(Math.round(sum));});
   if(rChart)rChart.destroy();
-  const rc=document.getElementById('rchart');
-  if(rc)rChart=new Chart(rc,{type:'line',data:{labels:MOS,datasets:[
+  rChart=new Chart(document.getElementById('rchart'),{type:'line',data:{labels:MOS,datasets:[
     {label:'Actual',data:cum,borderColor:'#1D9E75',fill:true,backgroundColor:'rgba(29,158,117,.1)'},
-    {label:'Target',data:GAMEPLAN_TARGETS,borderColor:'#BA7517',borderDash:[5,4],pointRadius:0}
+    {label:'Target',data:TARGETS,borderColor:'#BA7517',borderDash:[5,4]}
   ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}}});
-  
-  const leads=S.contacts.length, active=S.contacts.filter(c=>['interested','military'].includes(c.status)).length, closes=S.closings.length;
-  if(fChart)fChart.destroy();
-  const fc=document.getElementById('fchart');
-  if(fc)fChart=new Chart(fc,{type:'doughnut',data:{labels:['Leads','Active','Closings'],datasets:[{data:[Math.max(1,leads),active,closes],backgroundColor:['#E6F1FB','#EAF3DE','#1D9E75']}]},options:{responsive:true,maintainAspectRatio:false,cutout:'65%',plugins:{legend:{display:false}}}});
-  document.getElementById('fleg').innerHTML=`<div>🔵 <b>${leads}</b> leads</div><div>🟢 <b>${active}</b> active</div><div>✅ <b>${closes}</b> closes</div>`;
-}
-
-function pay(t){
-  const v=parseFloat(document.getElementById(t==='s'?'ps':'pf3').value)||0;
-  if(t==='s')S.sallie=Math.max(0,S.sallie-v);else S.federal=Math.max(0,S.federal-v);
-  document.getElementById(t==='s'?'ps':'pf3').value='';renderMoney();save();
 }
 
 function logMile(){
-  const miles=parseFloat(document.getElementById('mmi').value)||0;if(miles<=0)return;
-  S.miles.unshift({miles,purpose:document.getElementById('mpur').value,note:document.getElementById('mno').value,date:new Date().toLocaleDateString(),ded:+(miles*IRS).toFixed(2)});
-  document.getElementById('mmi').value='';renderMiles();save();
+  const m=parseFloat(document.getElementById('mmi').value)||0;
+  S.miles.push({m,date:new Date().toLocaleDateString()});
+  renderMiles();save();
 }
-
 function renderMiles(){
-  const tot=S.miles.reduce((a,m)=>a+m.miles,0);
-  document.getElementById('mit').textContent=Math.round(tot).toLocaleString();
-  document.getElementById('mid').textContent='$'+Math.round(tot*IRS).toLocaleString();
-  document.getElementById('mip').textContent=S.miles.length;
-  document.getElementById('mlist').innerHTML=S.miles.slice(0,10).map(m=>`<div class="mli"><div>${m.purpose}<br><small>${m.date}</small></div><b>${m.miles} mi</b></div>`).join('');
-}
-
-function showS(k,el){
-  document.querySelectorAll('.stab').forEach(t=>t.classList.remove('on')); el.classList.add('on');
-  document.getElementById('scontent').innerHTML=(scripts[k]||[]).map(s=>`<div class="scard"><div class="sst">${s.s}</div><div class="stxt">${s.t}</div><div class="stip">→ ${s.tip}</div></div>`).join('');
+  const tot=S.miles.reduce((a,m)=>a+m.m,0);
+  document.getElementById('mit').textContent=Math.round(tot);
+  document.getElementById('mid').textContent='$'+Math.round(tot*IRS);
+  document.getElementById('mlist').innerHTML=S.miles.slice(-5).map(m=>`<div class="mli">${m.date}<span>${m.m} mi</span></div>`).join('');
 }
 
 function renderQuote(){
@@ -501,7 +408,16 @@ function renderQuote(){
   }
 }
 
-window.onload=()=>{load();applyDark();updateC();renderTasks();renderCal();renderContacts();renderMiles();renderMoney();renderTaxBanner();showS('door',document.querySelector('.stab'));renderQuote();};
+function showS(k,el){
+  document.querySelectorAll('.stab').forEach(t=>t.classList.remove('on')); el.classList.add('on');
+  const scripts={
+    door:[{s:'Approach',t:'"Hey! I helped a neighbor close on [Street] and wanted to see if you had questions about the market."'}],
+    warm:[{s:'Follow up',t:'"Hey [Name], just checking in! Do you know anyone thinking about buying or selling?"'}]
+  };
+  document.getElementById('scontent').innerHTML=(scripts[k]||[]).map(s=>`<div class="scard"><b>${s.s}</b><p>${s.t}</p></div>`).join('');
+}
+
+window.onload=()=>{load();applyDark();renderQuote();renderCharts();showS('door',document.querySelector('.stab'));};
 </script>
 </body>
 </html>
