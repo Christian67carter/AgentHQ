@@ -6,13 +6,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Agent HQ">
-<title>Agent HQ | Christian Carter</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
-
+<title>Agent HQ</title>
 <style>
 :root{
-  /* LUXURY PALETTE */
   --g:#1A2744;--gl:#F5EDD6;--gd:#0F1A2E;
   --am:#C9A84C;--al:#F5EDD6;
   --bl:#1A2744;--bll:#EEE8D6;
@@ -22,9 +18,6 @@
   --br:rgba(60,60,67,.12);--inp:#F2F2F7;
   --ios-red:#FF3B30; --ios-blue:#007AFF; --ios-green:#34C759;
   --st:env(safe-area-inset-top,44px);--th:83px;
-  
-  --font-serif: 'Playfair Display', serif;
-  --font-sans: 'Inter', -apple-system, sans-serif;
 }
 [data-dark]{
   --bg:#000000;--card:#1C1C1E;--tx:#FFFFFF;--tx2:#8E8E93;--tx3:#48484A;
@@ -32,45 +25,33 @@
   --ios-red:#FF453A; --ios-blue:#0A84FF; --ios-green:#30D158;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0;}
-html,body{height:100%;overflow:hidden;background:var(--bg);font-family:var(--font-sans);color:var(--tx);-webkit-font-smoothing:antialiased;}
+html,body{height:100%;overflow:hidden;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--tx);-webkit-font-smoothing:antialiased;}
 body{display:flex;flex-direction:column;}
-
-/* HEADER & NAVIGATION */
 .ss{height:var(--st);background:var(--card);flex-shrink:0;}
 .hdr{background:var(--card);padding:8px 16px 10px;border-bottom:.5px solid var(--br);flex-shrink:0;display:flex;justify-content:space-between;align-items:flex-end;}
-.hdr-l .t{font-family:var(--font-serif); font-size:26px;font-weight:700;letter-spacing:-.5px; color:var(--g);}
-.hdr-l .s{font-size:12px;color:var(--tx2);margin-top:1px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;}
+.hdr-l .t{font-size:26px;font-weight:700;letter-spacing:-.5px;}
+.hdr-l .s{font-size:12px;color:var(--tx2);margin-top:1px;}
 .hdr-r{display:flex;gap:8px;align-items:center;}
 .dbtn{width:36px;height:36px;border-radius:50%;border:none;background:var(--inp);cursor:pointer;font-size:17px;}
 .bdg{background:var(--g);color:#fff;font-size:11px;font-weight:600;padding:4px 10px;border-radius:12px;}
-
 .scrl{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 14px calc(var(--th) + env(safe-area-inset-bottom) + 60px);}
 .tbar{position:fixed;bottom:0;left:0;right:0;height:var(--th);background:var(--card);border-top:.5px solid var(--br);display:flex;align-items:flex-start;padding-top:10px;z-index:100;justify-content:space-around;padding-left:10px;padding-right:10px;}
 .tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:0 2px;}
 .tab svg{width:22px;height:22px;stroke:var(--tx2);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
 .tab .tl{font-size:9px;font-weight:500;color:var(--tx3);}
-.tab.on svg{stroke:var(--g);} .tab.on .tl{color:var(--g);}
-
-/* CARDS & UI ELEMENTS */
+.tab.on svg{stroke:var(--ios-blue);} .tab.on .tl{color:var(--ios-blue);}
 .scn{display:none;} .scn.on{display:block;animation:su .18s ease;}
 @keyframes su{from{transform:translateY(14px);opacity:0;}to{transform:translateY(0);opacity:1;}}
-.card{background:var(--card);border-radius:16px;margin-bottom:12px;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,0.02); border: 1px solid var(--br);}
-.ch{padding:12px 16px 0;font-size:11px;font-weight:700;color:var(--am);text-transform:uppercase;letter-spacing:.1em;}
+.card{background:var(--card);border-radius:16px;margin-bottom:12px;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,0.02);}
+.ch{padding:12px 16px 0;font-size:12px;font-weight:600;color:var(--tx2);text-transform:uppercase;letter-spacing:.06em;}
 .cb{padding:12px 16px 16px;}
 .dv{height:.5px;background:var(--br);margin:0 16px;}
 .mg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
-.m{background:var(--card);border-radius:14px;padding:12px;box-shadow:0 1px 2px rgba(0,0,0,0.02); border: 1px solid var(--br);}
-.mv{font-family:var(--font-serif); font-size:26px;font-weight:700;letter-spacing:-.8px;line-height:1;}
+.m{background:var(--card);border-radius:14px;padding:12px;box-shadow:0 1px 2px rgba(0,0,0,0.02);}
+.mv{font-size:26px;font-weight:700;letter-spacing:-.8px;line-height:1;}
 .mv.g{color:var(--g);} .mv.a{color:var(--am);} .mv.b{color:var(--bl);} .mv.r{color:var(--rd);}
-.ml{font-size:11px;color:var(--tx2);margin-top:4px;font-weight:600; text-transform: uppercase;}
+.ml{font-size:11px;color:var(--tx2);margin-top:4px;font-weight:500;}
 .ms{font-size:10px;color:var(--tx3);margin-top:2px;}
-
-/* INTEL BOX */
-.intel-box {
-  background: var(--bg); padding: 12px; border-radius: 10px; margin-top: 10px; font-size: 13px; color: var(--tx2); line-height: 1.5; border-left: 4px solid var(--am);
-}
-.intel-box b { color: var(--g); text-transform: uppercase; font-size: 10px; letter-spacing: 0.5px; }
-
 .row{display:flex;align-items:center;padding:12px 16px;gap:12px;border-bottom:.5px solid var(--br);}
 .rt{font-size:15px;color:var(--tx);}
 .rs{font-size:12px;color:var(--tx2);margin-top:2px;}
@@ -79,44 +60,83 @@ body{display:flex;flex-direction:column;}
 .cb2.ck::after{content:'';width:12px;height:8px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translateY(-1px);display:block;}
 .rt.dn{color:var(--tx3);text-decoration:line-through;}
 .stp{display:flex;align-items:center;gap:12px;}
-.sbtn{width:32px;height:32px;border-radius:50%;background:var(--inp);border:none;font-size:20px;color:var(--g);cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.sbtn{width:32px;height:32px;border-radius:50%;background:var(--inp);border:none;font-size:20px;color:var(--ios-blue);cursor:pointer;display:flex;align-items:center;justify-content:center;}
 .sv{font-size:22px;font-weight:600;min-width:36px;text-align:center;}
 .pb{height:6px;background:var(--inp);border-radius:3px;overflow:hidden;margin-top:6px;}
 .pf{height:100%;border-radius:3px;transition:width .4s;}
-
 .fst{display:flex;gap:6px;margin-bottom:10px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;}
 .fc{flex-shrink:0;height:32px;padding:0 14px;border-radius:16px;border:.5px solid var(--br);font-size:13px;font-weight:500;cursor:pointer;background:var(--inp);color:var(--tx2);}
 .fc.on{background:var(--g);color:#fff;border-color:var(--g);}
-
 .ci{display:flex;align-items:center;padding:12px 16px;gap:12px;border-bottom:.5px solid var(--br);}
-.av{font-family:var(--font-serif); width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;flex-shrink:0;}
+.av{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;flex-shrink:0;}
+.stabs{display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;}
+.stab{flex-shrink:0;height:34px;padding:0 16px;border-radius:17px;border:none;font-size:13px;font-weight:600;cursor:pointer;background:var(--inp);color:var(--tx2);}
+.stab.on{background:var(--g);color:#fff;}
+.scard{background:var(--card);border-radius:14px;padding:16px;margin-bottom:12px;border:.5px solid var(--br);}
+.sst{font-size:11px;font-weight:800;color:var(--g);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;}
+.stxt{font-size:15px;color:var(--tx);line-height:1.5;margin-bottom:10px;}
+.stip{font-size:12px;color:var(--tx3);font-style:italic;padding-top:8px;border-top:.5px solid var(--br);}
+.zp{height:14px;background:var(--inp);border-radius:7px;overflow:hidden;margin:8px 0 5px;}
+.zf{height:100%;background:var(--g);border-radius:7px;transition:width .4s;}
 input,select,textarea{width:100%;border-radius:10px;border:none;background:var(--inp);padding:12px;font-size:16px;color:var(--tx);outline:none;}
-.btn{height:44px;border-radius:10px;border:none;background:var(--g);color:var(--am);font-size:15px;font-weight:700;padding:0 20px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center; text-transform: uppercase;}
-.bsm{height:32px;font-size:12px;padding:0 14px;border-radius:16px;}
-.bo{background:var(--inp);color:var(--g);}
+.btn{height:44px;border-radius:10px;border:none;background:var(--ios-blue);color:#fff;font-size:15px;font-weight:600;padding:0 20px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;}
+.bsm{height:32px;font-size:13px;padding:0 14px;border-radius:16px;}
+.bo{background:var(--inp);color:var(--ios-blue);}
+.cw{position:relative;height:180px;margin-top:10px;}
+.sel-box{width:22px;height:22px;border-radius:50%;border:2px solid var(--tx3);flex-shrink:0;transition:all .15s;}
+.ci.selected .sel-box{background:var(--g);border-color:var(--g);}
+#hustle-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:var(--bg);z-index:2000;display:none;padding:20px;flex-direction:column;}
+.h-card{background:var(--card);border-radius:24px;padding:30px;text-align:center;margin-top:40px;flex:1;display:flex;flex-direction:column;justify-content:center;}
+.aniv-badge{background:var(--ios-red);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;margin-left:6px;}
+.client-card{background:var(--card);border-radius:14px;padding:14px 16px;margin-bottom:10px;border:.5px solid var(--br);}
+.client-name{font-size:17px;font-weight:700;color:var(--tx);}
+.client-addr{font-size:13px;color:var(--tx2);margin-top:2px;}
+.client-row{display:flex;justify-content:space-between;margin-top:8px;font-size:12px;color:var(--tx3);}
+.client-val{font-weight:600;color:var(--tx2);}
+.aniv-row{display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:.5px solid var(--br);}
+.tag{font-size:10px;font-weight:600;padding:2px 8px;border-radius:6px;}
+.tag-mil{background:var(--bll);color:var(--bl);}
+.tag-fam{background:var(--gl);color:var(--gd);}
+.tag-inv{background:var(--pul);color:var(--pu);}
+.tag-ft{background:var(--al);color:var(--am);}
+.empty-state{text-align:center;padding:40px 20px;color:var(--tx3);font-size:14px;}
+#perf-tracker{transition:all 0.3s ease;}
 
-/* PORTFOLIO MANAGEMENT */
-.listing-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: .5px solid var(--br); font-size: 14px; }
-.listing-addr { flex: 1; font-weight: 600; color: var(--g); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.listing-del { color: var(--ios-red); font-weight: 700; cursor: pointer; padding-left: 15px; font-size: 11px; text-transform: uppercase; }
-
-/* PANELS & OVERLAYS */
-#toast{position:fixed;bottom:calc(var(--th) + 20px);left:50%;transform:translateX(-50%) translateY(20px);background:var(--g);color:var(--am);padding:10px 20px;border-radius:20px;font-size:13px;font-weight:700;z-index:9999;opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap; border: 1px solid var(--am);}
+/* TOAST */
+#toast{position:fixed;bottom:calc(var(--th) + 20px);left:50%;transform:translateX(-50%) translateY(20px);background:#1A2744;color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:600;z-index:9999;opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap;}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* NOTIFICATION BANNER */
+#notif-banner{position:fixed;top:var(--st);left:0;right:0;background:#1A2744;color:#fff;padding:14px 20px;z-index:5000;display:none;align-items:center;gap:12px;border-bottom:2px solid var(--am);}
+#notif-banner .nb-icon{font-size:24px;}
+#notif-banner .nb-body{flex:1;}
+#notif-banner .nb-title{font-size:14px;font-weight:700;color:var(--am);}
+#notif-banner .nb-msg{font-size:13px;color:rgba(255,255,255,.85);margin-top:2px;}
+#notif-banner .nb-close{font-size:22px;color:rgba(255,255,255,.5);cursor:pointer;}
+
+/* REMOTE CONFIG PANEL */
 #rc-panel{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);z-index:4000;display:none;align-items:flex-end;}
-#rc-inner{background:var(--card);border-radius:24px 24px 0 0;padding:20px 20px 50px;width:100%;max-height:80vh;overflow-y:auto;}
+#rc-inner{background:var(--card);border-radius:20px 20px 0 0;padding:20px 20px 50px;width:100%;max-height:80vh;overflow-y:auto;}
 .rc-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:.5px solid var(--br);}
-.rc-val{font-size:22px;font-weight:700;color:var(--g);min-width:44px;text-align:center;}
+.rc-label{font-size:15px;font-weight:600;}
+.rc-sub{font-size:12px;color:var(--tx2);margin-top:2px;}
+.rc-val{font-size:22px;font-weight:700;color:var(--ios-blue);min-width:44px;text-align:center;}
 .toggle{width:51px;height:31px;background:var(--tx3);border-radius:16px;position:relative;cursor:pointer;transition:background .2s;}
 .toggle.on{background:var(--ios-green);}
 .toggle::after{content:'';position:absolute;width:27px;height:27px;background:#fff;border-radius:50%;top:2px;left:2px;transition:left .2s;box-shadow:0 2px 4px rgba(0,0,0,.3);}
 .toggle.on::after{left:22px;}
-#hustle-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:var(--bg);z-index:2000;display:none;padding:20px;flex-direction:column;}
-.h-card{background:var(--card);border-radius:24px;padding:30px;text-align:center;margin-top:40px;flex:1;display:flex;flex-direction:column;justify-content:center; border: 1px solid var(--br);}
 
-/* CALENDAR STYLES */
+/* DOCS PANEL */
+#docs-panel{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);z-index:4000;display:none;align-items:flex-end;}
+#docs-inner{background:var(--card);border-radius:20px 20px 0 0;padding:20px 20px 50px;width:100%;max-height:85vh;overflow-y:auto;}
+.doc-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:.5px solid var(--br);}
+.doc-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.doc-name{font-size:14px;font-weight:600;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.doc-size{font-size:11px;color:var(--tx3);}
+
+/* IOS CALENDAR STYLES */
 .ios-header{display:flex;justify-content:space-between;align-items:center;padding:14px 16px 8px;}
-.ios-month{font-family:var(--font-serif); font-size:24px;font-weight:700;color:var(--ios-red);}
+.ios-month{font-size:22px;font-weight:700;color:var(--ios-red);}
 .ios-nav-btn{width:32px;height:32px;border-radius:50%;border:none;background:var(--inp);color:var(--tx);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;font-weight:bold;}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);padding:0 10px 10px;gap:2px 0;}
 .cal-day-name{font-size:10px;font-weight:600;color:var(--tx3);text-align:center;padding-bottom:8px;text-transform:uppercase;}
@@ -126,21 +146,38 @@ input,select,textarea{width:100%;border-radius:10px;border:none;background:var(-
 .cal-d.selected:not(.today) .cal-d-num{background:var(--tx);color:var(--bg);font-weight:600;}
 .cal-dots{display:flex;gap:3px;margin-top:2px;height:4px;justify-content:center;width:100%;}
 .cal-dot{width:4.5px;height:4.5px;border-radius:50%;}
-.cal-d.hit .cal-d-num{box-shadow:0 0 0 2px var(--ios-green);}
+.cal-d.hit .cal-d-num{box-shadow:0 0 0 2px #34D399;}
+.tl-row{display:flex;align-items:stretch;gap:12px;padding:10px 16px;border-bottom:.5px solid var(--br);}
+.tl-time{width:55px;flex-shrink:0;text-align:right;padding-top:2px;font-size:12px;font-weight:600;color:var(--tx2);}
+.tl-bar{width:4px;border-radius:2px;}
+.tl-content{flex:1;padding-bottom:4px;}
+.tl-title{font-size:15px;font-weight:600;color:var(--tx);line-height:1.3;}
+.tl-sub{font-size:13px;color:var(--tx2);margin-top:2px;}
 </style>
 </head>
 <body>
 
 <div id="toast"></div>
 
+<div id="notif-banner">
+  <div class="nb-icon">🔔</div>
+  <div class="nb-body">
+    <div class="nb-title" id="nb-title">Accountability Check</div>
+    <div class="nb-msg" id="nb-msg">You have conversations to make.</div>
+  </div>
+  <div class="nb-close" onclick="document.getElementById('notif-banner').style.display='none'">×</div>
+</div>
+
 <div id="rc-panel">
   <div id="rc-inner">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-      <div style="font-family:var(--font-serif); font-size:22px;font-weight:700;">⚙️ Remote Config</div>
+      <div style="font-size:17px;font-weight:700;">⚙️ Remote Config</div>
       <button onclick="closeRC()" style="border:none;background:none;font-size:22px;color:var(--tx3);cursor:pointer;">×</button>
     </div>
+    <div style="font-size:12px;color:var(--tx2);margin-bottom:16px;">Change goals and features instantly — no code needed.</div>
+
     <div class="rc-row">
-      <div><div class="rc-label">Daily Convo Goal</div></div>
+      <div><div class="rc-label">Daily Conversation Goal</div><div class="rc-sub">Conversations needed per day</div></div>
       <div style="display:flex;align-items:center;gap:8px;">
         <button class="sbtn" onclick="rcAdj('convGoal',-1)">-</button>
         <span class="rc-val" id="rc-convGoal">20</span>
@@ -148,284 +185,940 @@ input,select,textarea{width:100%;border-radius:10px;border:none;background:var(-
       </div>
     </div>
     <div class="rc-row">
-      <div><div class="rc-label">Sprint Mode</div></div>
+      <div><div class="rc-label">Daily Door Goal</div><div class="rc-sub">Doors knocked per day</div></div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <button class="sbtn" onclick="rcAdj('doorGoal',-1)">-</button>
+        <span class="rc-val" id="rc-doorGoal">20</span>
+        <button class="sbtn" onclick="rcAdj('doorGoal',1)">+</button>
+      </div>
+    </div>
+    <div class="rc-row">
+      <div><div class="rc-label">Nudge Time</div><div class="rc-sub">Daily accountability check time</div></div>
+      <div>
+        <input type="time" id="rc-nudgeTime" style="width:120px;font-size:15px;padding:8px;" onchange="rcSet('nudgeTime', this.value)">
+      </div>
+    </div>
+    <div class="rc-row">
+      <div><div class="rc-label">Show ZR1X Fund</div><div class="rc-sub">Display Corvette savings tracker</div></div>
+      <div class="toggle" id="tog-zr1x" onclick="rcToggle('showZR1X')"></div>
+    </div>
+    <div class="rc-row">
+      <div><div class="rc-label">Show Debt Payoff</div><div class="rc-sub">Display debt progress bars</div></div>
+      <div class="toggle" id="tog-debt" onclick="rcToggle('showDebt')"></div>
+    </div>
+    <div class="rc-row">
+      <div><div class="rc-label">Sprint Mode</div><div class="rc-sub">Red banner + max intensity UI</div></div>
       <div class="toggle" id="tog-sprint" onclick="rcToggle('sprintMode')"></div>
     </div>
-    <button class="btn" style="width:100%;margin-top:20px;" onclick="saveRC()">Save & Apply</button>
+    <div class="rc-row">
+      <div><div class="rc-label">Closings Goal</div><div class="rc-sub">Annual closing target</div></div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <button class="sbtn" onclick="rcAdj('closingsGoal',-1)">-</button>
+        <span class="rc-val" id="rc-closingsGoal">21</span>
+        <button class="sbtn" onclick="rcAdj('closingsGoal',1)">+</button>
+      </div>
+    </div>
+
+    <button class="btn" style="width:100%;margin-top:20px;background:var(--g);" onclick="saveRC()">Save & Apply</button>
+  </div>
+</div>
+
+<div id="docs-panel">
+  <div id="docs-inner">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+      <div style="font-size:17px;font-weight:700;" id="docs-panel-title">Documents</div>
+      <button onclick="closeDocs()" style="border:none;background:none;font-size:22px;color:var(--tx3);cursor:pointer;">×</button>
+    </div>
+    <div style="font-size:12px;color:var(--tx2);margin-bottom:16px;" id="docs-panel-sub">Client documents & photos</div>
+    <label style="display:block;background:var(--inp);border-radius:12px;padding:14px;text-align:center;cursor:pointer;border:1px dashed var(--tx3);margin-bottom:14px;" id="doc-upload-label">
+      <div style="font-size:15px;font-weight:600;margin-bottom:4px;">📎 Upload Document or Photo</div>
+      <div style="font-size:13px;color:var(--tx2);">PDF, JPG, PNG — stored in Firebase</div>
+      <input type="file" id="doc-file-input" accept=".pdf,.jpg,.jpeg,.png,.heic" multiple style="display:none;" onchange="uploadDocs(this)">
+    </label>
+    <div id="docs-list"></div>
+    <div id="docs-upload-progress" style="display:none;padding:10px 0;">
+      <div style="font-size:13px;color:var(--tx2);margin-bottom:6px;" id="docs-progress-label">Uploading...</div>
+      <div class="pb"><div class="pf" id="docs-progress-bar" style="width:0%;background:var(--ios-blue);"></div></div>
+    </div>
   </div>
 </div>
 
 <div id="hustle-overlay">
   <div style="display:flex;justify-content:space-between;align-items:center;">
-    <div style="font-size:18px;font-weight:700;" id="h-count">Queue</div>
+    <div style="font-size:18px;font-weight:700;" id="h-count">Queue 1/20</div>
     <button class="btn bo bsm" onclick="stopHustle()">Exit</button>
   </div>
   <div class="h-card">
-    <div class="av" id="h-av" style="width:80px;height:80px;margin:0 auto 20px;font-size:32px;"></div>
-    <div style="font-family:var(--font-serif); font-size:32px;font-weight:700;" id="h-name">Name</div>
-    <div class="intel-box" id="h-note">No notes</div>
-    <button class="btn" style="width:100%;margin-top:40px;height:60px;" id="h-send-btn" onclick="hustleSend()">Send Text</button>
-    <button class="btn bo" style="width:100%;margin-top:12px;" onclick="nextHustle()">Next Lead</button>
+    <div class="av" id="h-av" style="width:80px;height:80px;margin:0 auto 20px;font-size:32px;background:var(--gl);color:var(--gd);border-radius:50%;"></div>
+    <div style="font-size:26px;font-weight:700;" id="h-name">Name</div>
+    <div style="font-size:15px;color:var(--tx2);margin-top:10px;" id="h-note">No notes</div>
+    <div style="margin-top:6px;font-size:12px;font-weight:700;color:var(--g);" id="h-source"></div>
+    <button class="btn" style="width:100%;margin-top:40px;height:60px;font-size:18px;" id="h-send-btn" onclick="hustleSend()">Send Text</button>
+    <button class="btn bo" style="width:100%;margin-top:12px;" onclick="nextHustle()">Next</button>
   </div>
 </div>
 
 <div class="ss"></div>
 <div class="hdr">
-  <div class="hdr-l"><div class="t">Agent HQ</div><div class="s">Christian · $3,675/closing</div></div>
+  <div class="hdr-l"><div class="t">Agent HQ</div><div class="s" id="hdr-sub">Christian · $3,675/closing</div></div>
   <div class="hdr-r">
-    <button class="dbtn" onclick="openRC()">⚙️</button>
+    <button class="dbtn" onclick="openRC()" title="Remote Config">⚙️</button>
     <button class="dbtn" onclick="toggleDark()">🌙</button>
+    <div class="bdg" style="background:var(--ios-blue);" id="goal-badge">$140K Goal</div>
   </div>
 </div>
 
 <div class="scrl">
 
-  <div id="scn-inbox" class="scn">
-    <div style="font-family:var(--font-serif); font-size:26px;font-weight:800;margin-bottom:8px;">Live Inbox</div>
-    <div id="inbox-list"></div>
+<div id="scn-inbox" class="scn">
+  <div style="font-size:22px;font-weight:800;margin-bottom:8px;">Live Inbox</div>
+  <div style="font-size:13px;color:var(--tx2);margin-bottom:16px;">New sign-ins dynamically pushed from the Open House iPad</div>
+  <div id="inbox-list"></div>
+</div>
+
+<div id="scn-daily" class="scn on">
+  <div id="sprint-banner" style="display:none;background:#B94040;border-radius:16px;padding:10px 16px;margin-bottom:12px;text-align:center;font-size:13px;font-weight:700;color:#fff;letter-spacing:.06em;">🔥 SPRINT MODE ACTIVE — GIVE 120%</div>
+
+  <div style="background:#1A2744;border-radius:16px;padding:20px 22px;margin-bottom:12px;text-align:center;">
+    <div style="font-size:10px;font-weight:700;letter-spacing:.14em;color:#C9A84C;text-transform:uppercase;margin-bottom:8px;">Focus the Energy</div>
+    <div style="font-size:20px;font-weight:700;color:#FFFFFF;letter-spacing:-.2px;line-height:1.3;" id="daily-quote">Every call is a closing waiting to happen.</div>
+    <div style="height:.5px;background:rgba(201,168,76,.3);margin:12px 0 10px;"></div>
+    <div style="font-size:12px;color:#C9A84C;font-weight:500;" id="todays-date"></div>
   </div>
 
-  <div id="scn-daily" class="scn on">
-    <div style="background:var(--g);border-radius:16px;padding:20px 22px;margin-bottom:12px;text-align:center;">
-      <div style="font-size:10px;font-weight:700;color:var(--am);text-transform:uppercase;margin-bottom:8px;">Focus the Energy</div>
-      <div style="font-family:var(--font-serif); font-size:22px;font-weight:700;color:#FFFFFF;" id="daily-quote">Every call is a closing waiting to happen.</div>
-      <div id="todays-date" style="font-size:12px;color:var(--am);margin-top:10px;"></div>
-    </div>
+  <div id="perf-tracker" style="background:var(--card);border-left:4px solid var(--rd);border-radius:12px;padding:14px 18px;margin-bottom:16px;font-size:13px;color:var(--tx2);">
+    <div style="color:var(--rd);font-weight:700;margin-bottom:2px;letter-spacing:-.2px;" id="perf-title">NO ACTIVITY LOGGED.</div>
+    <div id="perf-desc">The market doesn't pay for intentions. Get to work.</div>
+  </div>
 
-    <div class="mg">
-      <div class="m"><div class="mv g" id="m-cv">0</div><div class="ml">Convos</div><div class="pb"><div class="pf" id="p-cv" style="width:0%;background:var(--g);"></div></div></div>
-      <div class="m"><div class="mv r" id="m-debt">$93,432</div><div class="ml">Debt</div></div>
-      <div class="m"><div class="mv b" id="m-dr">0</div><div class="ml">Doors</div><div class="pb"><div class="pf" id="p-dr" style="width:0%;background:var(--g);"></div></div></div>
-      <div class="m"><div class="mv a" id="m-nc">0</div><div class="ml">New Leads</div><div class="pb"><div class="pf" id="p-nc" style="width:0%;background:var(--am);"></div></div></div>
-    </div>
+  <div class="mg">
+    <div class="m"><div class="mv g" id="m-cv">0</div><div class="ml">Conversations</div><div class="ms" id="ms-cv">Goal: 20 today</div><div class="pb"><div class="pf" id="p-cv" style="width:0%;background:#1A2744;"></div></div></div>
+    <div class="m"><div class="mv r" id="m-debt">$93,432</div><div class="ml">Total Debt</div><div class="ms">Truck + Student Loans</div></div>
+    <div class="m"><div class="mv b" id="m-dr">0</div><div class="ml">Doors Knocked</div><div class="ms" id="ms-dr">Goal: 20 today</div><div class="pb"><div class="pf" id="p-dr" style="width:0%;background:var(--ios-blue);"></div></div></div>
+    <div class="m"><div class="mv a" id="m-nc">0</div><div class="ml">New Contacts</div><div class="ms">Added today</div><div class="pb"><div class="pf" id="p-nc" style="width:0%;background:var(--am);"></div></div></div>
+  </div>
+  <div class="mg" style="grid-template-columns:1fr 1fr 1fr;">
+    <div class="m"><div class="mv" id="m-st">0</div><div class="ml">Day Streak</div><div class="ms">20+ convos</div></div>
+    <div class="m"><div class="mv g" id="m-cl">0</div><div class="ml">Closings</div><div class="ms" id="ms-cl">of 21 needed</div></div>
+    <div class="m"><div class="mv g" id="m-ne">$0</div><div class="ml">Net Earned</div><div class="ms">of $75K</div></div>
+  </div>
 
-    <div class="card"><div class="ch">Quick Counters</div>
-      <div class="row">
-        <div style="flex:1;"><div class="rt">Conversations</div></div>
-        <div class="stp"><button class="sbtn" onclick="adj('cv',-1)">-</button><span class="sv" id="s-cv">0</span><button class="sbtn" onclick="adj('cv',1)">+</button></div>
-      </div>
-      <div class="row">
-        <div style="flex:1;"><div class="rt">Doors Knocked</div></div>
-        <div class="stp"><button class="sbtn" onclick="adj('dr',-1)">-</button><span class="sv" id="s-dr">0</span><button class="sbtn" onclick="adj('dr',1)">+</button></div>
-      </div>
-      <div class="row">
-        <div style="flex:1;"><div class="rt">New Contacts</div></div>
-        <div class="stp"><button class="sbtn" onclick="adj('nc',-1)">-</button><span class="sv" id="s-nc">0</span><button class="sbtn" onclick="adj('nc',1)">+</button></div>
+  <div class="card"><div class="ch">Quick Counters</div>
+    <div class="row" style="padding:14px 16px;display:flex;justify-content:space-between;align-items:center;">
+      <div><div class="rt">Conversations</div><div class="rs">Real estate related chat</div></div>
+      <div class="stp"><button class="sbtn" onclick="adj('cv',-1)">-</button><span class="sv" id="s-cv">0</span><button class="sbtn" onclick="adj('cv',1)">+</button></div>
+    </div>
+    <div class="dv"></div>
+    <div class="row" style="padding:14px 16px;display:flex;justify-content:space-between;align-items:center;">
+      <div><div class="rt">Doors Knocked</div><div class="rs">Neighborhood / near Dyess</div></div>
+      <div class="stp"><button class="sbtn" onclick="adj('dr',-1)">-</button><span class="sv" id="s-dr">0</span><button class="sbtn" onclick="adj('dr',1)">+</button></div>
+    </div>
+    <div class="dv"></div>
+    <div class="row" style="padding:14px 16px;display:flex;justify-content:space-between;align-items:center;">
+      <div><div class="rt">New Contacts Added</div><div class="rs">Added to database today</div></div>
+      <div class="stp"><button class="sbtn" onclick="adj('nc',-1)">-</button><span class="sv" id="s-nc">0</span><button class="sbtn" onclick="adj('nc',1)">+</button></div>
+    </div>
+  </div>
+
+  <div class="card"><div class="ch">Non-Negotiables</div><div id="tlist"></div></div>
+
+  <div class="card" style="padding:16px;">
+    <div class="sst">🔔 Daily Accountability Nudge</div>
+    <div style="font-size:13px;color:var(--tx2);margin-bottom:12px;" id="notif-status-text">Enable push notifications to get nudged if you're below your goal.</div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <button class="btn bsm" id="notif-btn" onclick="requestNotifPermission()" style="background:var(--g);">Enable Notifications</button>
+      <span style="font-size:12px;color:var(--tx3);" id="notif-perm-status"></span>
+    </div>
+  </div>
+
+  <div class="card" style="overflow:visible;padding-bottom:0;">
+    <div class="ios-header">
+      <div class="ios-month" id="cal-month"></div>
+      <div style="display:flex;gap:12px;">
+        <button onclick="calNav(-1)" class="ios-nav-btn">‹</button>
+        <button onclick="calNav(1)" class="ios-nav-btn">›</button>
       </div>
     </div>
+    <div class="cal-grid" id="cal-names"></div>
+    <div class="cal-grid" id="cal-days"></div>
+    <div style="height:.5px;background:var(--br);width:100%;"></div>
+    <div style="background:var(--card);min-height:180px;border-radius:0 0 16px 16px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px 4px;">
+        <div id="cal-day-header" style="font-size:15px;font-weight:600;color:var(--tx2);"></div>
+        <button onclick="openAddEvent()" style="border:none;background:none;color:var(--ios-red);font-size:26px;font-weight:300;cursor:pointer;padding:0;">+</button>
+      </div>
+      <div id="cal-events-list"></div>
+      <div style="padding:14px 16px;">
+        <label class="btn bo bsm" style="width:100%;height:36px;cursor:pointer;margin:0;display:flex;justify-content:center;">
+          <input type="file" id="ics-upload" accept=".ics" multiple style="display:none;" onchange="importICS(this)">
+          Import .ics Schedule
+        </label>
+      </div>
+    </div>
+  </div>
 
-    <div class="card" style="overflow:visible;padding-bottom:0;">
-      <div class="ios-header">
-        <div class="ios-month" id="cal-month"></div>
-        <div style="display:flex;gap:12px;">
-          <button onclick="calNav(-1)" class="ios-nav-btn">‹</button>
-          <button onclick="calNav(1)" class="ios-nav-btn">›</button>
+  <div id="cal-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.45);z-index:3000;align-items:flex-end;">
+    <div style="background:var(--card);border-radius:20px 20px 0 0;padding:20px 20px 40px;width:100%;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+        <div style="font-size:17px;font-weight:700;" id="modal-date-title"></div>
+        <button onclick="closeModal()" style="border:none;background:none;font-size:22px;color:var(--tx3);cursor:pointer;">×</button>
+      </div>
+      <div style="display:grid;gap:10px;">
+        <select id="ev-type">
+          <option value="openhouse">Open House</option>
+          <option value="showing">Showing</option>
+          <option value="listing">Listing Appointment</option>
+          <option value="closing">Closing</option>
+          <option value="prospecting">Prospecting Block</option>
+          <option value="doorknock">Door Knocking</option>
+          <option value="class">Class</option>
+          <option value="other">Other</option>
+        </select>
+        <input type="text" id="ev-title" placeholder="Address, client name...">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <input type="time" id="ev-start">
+          <input type="time" id="ev-end">
         </div>
+        <button class="btn" style="width:100%;" onclick="saveEvent()">Add Event</button>
       </div>
-      <div class="cal-grid" id="cal-names"></div>
-      <div class="cal-grid" id="cal-days"></div>
+      <div id="existing-events" style="margin-top:14px;max-height:200px;overflow-y:auto;"></div>
     </div>
   </div>
+</div>
 
-  <div id="scn-open" class="scn">
-    <div style="font-family:var(--font-serif); font-size:26px;font-weight:800;margin-bottom:12px;">Open House Admin</div>
-    <div class="card">
-      <div class="ch">Broadcast to iPad</div>
-      <select id="oh-admin-picker" onchange="document.getElementById('oh-admin-addr').value = this.value;">
-          <option value="">Quick Pick Listing...</option>
+<div id="scn-open" class="scn">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+    <div style="font-size:22px;font-weight:800;">Open House Admin</div>
+  </div>
+  
+  <div class="card" style="padding:16px;">
+    <div class="sst" style="margin-bottom:10px;">Set Active Property for iPad</div>
+    <div style="font-size:13px;color:var(--tx2);margin-bottom:12px;">This updates the live Open House Portal instantly.</div>
+
+    <select id="oh-admin-addr-picker" style="margin-bottom:8px;" onchange="document.getElementById('oh-admin-addr').value = this.value;">
+        <option value="">Quick Pick from Portfolio...</option>
+    </select>
+
+    <input type="text" id="oh-admin-addr" placeholder="Property Address (e.g. 123 Main St)">
+    <input type="url" id="oh-admin-url" placeholder="TonyaHarbin.com Flyer URL" style="margin-top:8px;">
+    <input type="text" id="oh-admin-price" placeholder="Price (e.g. $450,000)" style="margin-top:8px;">
+    <input type="text" id="oh-admin-details" placeholder="Details (e.g. 4 Bed, 3 Bath, 2,500 sqft)" style="margin-top:8px;">
+    
+    <button class="btn" id="oh-admin-btn" style="width:100%;margin-top:16px;background:var(--ios-blue);" onclick="saveActiveOpenHouse()">Update Live Portal</button>
+  </div>
+</div>
+
+<div id="scn-circle" class="scn">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+    <div style="font-size:22px;font-weight:800;">Warm Circle</div>
+    <button id="h-btn" class="btn bsm" style="background:var(--ios-blue);display:none;color:#fff;" onclick="launchHustle()">Start Hustle</button>
+  </div>
+  <div class="card" style="padding:16px;margin-bottom:12px;">
+    <div class="sst" style="margin-bottom:10px;">Import from iPhone</div>
+    <label style="display:block;background:var(--inp);border-radius:12px;padding:14px;text-align:center;cursor:pointer;border:1px dashed var(--tx3);" for="vcf">
+      <div style="font-size:15px;font-weight:600;margin-bottom:4px;">Import .vcf file</div>
+      <div style="font-size:13px;color:var(--tx2);">Export contacts from phone & tap here</div>
+    </label>
+    <input type="file" id="vcf" accept=".vcf" style="display:none;" onchange="importVCF(this)">
+  </div>
+  <div class="card" style="padding:16px;margin-bottom:12px;">
+    <div class="sst" style="margin-bottom:10px;">Quick Add Contact</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+      <input type="text" id="cn" placeholder="Name">
+      <input type="text" id="cp" placeholder="Phone">
+    </div>
+    <div style="display:grid;grid-template-columns:1.5fr 1fr;gap:8px;margin-bottom:8px;">
+      <input type="text" id="cnot" placeholder="Notes (PCSing, met at...)">
+      <input type="text" id="cref" placeholder="Source">
+    </div>
+    <div style="display:flex;gap:8px;">
+      <select id="ctype" style="flex:1;">
+        <option value="general">General</option>
+        <option value="military">Military / VA</option>
+        <option value="firsttime">First-Time Buyer</option>
+        <option value="investor">Investor</option>
+        <option value="fsbo">FSBO</option>
+        <option value="expired">Expired Listing</option>
+        <option value="referral">Referral</option>
       </select>
-      <input type="text" id="oh-admin-addr" placeholder="Property Address">
-      <input type="url" id="oh-admin-url" placeholder="Flyer Link">
-      <button class="btn" style="width:100%;margin-top:10px;" onclick="saveActiveOpenHouse()">Update Live Portal</button>
-      <button class="btn bo" style="width:100%;margin-top:8px;" onclick="clearActiveOpenHouse()">Clear Active Property</button>
+      <select id="cs" style="flex:1;">
+        <option value="new">New Lead</option>
+        <option value="contacted">Contacted</option>
+        <option value="interested">Interested</option>
+      </select>
+      <button class="btn" style="background:var(--ios-blue);" onclick="addContact()">Add</button>
     </div>
+  </div>
+  <div class="fst" id="filter-tabs">
+    <button class="fc on" onclick="setFilter('all',this)">All</button>
+    <button class="fc" onclick="setFilter('new',this)">New</button>
+    <button class="fc" onclick="setFilter('military',this)">Military</button>
+    <button class="fc" onclick="setFilter('firsttime',this)">First-Time</button>
+    <button class="fc" onclick="setFilter('investor',this)">Investor</button>
+    <button class="fc" onclick="setFilter('fsbo',this)">FSBO</button>
+  </div>
+  <div class="card" id="clist"></div>
+</div>
 
-    <div class="card">
-      <div class="ch">Managed Portfolio</div>
-      <div style="display:flex;gap:8px;margin-bottom:12px;">
-        <input type="text" id="new-listing-addr" placeholder="Add new address..." style="margin:0;">
-        <button class="btn" onclick="addListing()">Add</button>
+<div id="scn-clients" class="scn">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+    <div style="font-size:22px;font-weight:800;">My Clients</div>
+    <div style="font-size:13px;color:var(--tx2);" id="aniv-count"></div>
+  </div>
+  <div class="card" style="padding:16px;margin-bottom:12px;">
+    <div class="sst" style="margin-bottom:10px;">Log a Closing</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+      <input type="text" id="cli-name" placeholder="Client Name">
+      <input type="text" id="cli-addr" placeholder="Property Address">
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px;">
+      <input type="number" id="cli-price" placeholder="Sale Price ($)">
+      <input type="date" id="cli-date" placeholder="Close Date">
+      <select id="cli-type">
+        <option value="military">Military / VA</option>
+        <option value="firsttime">First-Time</option>
+        <option value="family">Family Move-Up</option>
+        <option value="investor">Investor</option>
+      </select>
+    </div>
+    <input type="text" id="cli-notes" placeholder="Notes" style="margin-bottom:8px;">
+    <button class="btn" style="width:100%;background:var(--ios-blue);" onclick="addClient()">Log Closing</button>
+  </div>
+  <div id="aniv-alert" style="display:none;background:var(--rl);border-radius:12px;padding:14px 16px;margin-bottom:12px;border:.5px solid var(--ios-red);">
+    <div style="font-size:13px;font-weight:700;color:var(--ios-red);">🎉 Anniversaries coming up</div>
+    <div style="font-size:12px;color:var(--ios-red);margin-top:4px;" id="aniv-list"></div>
+  </div>
+  <div id="client-list"></div>
+</div>
+
+<div id="scn-scripts" class="scn">
+  <div style="font-size:22px;font-weight:800;margin-bottom:15px;">Scripts & Dialogues</div>
+  <div class="stabs">
+    <button class="stab on" onclick="showS('sphere',this)">Sphere</button>
+    <button class="stab" onclick="showS('fsbo',this)">FSBO</button>
+    <button class="stab" onclick="showS('expired',this)">Expired</button>
+    <button class="stab" onclick="showS('open',this)">Open House</button>
+    <button class="stab" onclick="showS('follow',this)">Follow-Up</button>
+    <button class="stab" onclick="showS('listing',this)">Listing Appt</button>
+    <button class="stab" onclick="showS('buyer',this)">Buyer Consult</button>
+    <button class="stab" onclick="showS('military',this)">Military / VA</button>
+    <button class="stab" onclick="showS('aniv',this)">Anniversary</button>
+  </div>
+  <div id="scontent"></div>
+</div>
+
+<div id="scn-money" class="scn">
+  <div style="font-size:22px;font-weight:800;margin-bottom:14px;">Money</div>
+  <div class="mg">
+    <div class="m"><div class="mv g" id="me">$0</div><div class="ml">Net Earned</div><div class="ms">Goal: $75,000</div></div>
+    <div class="m"><div class="mv g" id="mc">0</div><div class="ml">Closings</div><div class="ms" id="ms-mc">Need ~21 closings</div></div>
+    <div class="m"><div class="mv b" id="msav-grid" style="color:var(--ios-blue);">$0</div><div class="ml">Savings</div><div class="ms">20% auto-split</div></div>
+    <div class="m"><div class="mv a" id="mt-grid">$0</div><div class="ml">Tax Vault</div><div class="ms">30% auto-split</div></div>
+  </div>
+  <div class="card"><div class="ch">Cumulative Net vs Target</div><div class="cw"><canvas id="rchart"></canvas></div></div>
+  <div class="card" style="padding:16px;">
+    <div class="sst">Log a Closing</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;">
+      <input type="text" id="cln" placeholder="Client Name">
+      <input type="number" id="clp" placeholder="Sale Price ($)">
+    </div>
+    <button class="btn" style="width:100%;margin-top:10px;background:var(--ios-blue);" onclick="logCloseMoney()">Log Closing</button>
+  </div>
+  <div class="card"><div class="cb">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;">
+      <span style="font-size:16px;font-weight:700;">Tax Vault</span>
+      <span style="font-size:22px;font-weight:700;color:var(--am);" id="mt-total">$0</span>
+    </div>
+    <div style="font-size:12px;color:var(--tx3);margin-bottom:12px;" id="tax-breakdown">Auto: $0 · Manual: $0</div>
+    <div style="display:flex;gap:8px;">
+      <input type="number" id="ma-tax" placeholder="Add extra income ($)">
+      <button class="btn" style="background:var(--am);" onclick="addTax()">Stash</button>
+    </div>
+  </div></div>
+  <div class="card"><div class="cb">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;">
+      <span style="font-size:16px;font-weight:700;">Savings</span>
+      <span style="font-size:22px;font-weight:700;color:var(--ios-blue);" id="msav-total">$0</span>
+    </div>
+    <div style="font-size:12px;color:var(--tx3);margin-bottom:12px;" id="sav-breakdown">Auto: $0 · Manual: $0</div>
+    <div style="display:flex;gap:8px;">
+      <input type="number" id="ma-sav" placeholder="Add extra savings ($)">
+      <button class="btn" style="background:var(--ios-blue);" onclick="addSav()">Stash</button>
+    </div>
+  </div></div>
+  <div class="card" id="zr1x-card"><div class="cb">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;">
+      <span style="font-size:16px;font-weight:700;">ZR1X Fund</span>
+      <span style="font-size:22px;font-weight:700;color:var(--g);" id="mz">$0</span>
+    </div>
+    <div class="zp"><div class="zf" id="zf" style="width:0%;"></div></div>
+    <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--tx3);margin-bottom:4px;"><span>$0</span><span>$25,000</span></div>
+  </div></div>
+  <div class="card" id="debt-card"><div class="ch">Debt Payoff</div><div class="cb" style="padding-top:10px;">
+    <div style="margin-bottom:14px;">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;">
+        <span style="font-size:14px;font-weight:600;">Sallie Mae</span>
+        <span style="font-size:16px;font-weight:700;color:var(--ios-red);">$<span id="d-sallie">24,225</span></span>
       </div>
-      <div id="managed-listings-list"></div>
+      <div class="pb"><div class="pf" id="pb-sallie" style="width:0%;background:var(--ios-red);"></div></div>
     </div>
-  </div>
-
-  <div id="scn-circle" class="scn">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-      <div style="font-family:var(--font-serif); font-size:26px;font-weight:800;">Contacts</div>
-      <button id="h-btn" class="btn bsm" style="display:none;" onclick="launchHustle()">Start Hustle</button>
+    <div style="margin-bottom:14px;">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;">
+        <span style="font-size:14px;font-weight:600;">Federal Loans</span>
+        <span style="font-size:16px;font-weight:700;color:var(--am);">$<span id="d-fed">5,500</span></span>
+      </div>
+      <div class="pb"><div class="pf" id="pb-fed" style="width:0%;background:var(--am);"></div></div>
     </div>
-    <div id="clist"></div>
-  </div>
-
-  <div id="scn-money" class="scn">
-    <div style="font-family:var(--font-serif); font-size:26px;font-weight:800;margin-bottom:14px;">Money Hub</div>
-    <div class="mg">
-      <div class="m"><div class="mv g" id="me">$0</div><div class="ml">Net Earned</div></div>
-      <div class="m"><div class="mv a" id="mt-grid">$0</div><div class="ml">Tax Vault</div></div>
-      <div class="m"><div class="mv b" id="msav-grid">$0</div><div class="ml">Savings</div></div>
-      <div class="m"><div class="mv g" id="mz">$0</div><div class="ml">ZR1X Fund</div></div>
+    <div style="display:flex;gap:8px;">
+      <input type="number" id="debt-pay" placeholder="Payment amount ($)">
+      <button class="btn bsm" style="background:var(--ios-red);" onclick="payDebt()">Pay Sallie Mae</button>
     </div>
-    <div style="padding:16px;">
-        <input type="number" id="debt-pay" placeholder="Log Payment Amount ($)">
-        <button class="btn" style="width:100%; background:var(--ios-red); color:#fff;" onclick="payDebt()">Apply to Debt</button>
-    </div>
-  </div>
-
-  <div id="scn-scripts" class="scn">
-    <div style="font-family:var(--font-serif); font-size:26px;font-weight:800;margin-bottom:15px;">Scripts</div>
-    <div class="stabs" id="script-tabs"></div>
-    <div id="scontent"></div>
-  </div>
+  </div></div>
+</div>
 
 </div>
 
 <div class="tbar">
-  <div class="tab" onclick="showScn('inbox',this)"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg><span class="tl">Inbox</span></div>
-  <div class="tab on" onclick="showScn('daily',this)"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span class="tl">Daily</span></div>
-  <div class="tab" onclick="showScn('open',this)"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg><span class="tl">Open</span></div>
-  <div class="tab" onclick="showScn('circle',this)"><svg viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"/><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/></svg><span class="tl">Contacts</span></div>
-  <div class="tab" onclick="showScn('scripts',this)"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2-2z"/></svg><span class="tl">Scripts</span></div>
-  <div class="tab" onclick="showScn('money',this)"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><span class="tl">Money</span></div>
+  <div class="tab" onclick="showScn('inbox',this)" style="position:relative;">
+    <div id="inbox-badge" style="display:none; position:absolute; top:4px; right:calc(50% - 14px); width:10px; height:10px; background:var(--ios-red); border-radius:50%; border:2px solid var(--card);"></div>
+    <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg><span class="tl">Inbox</span>
+  </div>
+  <div class="tab on" onclick="showScn('daily',this)">
+    <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span class="tl">Daily</span>
+  </div>
+  <div class="tab" onclick="showScn('open',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg><span class="tl">Open</span>
+  </div>
+  <div class="tab" onclick="showScn('circle',this)">
+    <svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="4"/><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/></svg><span class="tl">Circle</span>
+  </div>
+  <div class="tab" onclick="showScn('clients',this)">
+    <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="tl">Clients</span>
+  </div>
+  <div class="tab" onclick="showScn('scripts',this)">
+    <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2-2z"/></svg><span class="tl">Scripts</span>
+  </div>
+  <div class="tab" onclick="showScn('money',this)">
+    <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><span class="tl">Money</span>
+  </div>
 </div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase, ref, onValue, update, push, remove, get } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-
-const cfg = {
-  apiKey: "AIzaSyBRl0xHETygH2XYB8lWzWOPoGFrzI-zqwg", authDomain: "agenthq-3c2c9.firebaseapp.com",
-  databaseURL: "https://agenthq-3c2c9-default-rtdb.firebaseio.com", projectId: "agenthq-3c2c9",
-  storageBucket: "agenthq-3c2c9.appspot.com", messagingSenderId: "91185374523", appId: "1:91185374523:web:fef9123905c7d416d1831e"
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const MOS = ['Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const TARGETS = [0,0,0,3675,14700,29400,47775,61425,75000];
+const QUOTES = ["Every call is a closing waiting to happen.", "The grind today is the glory tomorrow.", "Pick up the phone. Someone needs a home.", "Discipline beats motivation every single time."];
+const SCRIPTS = {
+  sphere:[{s:'Announcement',t:'"Hey [name], it\'s Christian — I just got my real estate license and joined the Tonya Harbin Team here in Abilene. I\'m not calling to sell you anything, I just wanted you to hear it from me. If you ever hear of anyone buying or selling, I\'d love your help!"',tip:'Call 10 people every day in your first 30 days.'}],
+  fsbo:[{s:'Buyer Approach',t:'"Hey, I\'m Christian with the Tonya Harbin Team — I\'m not calling to list your home. I actually have buyers looking in your area right now. Would you be open to letting me bring them through?"',tip:'Lead with buyers, not listings.'}],
+  expired:[{s:'Solution Opener',t:'"I noticed your home came off the market recently and I didn\'t want to assume you changed your mind about selling. Are you still looking to move? I have some ideas on what we could do differently."',tip:'Position yourself as the fresh solution.'}],
+  open:[{s:'Greeting',t:'"Welcome! I\'m Christian. Before you look around, can I ask — are you just getting started in your search, or are you a little further along in the process?"',tip:'Always get a name and phone number before they leave.'}],
+  follow:[{s:'Post-Showing Text',t:'"Hey [name]! Just following up on [address]. What\'d you think? Did anything stand out or was it a no for you?"',tip:'Short texts get more replies than long ones.'}],
+  listing:[{s:'Motivation Opener',t:'"Before I show you anything, I\'d love to hear from you. What\'s making now the right time to sell, and where are you headed after?"',tip:'Listen for motivation, timeline, and urgency.'}],
+  buyer:[{s:'Consultation Opener',t:'"I want to make sure we find you the right home, not just any home. What\'s bringing you to Abilene, and what does your ideal situation look like?"',tip:'Present the buyer rep agreement with confidence.'}],
+  military:[{s:'VA Buyer Intro',t:'"Hey, I work with a lot of families at Dyess and I know the PCS timeline can be really tight. I\'m familiar with VA loans and I know how to move fast. When are your orders effective?"',tip:'Ask about their report date early.'}],
+  aniv:[{s:'1-Year Anniversary Text',t:'"Hey [name]! I can\'t believe it\'s already been a year since you closed on [address]. Hope you\'re absolutely loving it! If you ever need anything or know someone looking to buy or sell, I\'m always here. Happy home anniversary!"',tip:'Send this text the week before the anniversary date.'}]
 };
-const app = initializeApp(cfg);
-const db = getDatabase(app);
-const hqRef = ref(db, 'agent_hq_data');
 
-let S = { 
-    cv:0, dr:0, nc:0, contacts: [], listings: {}, currentOpenHouse: {}, 
-    sallie: 24225, federal: 5500, zr1x: 0, closings: [], rc: { convGoal: 20 } 
+let rChart=null, selectedContacts=[], hIdx=0, currentFilter='all', activeDocsClientId=null;
+const S = {
+  dark:false, cv:0, dr:0, nc:0, streak:0, history:{}, calEvents:{},
+  tasks:[{id:'t1',t:'20 conversations',d:false},{id:'t2',t:'Add 20 new contacts',d:false},{id:'t3',t:'1 hour door knocking',d:false}],
+  contacts:[], clients:[], closings:[], currentOpenHouse: {},
+  sallie:24225, federal:5500, zr1x:0, manualTax:0, manualSav:0, docs:{},
+  rc:{ convGoal:20, doorGoal:20, nudgeTime:'16:00', showZR1X:true, showDebt:true, sprintMode:false, closingsGoal:21 },
+  notifPermission:'default'
 };
-let selectedContacts = [];
-let hIdx = 0;
 
-// FIREBASE SYNC
-onValue(hqRef, snap => {
-  const data = snap.val();
-  if(data) {
-    S = {...S, ...data};
-    if(!S.contacts) S.contacts = [];
-    if(!S.listings) S.listings = {};
-    updateUI();
-    renderInbox();
-    renderContacts();
-    renderListings();
-    renderCal();
-  }
+const todayD = new Date();
+let calYear=todayD.getFullYear(), calMonth=todayD.getMonth();
+let activeDateStr=`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(todayD.getDate()).padStart(2,'0')}`;
+
+// Twilio Backend Pointers
+let dbRef=null, setDb=null, storageRef=null, fbUploadBytes=null, fbGetDownloadURL=null, fbPush=null, fbDb=null, fbRef=null;
+
+import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js').then(fa=>{
+  Promise.all([
+    import('https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js'),
+    import('https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js')
+  ]).then(([fd, fs])=>{
+    const cfg={
+      apiKey:"AIzaSyBRl0xHETygH2XYB8lWzWOPoGFrzI-zqwg", authDomain:"agenthq-3c2c9.firebaseapp.com",
+      databaseURL:"https://agenthq-3c2c9-default-rtdb.firebaseio.com", projectId:"agenthq-3c2c9",
+      storageBucket:"agenthq-3c2c9.appspot.com", messagingSenderId:"91185374523", appId:"1:91185374523:web:fef9123905c7d416d1831e"
+    };
+    const app=fa.initializeApp(cfg);
+    fbDb=fd.getDatabase(app);
+    fbPush=fd.push;
+    fbRef=fd.ref;
+    dbRef=fd.ref(fbDb,'agent_hq_data');
+    setDb=fd.set;
+    const storage=fs.getStorage(app); storageRef=fs.ref; fbUploadBytes=fs.uploadBytesResumable; fbGetDownloadURL=fs.getDownloadURL;
+
+    fd.onValue(dbRef,snap=>{
+      const data=snap.val();
+      if(data){
+        Object.assign(S,data);
+        if(!S.calEvents)S.calEvents={}; if(!S.docs)S.docs={}; if(!S.contacts)S.contacts=[];
+        if(!S.rc)S.rc={convGoal:20,doorGoal:20,nudgeTime:'16:00',showZR1X:true,showDebt:true,sprintMode:false,closingsGoal:21};
+        applyRC(); updateC(); if(document.getElementById('cal-month'))renderCal();
+        renderMoney(); renderContacts(); renderClients();
+        if(document.getElementById('scn-inbox').classList.contains('on')) renderInbox();
+        
+        // ADMIN AUTO-FILL
+        if(S.currentOpenHouse) {
+           document.getElementById('oh-admin-addr').value = S.currentOpenHouse.address || '';
+           document.getElementById('oh-admin-price').value = S.currentOpenHouse.price || '';
+           document.getElementById('oh-admin-details').value = S.currentOpenHouse.details || '';
+           document.getElementById('oh-admin-url').value = S.currentOpenHouse.url || '';
+        }
+      }
+    });
+
+    // ADMIN PORTFOLIO DROPDOWN LISTENER
+    fd.onValue(fd.ref(fbDb, 'agent_hq_data/listings'), (snap) => {
+        const listings = snap.val();
+        const picker = document.getElementById('oh-admin-addr-picker');
+        if(listings) {
+            picker.innerHTML = '<option value="">Quick Pick from Portfolio...</option>';
+            Object.values(listings).forEach(addr => {
+                let opt = document.createElement('option');
+                opt.value = addr;
+                opt.innerText = addr;
+                picker.appendChild(opt);
+            });
+        }
+    });
+  });
 });
 
-function updateUI() {
-  document.getElementById('m-cv').textContent = S.cv; document.getElementById('s-cv').textContent = S.cv;
-  document.getElementById('m-dr').textContent = S.dr; document.getElementById('s-dr').textContent = S.dr;
-  document.getElementById('m-nc').textContent = S.nc; document.getElementById('s-nc').textContent = S.nc;
-  document.getElementById('m-debt').textContent = '$' + (Math.round(S.sallie + S.federal)).toLocaleString();
-  document.getElementById('p-cv').style.width = Math.min(100, (S.cv/20)*100) + '%';
-  document.getElementById('p-dr').style.width = Math.min(100, (S.dr/20)*100) + '%';
-  document.getElementById('p-nc').style.width = Math.min(100, (S.nc/20)*100) + '%';
-  const earned = S.closings.reduce((a,c) => a+c.net, 0);
-  document.getElementById('me').textContent = '$' + Math.round(earned).toLocaleString();
-  document.getElementById('mz').textContent = '$' + Math.round(S.zr1x).toLocaleString();
-  document.getElementById('msav-grid').textContent = '$' + Math.round(earned * 0.2).toLocaleString();
-  document.getElementById('mt-grid').textContent = '$' + Math.round(earned * 0.3).toLocaleString();
+window.save=function(){
+  try{localStorage.setItem('ahq_v6',JSON.stringify(S));}catch(e){}
+  if(setDb&&dbRef){try{setDb(dbRef,S);}catch(e){console.error(e);}}
+};
+window.load=function(){
+  try{const d=JSON.parse(localStorage.getItem('ahq_v6')||'{}');Object.assign(S,d);if(!S.calEvents)S.calEvents={};if(!S.docs)S.docs={};if(!S.contacts)S.contacts=[];if(!S.rc)S.rc={convGoal:20,doorGoal:20,nudgeTime:'16:00',showZR1X:true,showDebt:true,sprintMode:false,closingsGoal:21};}catch(e){}
+  updateC();
+};
+
+function toast(msg,dur=2500){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),dur);
 }
 
-// INBOX RENDERER (ENHANCED)
-window.renderInbox = () => {
-  const el = document.getElementById('inbox-list');
-  const leads = Object.values(S.contacts || {}).filter(c => c.status === 'new' && (c.source?.includes('Portal') || c.source?.includes('iPad')));
-  document.getElementById('inbox-badge').style.display = leads.length > 0 ? 'block' : 'none';
-  if(leads.length === 0) { el.innerHTML = '<div class="empty-state">No new leads yet.</div>'; return; }
-  el.innerHTML = leads.map(c => `
-    <div class="card" style="border-left: 4px solid var(--am); padding: 16px;">
-      <div style="font-family:var(--font-serif); font-size:22px; font-weight:700; color:var(--g);">${c.name}</div>
-      <div style="font-size:13px; color:var(--tx2); margin-top:2px; font-weight:600;">📱 ${c.phone}</div>
-      <div class="intel-box"><b>Captured Intel</b><br>${c.note || 'No notes.'}</div>
-      <button class="btn" style="width:100%; margin-top:14px;" onclick="startHustleWithLead(${c.id})">Contact Now</button>
-    </div>`).join('');
-};
+function toggleDark(){S.dark=!S.dark;applyDark();save();}
+function applyDark(){document.documentElement.toggleAttribute('data-dark',S.dark);if(rChart)renderCharts();}
 
-// PORTFOLIO LOGIC
-window.addListing = () => {
-  const addr = document.getElementById('new-listing-addr').value.trim();
-  if(!addr) return;
-  push(ref(db, 'agent_hq_data/listings'), addr);
-  document.getElementById('new-listing-addr').value = '';
-};
-window.removeListing = (key) => {
-  if(confirm("Remove this listing?")) remove(ref(db, `agent_hq_data/listings/${key}`));
-};
-function renderListings() {
-  const picker = document.getElementById('oh-admin-picker');
-  const managed = document.getElementById('managed-listings-list');
-  picker.innerHTML = '<option value="">Quick Pick Listing...</option>';
-  managed.innerHTML = '';
-  Object.entries(S.listings).forEach(([key, addr]) => {
-    const opt = document.createElement('option');
-    opt.value = addr; opt.innerText = addr;
-    picker.appendChild(opt);
-    managed.innerHTML += `<div class="listing-row"><div class="listing-addr">${addr}</div><div class="listing-del" onclick="removeListing('${key}')">REMOVE</div></div>`;
+function openRC(){
+  const rc=S.rc;
+  document.getElementById('rc-convGoal').textContent=rc.convGoal;
+  document.getElementById('rc-doorGoal').textContent=rc.doorGoal;
+  document.getElementById('rc-nudgeTime').value=rc.nudgeTime||'16:00';
+  document.getElementById('rc-closingsGoal').textContent=rc.closingsGoal;
+  ['zr1x','debt','sprint'].forEach(k=>{
+    const key=k==='zr1x'?'showZR1X':k==='debt'?'showDebt':'sprintMode';
+    const el=document.getElementById('tog-'+k);
+    el.classList.toggle('on',!!rc[key]);
   });
+  document.getElementById('rc-panel').style.display='flex';
+}
+function closeRC(){document.getElementById('rc-panel').style.display='none';}
+window.rcAdj=function(k,d){S.rc[k]=Math.max(1,(S.rc[k]||0)+d);document.getElementById('rc-'+k).textContent=S.rc[k];};
+window.rcSet=function(k,v){S.rc[k]=v;};
+window.rcToggle=function(k){
+  S.rc[k]=!S.rc[k]; const elMap={showZR1X:'tog-zr1x',showDebt:'tog-debt',sprintMode:'tog-sprint'};
+  document.getElementById(elMap[k]).classList.toggle('on',S.rc[k]);
+};
+window.saveRC=function(){applyRC();save();closeRC();toast('⚙️ Config saved & applied!');};
+
+function applyRC(){
+  const rc=S.rc;
+  document.getElementById('ms-cv').textContent=`Goal: ${rc.convGoal} today`;
+  document.getElementById('ms-dr').textContent=`Goal: ${rc.doorGoal} today`;
+  document.getElementById('ms-cl').textContent=`of ${rc.closingsGoal} needed`;
+  document.getElementById('ms-mc').textContent=`Need ~${rc.closingsGoal} closings`;
+  document.getElementById('sprint-banner').style.display=rc.sprintMode?'block':'none';
+  document.getElementById('zr1x-card').style.display=rc.showZR1X===false?'none':'';
+  document.getElementById('debt-card').style.display=rc.showDebt===false?'none':'';
+  document.getElementById('p-cv').style.width=Math.min(100,(S.cv/(rc.convGoal||20))*100)+'%';
+  document.getElementById('p-dr').style.width=Math.min(100,(S.dr/(rc.doorGoal||20))*100)+'%';
 }
 
-// CONTACTS LOGIC
-window.renderContacts = () => {
-  const el = document.getElementById('clist');
-  const contacts = Object.values(S.contacts || {}).sort((a,b) => (b.lt || 0) - (a.lt || 0));
-  if(contacts.length === 0) { el.innerHTML = '<div class="empty-state">No contacts found.</div>'; return; }
-  el.innerHTML = contacts.map(c => `
-    <div class="ci" onclick="togSel(${c.id})" style="${selectedContacts.includes(c.id)?'background:var(--gl);':''}">
-      <div class="av">${(c.name[0]||'').toUpperCase()}</div>
-      <div style="flex:1;">
-        <div style="font-family:var(--font-serif); font-weight:700; font-size:16px; color:var(--g);">${c.name}</div>
-        <div style="font-size:12px; color:var(--tx2);">${c.phone}</div>
+window.requestNotifPermission=async function(){
+  if(!('Notification' in window)){toast('Notifications not supported on this browser');return;}
+  const perm=await Notification.requestPermission(); S.notifPermission=perm; updateNotifUI();
+  if(perm==='granted'){toast('🔔 Notifications enabled!');save();}
+};
+
+function updateNotifUI(){
+  const perm = ('Notification' in window) ? Notification.permission : 'unsupported';
+  const btn=document.getElementById('notif-btn'); const status=document.getElementById('notif-perm-status');
+  if(perm==='granted'){ btn.textContent='✅ Notifications On';btn.style.background='var(--ios-green)'; status.textContent='Nudge active'; } 
+  else if(perm==='denied'){ btn.textContent='🚫 Blocked';btn.style.background='var(--tx3)'; status.textContent='Enable in browser settings'; } 
+  else { btn.textContent='Enable Notifications';btn.style.background='var(--g)'; status.textContent=''; }
+}
+
+window.openDocs=function(clientId, clientName){
+  activeDocsClientId=clientId;
+  document.getElementById('docs-panel-title').textContent='📁 '+clientName;
+  renderDocsList(); document.getElementById('docs-panel').style.display='flex';
+};
+window.closeDocs=function(){document.getElementById('docs-panel').style.display='none';activeDocsClientId=null;};
+
+function renderDocsList(){
+  const el=document.getElementById('docs-list'); const clientDocs=(S.docs[activeDocsClientId]||[]);
+  if(clientDocs.length===0){el.innerHTML='<div class="empty-state" style="padding:20px;">No documents yet.</div>';return;}
+  const iconMap={pdf:'📄',jpg:'🖼️',jpeg:'🖼️',png:'🖼️',heic:'🖼️'};
+  el.innerHTML=clientDocs.map((d,i)=>{
+    const ext=(d.name.split('.').pop()||'').toLowerCase(); const icon=iconMap[ext]||'📎';
+    return `<div class="doc-item">
+      <div class="doc-icon" style="background:var(--inp);">${icon}</div>
+      <div style="flex:1;min-width:0;"><div class="doc-name">${d.name}</div><div class="doc-size">${d.size}</div></div>
+      <div style="display:flex;gap:8px;">
+        ${d.url?`<a href="${d.url}" target="_blank" style="text-decoration:none;"><button class="btn bsm bo">View</button></a>`:''}
+        <button class="btn bsm" style="background:var(--rl);color:var(--ios-red);" onclick="deleteDoc(${i})">Del</button>
       </div>
-      <a href="tel:${c.phone}" class="btn bsm" style="height:32px; background:var(--g); color:var(--am);">Call</a>
-    </div>`).join('');
-  document.getElementById('h-btn').style.display = selectedContacts.length ? 'block' : 'none';
-};
+    </div>`;
+  }).join('');
+}
 
-// CALENDAR RENDERER
-let calYear = 2026, calMonth = 3;
-window.renderCal = () => {
-  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  document.getElementById('cal-month').textContent = months[calMonth] + ' ' + calYear;
-  const first = new Date(calYear, calMonth, 1).getDay();
-  const total = new Date(calYear, calMonth+1, 0).getDate();
-  let html = '';
-  for(let i=0; i<first; i++) html += '<div></div>';
-  for(let d=1; d<=total; d++) {
-    const key = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    html += `<div class="cal-d"><div class="cal-d-num">${d}</div></div>`;
+window.saveActiveOpenHouse = async function() {
+  const addr = document.getElementById('oh-admin-addr').value.trim();
+  const price = document.getElementById('oh-admin-price').value.trim();
+  const details = document.getElementById('oh-admin-details').value.trim();
+  const url = document.getElementById('oh-admin-url').value.trim();
+  const btn = document.getElementById('oh-admin-btn');
+  
+  if(!addr) return alert("Property address is required.");
+
+  btn.innerText = "Updating...";
+  btn.disabled = true;
+
+  S.currentOpenHouse = { address: addr, price, details, url };
+  save();
+  toast("🏡 Live Portal Updated!");
+  btn.innerText = "Update Live Portal";
+  btn.disabled = false;
+}
+
+function showScn(id,el){
+  document.querySelectorAll('.scn').forEach(s=>s.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.getElementById('scn-'+id).classList.add('on');if(el)el.classList.add('on');
+  if(id==='money')renderMoney(); if(id==='circle')renderContacts(); if(id==='clients')renderClients();
+  if(id==='inbox')renderInbox();
+}
+
+window.renderInbox = function() {
+  const el = document.getElementById('inbox-list');
+  const leads = S.contacts.filter(c => c.source === 'Open House iPad' && c.status === 'new');
+  
+  if(leads.length === 0) {
+    el.innerHTML = '<div class="empty-state">No new iPad leads.<br>Once someone signs in, they will appear here instantly.</div>';
+    return;
   }
-  document.getElementById('cal-days').innerHTML = html;
+
+  // UPDATED INBOX UI to highlight Employer/Snack
+  el.innerHTML = leads.map(c => `
+    <div class="card" style="padding:16px; border-left: 4px solid var(--ios-blue);">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+        <div style="flex:1;">
+          <div style="font-weight:700; font-size:18px;">${c.name}</div>
+          <div style="font-size:14px; color:var(--ios-blue); font-weight:600; margin-top:2px;">${c.phone}</div>
+          
+          <div style="background:var(--inp); padding:12px; border-radius:10px; margin-top:12px; font-size:13px; color:var(--tx2); line-height:1.5;">
+            <b style="color:var(--tx)">Intel:</b> ${c.note}
+          </div>
+        </div>
+      </div>
+      <div style="display:flex; gap:8px; margin-top:14px;">
+        <button class="btn bsm" onclick="startHustleWithLead(${c.id})" style="flex:1; background:var(--ios-blue);">Reach Out</button>
+        <button class="btn bsm bo" onclick="archiveLead(${c.id})" style="flex:1;">Archive</button>
+      </div>
+    </div>
+  `).join('');
 };
 
-// UTILS
-window.adj = (k,d) => { S[k] = Math.max(0, (S[k]||0)+d); update(hqRef, { [k]: S[k] }); };
-window.showScn = (id, el) => {
-  document.querySelectorAll('.scn').forEach(s => s.classList.remove('on'));
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
-  document.getElementById('scn-'+id).classList.add('on');
-  if(el) el.classList.add('on');
+window.updateInboxBadge = function() {
+    const newLeads = S.contacts.filter(c => c.source === 'Open House iPad' && c.status === 'new');
+    const badge = document.getElementById('inbox-badge');
+    if (badge) badge.style.display = newLeads.length > 0 ? 'block' : 'none';
 };
-window.toast = (m) => {
-  const t = document.getElementById('toast');
-  t.innerText = m; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2500);
+
+window.archiveLead = function(id) {
+    const idx = S.contacts.findIndex(c => c.id === id);
+    if(idx > -1) {
+        S.contacts[idx].status = 'archived';
+        save(); renderInbox(); toast("Lead archived.");
+    }
 };
+
+window.startHustleWithLead = function(id) {
+  selectedContacts = [id];
+  launchHustle();
+};
+
+function adj(k,d){
+  S[k]=Math.max(0,(S[k]||0)+d); const today=new Date().toISOString().split('T')[0]; S.history[today]=S.cv;
+  updateC();save();
+}
+
+function updateC(){
+  const rc=S.rc||{}; const cvGoal=rc.convGoal||20; const drGoal=rc.doorGoal||20;
+  document.getElementById('m-cv').textContent=S.cv; document.getElementById('s-cv').textContent=S.cv;
+  document.getElementById('m-dr').textContent=S.dr; document.getElementById('s-dr').textContent=S.dr;
+  document.getElementById('m-nc').textContent=S.nc||0; document.getElementById('s-nc').textContent=S.nc||0;
+  document.getElementById('m-st').textContent=S.streak||0;
+  document.getElementById('p-cv').style.width=Math.min(100,(S.cv/cvGoal)*100)+'%';
+  document.getElementById('p-dr').style.width=Math.min(100,(S.dr/drGoal)*100)+'%';
+  document.getElementById('p-nc').style.width=Math.min(100,((S.nc||0)/20)*100)+'%';
+  const netEarned=S.closings.reduce((a,c)=>a+c.net,0);
+  document.getElementById('m-cl').textContent=S.closings.length; document.getElementById('m-ne').textContent='$'+Math.round(netEarned).toLocaleString();
+  const pt=document.getElementById('perf-tracker'),pTitle=document.getElementById('perf-title'),pDesc=document.getElementById('perf-desc');
+  if(S.cv===0&&S.dr===0&&(S.nc||0)===0){ pt.style.borderLeftColor='var(--ios-red)';pTitle.style.color='var(--ios-red)';pTitle.textContent='NO ACTIVITY LOGGED.';pDesc.textContent="Start dialing."; } 
+  else if(S.cv<cvGoal){ pt.style.borderLeftColor='var(--am)';pTitle.style.color='var(--am)';pTitle.textContent='FALLING BEHIND.';pDesc.textContent=`Push harder.`; } 
+  else { pt.style.borderLeftColor='var(--g)';pTitle.style.color='var(--g)';pTitle.textContent='DAILY GOAL MET.';pDesc.textContent="Keep pushing — 120%."; }
+  renderTasks(); if(document.getElementById('cal-month'))renderCal();
+  updateInboxBadge();
+}
+
+function renderTasks(){ document.getElementById('tlist').innerHTML=S.tasks.map(t=>`<div class="row" style="cursor:pointer;" onclick="togT('${t.id}')"><div class="cb2 ${t.d?'ck':''}"></div><div class="rt ${t.d?'dn':''}">${t.t}</div></div>`).join(''); }
+window.togT=function(id){const t=S.tasks.find(x=>x.id===id);t.d=!t.d;renderTasks();save();};
+
+window.importICS=function(inp){
+  const files=inp.files;if(!files.length)return;
+  Array.from(files).forEach(f=>{ const r=new FileReader(); r.onload=e=>{ save();renderCal();toast(`✅ Schedule loaded!`); }; r.readAsText(f); }); inp.value='';
+};
+
+window.importVCF=function(inp){
+  const f=inp.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=e=>{
+    const cards=e.target.result.split('BEGIN:VCARD');let n=0;
+    cards.forEach(card=>{
+      if(!card.includes('END:VCARD'))return;
+      const nm=card.match(/FN:(.*)/i)||card.match(/N:(.*)/i); const ph=card.match(/TEL[^:]*:([\d\s\(\)\-\+]+)/i);
+      if(nm){ const name=nm[1].trim().replace(/;/g,' ').trim(); const phone=ph?ph[1].trim():'';
+        if(name&&name.length>1&&!S.contacts.find(c=>c.name===name)){ S.contacts.push({id:Date.now()+n,name,phone,type:'general',source:'iPhone Import',status:'new',lt:Date.now()});n++; }
+      }
+    }); S.nc+=n;window.renderContacts();updateC();save();toast(`✅ Imported ${n} contacts!`);
+  }; r.readAsText(f);inp.value='';
+};
+
+window.addContact=function(){
+  const n=document.getElementById('cn').value.trim(),p=document.getElementById('cp').value.trim(),nt=document.getElementById('cnot').value.trim(),src=document.getElementById('cref').value.trim(),type=document.getElementById('ctype').value,st=document.getElementById('cs').value;
+  if(!n)return; S.contacts.unshift({id:Date.now(),name:n,phone:p,note:nt,source:src,type,status:st,lt:Date.now()});
+  document.getElementById('cn').value='';document.getElementById('cp').value='';document.getElementById('cnot').value='';document.getElementById('cref').value=''; adj('nc',1);window.renderContacts();save();
+};
+window.setFilter=function(f,el){currentFilter=f;document.querySelectorAll('.fc').forEach(b=>b.classList.remove('on'));el.classList.add('on');window.renderContacts();};
+
+window.renderContacts=function(){
+  const el=document.getElementById('clist'); let filtered=S.contacts;
+  if(currentFilter==='new')filtered=S.contacts.filter(c=>c.status==='new');
+  else if(currentFilter!=='all')filtered=S.contacts.filter(c=>c.type===currentFilter);
+  if(filtered.length===0){el.innerHTML='<div class="empty-state">No contacts yet.<br>Use the importer above!</div>';return;}
+  const tc={military:'var(--bll);color:var(--bl)',firsttime:'var(--al);color:var(--am)',investor:'var(--pul);color:var(--pu)',fsbo:'var(--gl);color:var(--gd)',expired:'var(--rl);color:var(--rd)',referral:'var(--gl);color:var(--gd)',general:'var(--inp);color:var(--tx2)'};
+  el.innerHTML=filtered.map(c=>{
+    const col=tc[c.type]||tc.general; const docCount=(S.docs[c.id]||[]).length;
+    return `<div class="ci ${selectedContacts.includes(c.id)?'selected':''}" onclick="togSel(${c.id})">
+      <div class="sel-box"></div>
+      <div class="av" style="background:var(--gl);color:var(--gd);">${(c.name[0]||'').toUpperCase()}</div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-weight:700;font-size:15px;">${c.name}</div>
+        <div style="font-size:12px;color:var(--tx2);">${c.status||'new'} · ${c.phone||'No phone'}</div>
+        <div style="display:flex;gap:5px;margin-top:4px;flex-wrap:wrap;">
+          <span style="font-size:10px;background:${col};padding:2px 8px;border-radius:6px;">${c.type||'general'}</span>
+          ${c.source?`<span style="font-size:10px;background:var(--inp);padding:2px 8px;border-radius:6px;">${c.source}</span>`:''}
+          ${docCount?`<span style="font-size:10px;background:var(--inp);padding:2px 8px;border-radius:6px;">📎 ${docCount} doc${docCount>1?'s':''}</span>`:''}
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button onclick="event.stopPropagation();openDocs(${c.id},'${c.name.replace(/'/g,'')}')" style="width:32px;height:32px;border-radius:50%;background:var(--inp);border:none;font-size:16px;cursor:pointer;" title="Documents">📎</button>
+        ${c.phone?`<a href="tel:${c.phone.replace(/\D/g,'')}" onclick="event.stopPropagation()" style="width:36px;height:36px;border-radius:50%;background:var(--ios-blue);display:flex;align-items:center;justify-content:center;text-decoration:none;color:#fff;flex-shrink:0;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.77 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></a>`:''}
+        <button onclick="event.stopPropagation(); deleteContact(${c.id})" style="width:32px;height:32px;border-radius:50%;background:var(--rl);color:var(--ios-red);border:none;font-size:14px;font-weight:700;cursor:pointer;" title="Delete">X</button>
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('h-btn').style.display=selectedContacts.length?'block':'none';
+};
+
+window.deleteContact = function(id) {
+  if(!confirm("Are you sure you want to delete this contact?")) return;
+  S.contacts = S.contacts.filter(c => c.id !== id);
+  selectedContacts = selectedContacts.filter(x => x !== id);
+  window.renderContacts(); save(); toast('🗑️ Contact deleted');
+};
+
+window.togSel=function(id){if(selectedContacts.includes(id))selectedContacts=selectedContacts.filter(x=>x!==id);else selectedContacts.push(id);window.renderContacts();};
+window.launchHustle=function(){hIdx=0;showHustle();document.getElementById('hustle-overlay').style.display='flex';};
+function showHustle(){
+  const c=S.contacts.find(x=>x.id===selectedContacts[hIdx]);if(!c)return stopHustle();
+  document.getElementById('h-count').textContent=`Queue ${hIdx+1}/${selectedContacts.length}`; document.getElementById('h-name').textContent=c.name;
+  document.getElementById('h-note').textContent=c.note||'No notes recorded'; document.getElementById('h-source').textContent=c.source?`Source: ${c.source}`:'';
+  document.getElementById('h-av').textContent=(c.name[0]||'').toUpperCase();
+}
+
+// TWILIO CLOUD PUSH
+window.hustleSend=function(){
+  const c=S.contacts.find(x=>x.id===selectedContacts[hIdx]);
+  const msg="Hey! It's Christian Carter — I just joined the Tonya Harbin Team here in Abilene as a licensed real estate agent. If you or anyone you know is thinking about buying or selling, I'd love to help!";
+  
+  if (fbDb && fbPush && fbRef && c.phone) {
+     fbPush(fbRef(fbDb, 'sms_queue'), {
+        to: c.phone, body: msg, contactId: c.id, status: "pending", timestamp: Date.now()
+     });
+     adj('cv',1);
+     const btn = document.getElementById('h-send-btn');
+     btn.innerText = "Sent!";
+     
+     // Update status so they drop out of the "new" inbox automatically
+     c.status = "contacted";
+     save();
+     if(document.getElementById('scn-inbox').classList.contains('on')) renderInbox();
+     
+     setTimeout(() => { btn.innerText = "Send Text"; nextHustle(); }, 800);
+  } else {
+     // Fallback to local SMS if cloud isn't ready
+     window.location.href=`sms:${(c.phone||'').replace(/\D/g,'')}&body=${encodeURIComponent(msg)}`;
+     adj('cv',1);
+     c.status = "contacted";
+     save();
+     setTimeout(()=>nextHustle(),500);
+  }
+};
+
+window.nextHustle=function(){hIdx++;if(hIdx>=selectedContacts.length)stopHustle();else showHustle();};
+window.stopHustle=function(){document.getElementById('hustle-overlay').style.display='none';selectedContacts=[];window.renderContacts();};
+
+window.addClient=function(){
+  const name=document.getElementById('cli-name').value.trim(),addr=document.getElementById('cli-addr').value.trim(),price=parseFloat(document.getElementById('cli-price').value)||0,date=document.getElementById('cli-date').value,type=document.getElementById('cli-type').value,notes=document.getElementById('cli-notes').value.trim();
+  if(!name||date==='')return alert('Name and close date are required.');
+  const gross=price*0.03,afterSplit=gross*0.70,net=afterSplit*0.70,tax=afterSplit*0.30;
+  const anivDate=new Date(date);anivDate.setFullYear(anivDate.getFullYear()+1);
+  S.clients.unshift({id:Date.now(),name,addr,price,date,type,notes,net,tax,anivDate:anivDate.toISOString().split('T')[0]});
+  S.closings.push({net,tax,date:new Date().toISOString()});S.zr1x+=net*0.5;
+  document.getElementById('cli-name').value='';document.getElementById('cli-addr').value='';document.getElementById('cli-price').value='';document.getElementById('cli-date').value='';document.getElementById('cli-notes').value='';
+  renderClients();renderMoney();updateC();save();toast('🏠 Closing logged!');
+};
+
+function daysUntil(dateStr){const today=new Date();today.setHours(0,0,0,0);const target=new Date(dateStr);target.setHours(0,0,0,0);return Math.round((target-today)/86400000);}
+
+function renderClients(){
+  const el=document.getElementById('client-list'),alertEl=document.getElementById('aniv-alert'),anivList=document.getElementById('aniv-list'),anivCount=document.getElementById('aniv-count');
+  if(S.clients.length===0){el.innerHTML='<div class="empty-state">No clients yet.<br>Log your first closing above.</div>';alertEl.style.display='none';return;}
+  const upcoming=S.clients.filter(c=>{const d=daysUntil(c.anivDate);return d>=0&&d<=14;});
+  if(upcoming.length>0){
+    alertEl.style.display='block'; anivList.innerHTML=upcoming.map(c=>{const d=daysUntil(c.anivDate);return `${c.name} — ${d===0?'TODAY':d===1?'Tomorrow':`in ${d} days`}`;}).join('<br>');
+    anivCount.innerHTML=`<span class="aniv-badge">${upcoming.length} anniversary${upcoming.length>1?'s':''}</span>`;
+  } else {alertEl.style.display='none';anivCount.innerHTML='';}
+  const tl={military:'Military / VA',firsttime:'First-Time',family:'Family',investor:'Investor'}, tc={military:'tag-mil',firsttime:'tag-ft',family:'tag-fam',investor:'tag-inv'};
+  el.innerHTML=S.clients.map(c=>{
+    const days=daysUntil(c.anivDate),isUp=days>=0&&days<=14;
+    const msg=encodeURIComponent(`Hey ${c.name}! I can't believe it's already been a year since you closed on ${c.addr||'your home'}. Hope you're absolutely loving it! If you ever need anything or know someone looking to buy or sell, I'm always here. Happy home anniversary!`);
+    const docCount=(S.docs[c.id]||[]).length;
+    return `<div class="client-card">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <div><div class="client-name">${c.name}</div><div class="client-addr">${c.addr||'No address'}</div></div>
+        <div style="display:flex;gap:6px;align-items:center;"><span class="tag ${tc[c.type]||'tag-fam'}">${tl[c.type]||c.type}</span><button onclick="openDocs(${c.id},'${c.name.replace(/'/g,'')}')" style="width:30px;height:30px;border-radius:8px;background:var(--inp);border:none;font-size:14px;cursor:pointer;" title="Documents">📎${docCount?`<span style="font-size:9px;font-weight:700;color:var(--ios-blue);">${docCount}</span>`:''}</button></div>
+      </div>
+      <div class="client-row"><span>Sale Price</span><span class="client-val">${c.price?'$'+Number(c.price).toLocaleString():'—'}</span></div>
+      <div class="client-row"><span>Closed</span><span class="client-val">${c.date||'—'}</span></div>
+      <div class="client-row"><span>Your Net</span><span class="client-val" style="color:var(--g);">$${Math.round(c.net).toLocaleString()}</span></div>
+      <div class="aniv-row">
+        <div><div style="font-size:12px;font-weight:600;color:${isUp?'var(--ios-red)':'var(--tx2)'};">${isUp?(days===0?'🎉 Anniversary TODAY!':days===1?'🎉 Anniversary TOMORROW!':days+' days to anniversary'):'Anniversary: '+c.anivDate}</div></div>
+        ${c.phone?`<a href="sms:${c.phone.replace(/\D/g,'')}&body=${msg}" style="text-decoration:none;"><button class="btn bsm" style="background:${isUp?'var(--ios-red)':'var(--inp)'};color:${isUp?'#fff':'var(--ios-blue)'};">Send Text</button></a>`:'<button class="btn bsm bo" onclick="alert(\'Add phone number first\')">Send Text</button>'}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+window.logCloseMoney=function(){
+  const p=parseFloat(document.getElementById('clp').value)||0,n=document.getElementById('cln').value.trim(); if(p<=0)return;
+  const gross=p*0.03,afterSplit=gross*0.70,net=afterSplit*0.70,tax=afterSplit*0.30;
+  S.closings.push({net,tax,date:new Date().toISOString(),name:n});S.zr1x+=net*0.5; document.getElementById('clp').value='';document.getElementById('cln').value=''; renderMoney();updateC();save();toast('💰 Closing logged!');
+};
+window.addTax=function(){const v=parseFloat(document.getElementById('ma-tax').value)||0;if(v){S.manualTax+=v;document.getElementById('ma-tax').value='';renderMoney();save();}};
+window.addSav=function(){const v=parseFloat(document.getElementById('ma-sav').value)||0;if(v){S.manualSav+=v;document.getElementById('ma-sav').value='';renderMoney();save();}};
+window.payDebt=function(){
+  const v=parseFloat(document.getElementById('debt-pay').value)||0;if(v<=0)return;
+  if(S.sallie>0){const pay=Math.min(v,S.sallie);S.sallie-=pay;const rem=v-pay;if(rem>0)S.federal=Math.max(0,S.federal-rem);} else{S.federal=Math.max(0,S.federal-v);}
+  document.getElementById('debt-pay').value='';renderMoney();save();toast('💸 Payment applied!');
+};
+
+function renderMoney(){
+  const net=S.closings.reduce((a,c)=>a+c.net,0), autoTax=S.closings.reduce((a,c)=>a+c.tax,0), totalTax=autoTax+(S.manualTax||0);
+  const autoSav=S.closings.reduce((a,c)=>a+(c.net*0.2),0), totalSav=autoSav+(S.manualSav||0);
+  document.getElementById('me').textContent='$'+Math.round(net).toLocaleString(); document.getElementById('mc').textContent=S.closings.length;
+  document.getElementById('msav-grid').textContent='$'+Math.round(totalSav).toLocaleString(); document.getElementById('mt-grid').textContent='$'+Math.round(totalTax).toLocaleString();
+  document.getElementById('mt-total').textContent='$'+Math.round(totalTax).toLocaleString(); document.getElementById('tax-breakdown').textContent=`Auto: $${Math.round(autoTax).toLocaleString()} · Manual: $${Math.round(S.manualTax||0).toLocaleString()}`;
+  document.getElementById('msav-total').textContent='$'+Math.round(totalSav).toLocaleString(); document.getElementById('sav-breakdown').textContent=`Auto: $${Math.round(autoSav).toLocaleString()} · Manual: $${Math.round(S.manualSav||0).toLocaleString()}`;
+  document.getElementById('mz').textContent='$'+Math.round(S.zr1x).toLocaleString(); document.getElementById('zf').style.width=Math.min(100,(S.zr1x/25000)*100)+'%';
+  document.getElementById('d-sallie').textContent=Math.round(S.sallie).toLocaleString(); document.getElementById('d-fed').textContent=Math.round(S.federal).toLocaleString();
+  document.getElementById('pb-sallie').style.width=Math.min(100,((24225-S.sallie)/24225)*100)+'%'; document.getElementById('pb-fed').style.width=Math.min(100,((5500-S.federal)/5500)*100)+'%';
+  renderCharts();
+}
+
+function renderCharts(){
+  const mNet=Array(9).fill(0); S.closings.forEach(c=>{const d=new Date(c.date);const offset=(d.getFullYear()-2026)*12+(d.getMonth()-3);if(offset>=0&&offset<9)mNet[offset]+=c.net;});
+  const cum=[];let sum=0;mNet.forEach(v=>{sum+=v;cum.push(Math.round(sum));});
+  if(rChart)rChart.destroy(); const isDark=document.documentElement.hasAttribute('data-dark');
+  rChart=new Chart(document.getElementById('rchart'),{type:'line',data:{labels:MOS,datasets:[{label:'Your Net',data:cum,borderColor:'#1D9E75',fill:true,backgroundColor:'rgba(29,158,117,.1)',tension:.3},{label:'Target',data:TARGETS,borderColor:'#C9A84C',borderDash:[5,4],pointRadius:0,tension:.3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>'$'+Math.round(v/1000)+'K',color:isDark?'#AEAEB2':'#6C6C70'},grid:{color:isDark?'rgba(255,255,255,.06)':'rgba(0,0,0,.06)'}},x:{ticks:{color:isDark?'#AEAEB2':'#6C6C70'},grid:{display:false}}}}});
+}
+
+window.showS=function(k,el){ document.querySelectorAll('.stab').forEach(t=>t.classList.remove('on'));el.classList.add('on'); document.getElementById('scontent').innerHTML=(SCRIPTS[k]||[]).map(s=>`<div class="scard"><div class="sst">${s.s}</div><div class="stxt">${s.t}</div><div class="stip">PRO TIP: ${s.tip}</div></div>`).join(''); };
+window.calNav=function(dir){calMonth+=dir;if(calMonth>11){calMonth=0;calYear++;}if(calMonth<0){calMonth=11;calYear--;}renderCal();};
+window.selectDate=function(key){activeDateStr=key;renderCal();};
+
+function renderCal(){
+  const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('cal-month').textContent=months[calMonth]+' '+calYear; document.getElementById('cal-names').innerHTML=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d=>`<div class="cal-day-name">${d}</div>`).join('');
+  const now=new Date(),first=new Date(calYear,calMonth,1).getDay(),total=new Date(calYear,calMonth+1,0).getDate();
+  const evColors={openhouse:'#C9A84C',showing:'var(--ios-blue)',listing:'#7B9ED9',closing:'#2E7D52',prospecting:'#5A3472',doorknock:'var(--ios-red)',class:'#6B7280',other:'#9AA0AD'};
+  let html='';for(let i=0;i<first;i++)html+='<div></div>';
+  for(let d=1;d<=total;d++){
+    const key=`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`; const hit=(S.history[key]||0)>=(S.rc?.convGoal||20); const evs=(S.calEvents||{})[key]||[];
+    const isToday=(key===`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`), isSel=(key===activeDateStr);
+    let dots='';evs.slice(0,3).forEach(ev=>{dots+=`<div class="cal-dot" style="background:${evColors[ev.type]||'#9AA0AD'}"></div>`;});
+    html+=`<div class="cal-d ${isToday?'today':''} ${isSel?'selected':''} ${hit?'hit':''}" onclick="selectDate('${key}')"><div class="cal-d-num">${d}</div><div class="cal-dots">${dots}</div></div>`;
+  } document.getElementById('cal-days').innerHTML=html;renderCalEventsList();
+}
+function formatTime(t24){if(!t24)return '';let[h,m]=t24.split(':');let ap='AM';h=parseInt(h);if(h>=12){ap='PM';if(h>12)h-=12;}if(h===0)h=12;return`${h}:${m} ${ap}`;}
+
+function renderCalEventsList(){
+  const evColors={openhouse:'#C9A84C',showing:'var(--ios-blue)',listing:'#7B9ED9',closing:'#2E7D52',prospecting:'#5A3472',doorknock:'var(--ios-red)',class:'#6B7280',other:'#9AA0AD'};
+  const evLabels={openhouse:'Open House',showing:'Showing',listing:'Listing Appt',closing:'Closing',prospecting:'Prospecting',doorknock:'Door Knocking',class:'Class',other:'Other'};
+  const d=new Date(activeDateStr+'T12:00:00'); document.getElementById('cal-day-header').textContent=d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+  const evs=(S.calEvents||{})[activeDateStr]||[];
+  if(evs.length===0){document.getElementById('cal-events-list').innerHTML='<div style="padding:16px;text-align:center;color:var(--tx3);font-size:14px;">No events</div>';return;}
+  document.getElementById('cal-events-list').innerHTML=[...evs].sort((a,b)=>a.start.localeCompare(b.start)).map((ev,i)=>`
+    <div class="tl-row" onclick="openModal('${activeDateStr}',${i})"><div class="tl-time">${formatTime(ev.start)}</div><div class="tl-bar" style="background:${evColors[ev.type]||'#C9A84C'};"></div><div class="tl-content"><div class="tl-title">${ev.title}</div>${ev.type?`<div class="tl-sub">${evLabels[ev.type]||ev.type}</div>`:''}</div></div>`).join('');
+}
+
+window.openModal=function(dateKey,editIdx=null){
+  document.getElementById('modal-date-title').textContent='Add Event';
+  if(editIdx!==null){ const evs=(S.calEvents||{})[dateKey]||[]; if(evs[editIdx])document.getElementById('existing-events').innerHTML=`<button onclick="deleteEvent('${dateKey}',${editIdx})" style="width:100%;height:44px;border-radius:10px;border:none;background:var(--rl);color:var(--ios-red);font-size:15px;font-weight:600;margin-top:10px;cursor:pointer;">Delete Event</button>`; } else document.getElementById('existing-events').innerHTML='';
+  document.getElementById('cal-modal').style.display='flex';
+};
+window.closeModal=function(){document.getElementById('cal-modal').style.display='none';};
+window.openAddEvent=function(){document.getElementById('ev-title').value='';document.getElementById('ev-start').value='';document.getElementById('ev-end').value='';openModal(activeDateStr);};
+window.saveEvent=function(){
+  const type=document.getElementById('ev-type').value,title=document.getElementById('ev-title').value.trim(),start=document.getElementById('ev-start').value,end=document.getElementById('ev-end').value;
+  if(!title)return; if(!S.calEvents[activeDateStr])S.calEvents[activeDateStr]=[];
+  S.calEvents[activeDateStr].push({type,title,start,end}); S.calEvents[activeDateStr].sort((a,b)=>a.start.localeCompare(b.start));
+  document.getElementById('ev-title').value='';document.getElementById('ev-start').value='';document.getElementById('ev-end').value='';
+  save();renderCal();closeModal();toast('📅 Event added!');
+};
+window.deleteEvent=function(dateKey,idx){S.calEvents[dateKey].splice(idx,1);if(!S.calEvents[dateKey].length)delete S.calEvents[dateKey];save();renderCal();closeModal();};
+
+window.toggleDark=toggleDark;window.showScn=showScn;window.adj=adj; window.openRC=openRC;window.closeRC=closeRC;window.saveRC=saveRC; window.openDocs=openDocs;window.closeDocs=closeDocs;
 
 window.onload=()=>{
-  document.getElementById('todays-date').textContent = new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+  load();applyDark();applyRC();
+  const day=Math.floor((new Date()-new Date(new Date().getFullYear(),0,1))/86400000);
+  document.getElementById('daily-quote').textContent=QUOTES[day%QUOTES.length];
+  document.getElementById('todays-date').textContent=new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+  showS('sphere',document.querySelector('.stab')); updateNotifUI();
 };
 </script>
 </body>
