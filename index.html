@@ -391,20 +391,32 @@ input,select,textarea{width:100%;border-radius:10px;border:none;background:var(-
     <div style="font-size:22px;font-weight:800;">Open House Admin</div>
   </div>
   
-  <div class="card" style="padding:16px;">
-    <div class="sst" style="margin-bottom:10px;">Set Active Property for iPad</div>
-    <div style="font-size:13px;color:var(--tx2);margin-bottom:12px;">This updates the live Open House Portal instantly.</div>
-
-    <select id="oh-admin-addr-picker" style="margin-bottom:8px;" onchange="document.getElementById('oh-admin-addr').value = this.value;">
+  <div class="card" style="padding:16px; border-left: 4px solid var(--ios-blue);">
+    <div class="sst" style="margin-bottom:10px;">1. Select Active Property</div>
+    
+    <select id="oh-admin-addr-picker" style="margin-bottom:10px; background:var(--inp); border:none; padding:14px; border-radius:10px; font-size:16px; width:100%;">
         <option value="">Quick Pick from Portfolio...</option>
     </select>
 
-    <input type="text" id="oh-admin-addr" placeholder="Property Address (e.g. 123 Main St)">
-    <input type="url" id="oh-admin-url" placeholder="TonyaHarbin.com Flyer URL" style="margin-top:8px;">
-    <input type="text" id="oh-admin-price" placeholder="Price (e.g. $450,000)" style="margin-top:8px;">
-    <input type="text" id="oh-admin-details" placeholder="Details (e.g. 4 Bed, 3 Bath, 2,500 sqft)" style="margin-top:8px;">
+    <input type="text" id="oh-admin-addr" placeholder="Property Address (e.g. 123 Main St)" style="margin-bottom:8px;">
     
-    <button class="btn" id="oh-admin-btn" style="width:100%;margin-top:16px;background:var(--ios-blue);" onclick="saveActiveOpenHouse()">Update Live Portal</button>
+    <div class="sst" style="margin-bottom:10px; margin-top:10px;">2. Digital Flyer Link (Optional)</div>
+    <input type="url" id="oh-admin-url" placeholder="TonyaHarbin.com Flyer URL" style="margin-bottom:12px;">
+
+    <input type="text" id="oh-admin-price" placeholder="Price (e.g. $450,000)" style="margin-bottom:8px;">
+    <input type="text" id="oh-admin-details" placeholder="Details (e.g. 4 Bed, 3 Bath, 2,500 sqft)" style="margin-bottom:8px;">
+    
+    <button class="btn" id="oh-admin-btn" style="width:100%;margin-top:16px;background:var(--ios-blue);height:48px;font-size:16px;" onclick="saveActiveOpenHouse()">Update Live Portal</button>
+    
+    <div id="sync-status" style="margin-top:14px; font-size:13px; color:var(--ios-green); font-weight:700; display:none;">
+      ● iPad Live At: <span id="current-live-addr">None</span>
+    </div>
+  </div>
+
+  <div class="card" style="padding:16px;">
+    <div class="sst">Add New Listing to Portfolio</div>
+    <input type="text" id="new-listing-addr" placeholder="Address (e.g. 123 Maple St)" style="margin-bottom:10px;">
+    <button class="btn bsm bo" style="width:100%; height:40px;" onclick="addNewListing()">Save to Portfolio</button>
   </div>
 </div>
 
@@ -604,7 +616,24 @@ input,select,textarea{width:100%;border-radius:10px;border:none;background:var(-
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
-<script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getDatabase, ref, onValue, set, update, push } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const cfg = {
+    apiKey: "AIzaSyBRl0xHETygH2XYB8lWzWOPoGFrzI-zqwg",
+    authDomain: "agenthq-3c2c9.firebaseapp.com",
+    databaseURL: "https://agenthq-3c2c9-default-rtdb.firebaseio.com",
+    projectId: "agenthq-3c2c9",
+    storageBucket: "agenthq-3c2c9.appspot.com",
+    messagingSenderId: "91185374523",
+    appId: "1:91185374523:web:fef9123905c7d416d1831e"
+};
+
+const app = initializeApp(cfg);
+window.fbDb = getDatabase(app);
+let dbRef = ref(window.fbDb, 'agent_hq_data');
+
 const MOS = ['Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 const TARGETS = [0,0,0,3675,14700,29400,47775,61425,75000];
 const QUOTES = ["Every call is a closing waiting to happen.", "The grind today is the glory tomorrow.", "Pick up the phone. Someone needs a home.", "Discipline beats motivation every single time."];
@@ -621,7 +650,7 @@ const SCRIPTS = {
 };
 
 let rChart=null, selectedContacts=[], hIdx=0, currentFilter='all', activeDocsClientId=null;
-const S = {
+window.S = {
   dark:false, cv:0, dr:0, nc:0, streak:0, history:{}, calEvents:{},
   tasks:[{id:'t1',t:'20 conversations',d:false},{id:'t2',t:'Add 20 new contacts',d:false},{id:'t3',t:'1 hour door knocking',d:false}],
   contacts:[], clients:[], closings:[], currentOpenHouse: {},
@@ -634,84 +663,74 @@ const todayD = new Date();
 let calYear=todayD.getFullYear(), calMonth=todayD.getMonth();
 let activeDateStr=`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(todayD.getDate()).padStart(2,'0')}`;
 
-// Twilio Backend Pointers
-let dbRef=null, setDb=null, storageRef=null, fbUploadBytes=null, fbGetDownloadURL=null, fbPush=null, fbDb=null, fbRef=null;
-
-import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js').then(fa=>{
-  Promise.all([
-    import('https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js'),
-    import('https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js')
-  ]).then(([fd, fs])=>{
-    const cfg={
-      apiKey:"AIzaSyBRl0xHETygH2XYB8lWzWOPoGFrzI-zqwg", authDomain:"agenthq-3c2c9.firebaseapp.com",
-      databaseURL:"https://agenthq-3c2c9-default-rtdb.firebaseio.com", projectId:"agenthq-3c2c9",
-      storageBucket:"agenthq-3c2c9.appspot.com", messagingSenderId:"91185374523", appId:"1:91185374523:web:fef9123905c7d416d1831e"
-    };
-    const app=fa.initializeApp(cfg);
-    fbDb=fd.getDatabase(app);
-    fbPush=fd.push;
-    fbRef=fd.ref;
-    dbRef=fd.ref(fbDb,'agent_hq_data');
-    setDb=fd.set;
-    const storage=fs.getStorage(app); storageRef=fs.ref; fbUploadBytes=fs.uploadBytesResumable; fbGetDownloadURL=fs.getDownloadURL;
-
-    fd.onValue(dbRef,snap=>{
-      const data=snap.val();
-      if(data){
-        Object.assign(S,data);
-        if(!S.calEvents)S.calEvents={}; if(!S.docs)S.docs={}; if(!S.contacts)S.contacts=[];
-        if(!S.rc)S.rc={convGoal:20,doorGoal:20,nudgeTime:'16:00',showZR1X:true,showDebt:true,sprintMode:false,closingsGoal:21};
+onValue(dbRef, snap => {
+    const data = snap.val();
+    if(data) {
+        Object.assign(window.S, data);
+        if(!window.S.calEvents) window.S.calEvents={}; 
+        if(!window.S.docs) window.S.docs={}; 
+        if(!window.S.contacts) window.S.contacts=[];
+        if(!window.S.rc) window.S.rc={convGoal:20,doorGoal:20,nudgeTime:'16:00',showZR1X:true,showDebt:true,sprintMode:false,closingsGoal:21};
+        
         applyRC(); updateC(); if(document.getElementById('cal-month'))renderCal();
         renderMoney(); renderContacts(); renderClients();
         if(document.getElementById('scn-inbox').classList.contains('on')) renderInbox();
         
         // ADMIN AUTO-FILL
-        if(S.currentOpenHouse) {
-           document.getElementById('oh-admin-addr').value = S.currentOpenHouse.address || '';
-           document.getElementById('oh-admin-price').value = S.currentOpenHouse.price || '';
-           document.getElementById('oh-admin-details').value = S.currentOpenHouse.details || '';
-           document.getElementById('oh-admin-url').value = S.currentOpenHouse.url || '';
+        if(window.S.currentOpenHouse) {
+           document.getElementById('oh-admin-addr').value = window.S.currentOpenHouse.address || '';
+           document.getElementById('oh-admin-price').value = window.S.currentOpenHouse.price || '';
+           document.getElementById('oh-admin-details').value = window.S.currentOpenHouse.details || '';
+           document.getElementById('oh-admin-url').value = window.S.currentOpenHouse.url || '';
         }
-      }
-    });
-
-    // ADMIN PORTFOLIO DROPDOWN LISTENER
-    fd.onValue(fd.ref(fbDb, 'agent_hq_data/listings'), (snap) => {
-        const listings = snap.val();
-        const picker = document.getElementById('oh-admin-addr-picker');
-        if(listings) {
-            picker.innerHTML = '<option value="">Quick Pick from Portfolio...</option>';
-            Object.values(listings).forEach(addr => {
-                let opt = document.createElement('option');
-                opt.value = addr;
-                opt.innerText = addr;
-                picker.appendChild(opt);
-            });
-        }
-    });
-  });
+    }
 });
 
-window.save=function(){
-  try{localStorage.setItem('ahq_v6',JSON.stringify(S));}catch(e){}
-  if(setDb&&dbRef){try{setDb(dbRef,S);}catch(e){console.error(e);}}
+// ADMIN PORTFOLIO DROPDOWN LISTENER
+onValue(ref(window.fbDb, 'agent_hq_data/listings'), (snap) => {
+    const listings = snap.val();
+    const picker = document.getElementById('oh-admin-addr-picker');
+    if(listings) {
+        picker.innerHTML = '<option value="">Quick Pick from Portfolio...</option>';
+        Object.values(listings).forEach(addr => {
+            let opt = document.createElement('option');
+            opt.value = addr;
+            opt.innerText = addr;
+            picker.appendChild(opt);
+        });
+    }
+});
+
+onValue(ref(window.fbDb, 'agent_hq_data/currentOpenHouse'), (snap) => {
+    const data = snap.val();
+    const statusDiv = document.getElementById('sync-status');
+    const statusAddr = document.getElementById('current-live-addr');
+    if(data && data.address) {
+        statusDiv.style.display = 'block';
+        statusAddr.innerText = data.address;
+    }
+});
+
+window.save = function(){
+  try{localStorage.setItem('ahq_v6',JSON.stringify(window.S));}catch(e){}
+  if(dbRef){try{set(dbRef,window.S);}catch(e){console.error(e);}}
 };
-window.load=function(){
-  try{const d=JSON.parse(localStorage.getItem('ahq_v6')||'{}');Object.assign(S,d);if(!S.calEvents)S.calEvents={};if(!S.docs)S.docs={};if(!S.contacts)S.contacts=[];if(!S.rc)S.rc={convGoal:20,doorGoal:20,nudgeTime:'16:00',showZR1X:true,showDebt:true,sprintMode:false,closingsGoal:21};}catch(e){}
+window.load = function(){
+  try{const d=JSON.parse(localStorage.getItem('ahq_v6')||'{}');Object.assign(window.S,d);if(!window.S.calEvents)window.S.calEvents={};if(!window.S.docs)window.S.docs={};if(!window.S.contacts)window.S.contacts=[];if(!window.S.rc)window.S.rc={convGoal:20,doorGoal:20,nudgeTime:'16:00',showZR1X:true,showDebt:true,sprintMode:false,closingsGoal:21};}catch(e){}
   updateC();
 };
 
-function toast(msg,dur=2500){
+window.toast = function(msg,dur=2500){
   const t=document.getElementById('toast');
   t.textContent=msg;t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'),dur);
 }
 
-function toggleDark(){S.dark=!S.dark;applyDark();save();}
-function applyDark(){document.documentElement.toggleAttribute('data-dark',S.dark);if(rChart)renderCharts();}
+window.toggleDark = function(){window.S.dark=!window.S.dark;applyDark();save();}
+window.applyDark = function(){document.documentElement.toggleAttribute('data-dark',window.S.dark);if(rChart)renderCharts();}
 
-function openRC(){
-  const rc=S.rc;
+window.openRC = function(){
+  const rc=window.S.rc;
   document.getElementById('rc-convGoal').textContent=rc.convGoal;
   document.getElementById('rc-doorGoal').textContent=rc.doorGoal;
   document.getElementById('rc-nudgeTime').value=rc.nudgeTime||'16:00';
@@ -723,17 +742,17 @@ function openRC(){
   });
   document.getElementById('rc-panel').style.display='flex';
 }
-function closeRC(){document.getElementById('rc-panel').style.display='none';}
-window.rcAdj=function(k,d){S.rc[k]=Math.max(1,(S.rc[k]||0)+d);document.getElementById('rc-'+k).textContent=S.rc[k];};
-window.rcSet=function(k,v){S.rc[k]=v;};
-window.rcToggle=function(k){
-  S.rc[k]=!S.rc[k]; const elMap={showZR1X:'tog-zr1x',showDebt:'tog-debt',sprintMode:'tog-sprint'};
-  document.getElementById(elMap[k]).classList.toggle('on',S.rc[k]);
+window.closeRC = function(){document.getElementById('rc-panel').style.display='none';}
+window.rcAdj = function(k,d){window.S.rc[k]=Math.max(1,(window.S.rc[k]||0)+d);document.getElementById('rc-'+k).textContent=window.S.rc[k];};
+window.rcSet = function(k,v){window.S.rc[k]=v;};
+window.rcToggle = function(k){
+  window.S.rc[k]=!window.S.rc[k]; const elMap={showZR1X:'tog-zr1x',showDebt:'tog-debt',sprintMode:'tog-sprint'};
+  document.getElementById(elMap[k]).classList.toggle('on',window.S.rc[k]);
 };
-window.saveRC=function(){applyRC();save();closeRC();toast('⚙️ Config saved & applied!');};
+window.saveRC = function(){applyRC();save();closeRC();toast('⚙️ Config saved & applied!');};
 
-function applyRC(){
-  const rc=S.rc;
+window.applyRC = function(){
+  const rc=window.S.rc;
   document.getElementById('ms-cv').textContent=`Goal: ${rc.convGoal} today`;
   document.getElementById('ms-dr').textContent=`Goal: ${rc.doorGoal} today`;
   document.getElementById('ms-cl').textContent=`of ${rc.closingsGoal} needed`;
@@ -741,17 +760,17 @@ function applyRC(){
   document.getElementById('sprint-banner').style.display=rc.sprintMode?'block':'none';
   document.getElementById('zr1x-card').style.display=rc.showZR1X===false?'none':'';
   document.getElementById('debt-card').style.display=rc.showDebt===false?'none':'';
-  document.getElementById('p-cv').style.width=Math.min(100,(S.cv/(rc.convGoal||20))*100)+'%';
-  document.getElementById('p-dr').style.width=Math.min(100,(S.dr/(rc.doorGoal||20))*100)+'%';
+  document.getElementById('p-cv').style.width=Math.min(100,(window.S.cv/(rc.convGoal||20))*100)+'%';
+  document.getElementById('p-dr').style.width=Math.min(100,(window.S.dr/(rc.doorGoal||20))*100)+'%';
 }
 
-window.requestNotifPermission=async function(){
+window.requestNotifPermission = async function(){
   if(!('Notification' in window)){toast('Notifications not supported on this browser');return;}
-  const perm=await Notification.requestPermission(); S.notifPermission=perm; updateNotifUI();
+  const perm=await Notification.requestPermission(); window.S.notifPermission=perm; updateNotifUI();
   if(perm==='granted'){toast('🔔 Notifications enabled!');save();}
 };
 
-function updateNotifUI(){
+window.updateNotifUI = function(){
   const perm = ('Notification' in window) ? Notification.permission : 'unsupported';
   const btn=document.getElementById('notif-btn'); const status=document.getElementById('notif-perm-status');
   if(perm==='granted'){ btn.textContent='✅ Notifications On';btn.style.background='var(--ios-green)'; status.textContent='Nudge active'; } 
@@ -759,15 +778,15 @@ function updateNotifUI(){
   else { btn.textContent='Enable Notifications';btn.style.background='var(--g)'; status.textContent=''; }
 }
 
-window.openDocs=function(clientId, clientName){
+window.openDocs = function(clientId, clientName){
   activeDocsClientId=clientId;
   document.getElementById('docs-panel-title').textContent='📁 '+clientName;
   renderDocsList(); document.getElementById('docs-panel').style.display='flex';
 };
-window.closeDocs=function(){document.getElementById('docs-panel').style.display='none';activeDocsClientId=null;};
+window.closeDocs = function(){document.getElementById('docs-panel').style.display='none';activeDocsClientId=null;};
 
-function renderDocsList(){
-  const el=document.getElementById('docs-list'); const clientDocs=(S.docs[activeDocsClientId]||[]);
+window.renderDocsList = function(){
+  const el=document.getElementById('docs-list'); const clientDocs=(window.S.docs[activeDocsClientId]||[]);
   if(clientDocs.length===0){el.innerHTML='<div class="empty-state" style="padding:20px;">No documents yet.</div>';return;}
   const iconMap={pdf:'📄',jpg:'🖼️',jpeg:'🖼️',png:'🖼️',heic:'🖼️'};
   el.innerHTML=clientDocs.map((d,i)=>{
@@ -784,7 +803,7 @@ function renderDocsList(){
 }
 
 window.saveActiveOpenHouse = async function() {
-  const addr = document.getElementById('oh-admin-addr').value.trim();
+  const addr = document.getElementById('oh-admin-addr').value.trim() || document.getElementById('oh-admin-addr-picker').value;
   const price = document.getElementById('oh-admin-price').value.trim();
   const details = document.getElementById('oh-admin-details').value.trim();
   const url = document.getElementById('oh-admin-url').value.trim();
@@ -795,14 +814,28 @@ window.saveActiveOpenHouse = async function() {
   btn.innerText = "Updating...";
   btn.disabled = true;
 
-  S.currentOpenHouse = { address: addr, price, details, url };
-  save();
-  toast("🏡 Live Portal Updated!");
-  btn.innerText = "Update Live Portal";
-  btn.disabled = false;
+  window.S.currentOpenHouse = { address: addr, price, details, url };
+  update(ref(window.fbDb, 'agent_hq_data/currentOpenHouse'), { 
+      address: addr, 
+      url: url || "https://tonyaharbin.com",
+      syncTime: Date.now() 
+  }).then(() => {
+      toast("🏡 iPad Updated Instantly!");
+      btn.innerText = "Update Live Portal";
+      btn.disabled = false;
+  });
 }
 
-function showScn(id,el){
+window.addNewListing = function() {
+    const addr = document.getElementById('new-listing-addr').value.trim();
+    if(!addr) return;
+    push(ref(window.fbDb, 'agent_hq_data/listings'), addr).then(() => {
+        document.getElementById('new-listing-addr').value = '';
+        toast("✅ Added to Portfolio");
+    });
+};
+
+window.showScn = function(id,el){
   document.querySelectorAll('.scn').forEach(s=>s.classList.remove('on'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
   document.getElementById('scn-'+id).classList.add('on');if(el)el.classList.add('on');
@@ -812,14 +845,14 @@ function showScn(id,el){
 
 window.renderInbox = function() {
   const el = document.getElementById('inbox-list');
-  const leads = S.contacts.filter(c => c.source === 'Open House iPad' && c.status === 'new');
+  // Exclude archived leads
+  const leads = window.S.contacts.filter(c => c.status !== 'archived' && c.source === 'Open House iPad');
   
   if(leads.length === 0) {
-    el.innerHTML = '<div class="empty-state">No new iPad leads.<br>Once someone signs in, they will appear here instantly.</div>';
+    el.innerHTML = '<div class="empty-state">No active Open House leads.<br>They will appear here instantly.</div>';
     return;
   }
 
-  // UPDATED INBOX UI to highlight Employer/Snack
   el.innerHTML = leads.map(c => `
     <div class="card" style="padding:16px; border-left: 4px solid var(--ios-blue);">
       <div style="display:flex; justify-content:space-between; align-items:flex-start;">
@@ -832,24 +865,56 @@ window.renderInbox = function() {
           </div>
         </div>
       </div>
-      <div style="display:flex; gap:8px; margin-top:14px;">
-        <button class="btn bsm" onclick="startHustleWithLead(${c.id})" style="flex:1; background:var(--ios-blue);">Reach Out</button>
-        <button class="btn bsm bo" onclick="archiveLead(${c.id})" style="flex:1;">Archive</button>
+      
+      <div style="margin-top:14px; padding-top:14px; border-top:.5px solid var(--br);">
+        <input type="text" id="reply-msg-${c.id}" placeholder="Type reply here..." style="width:100%; padding:12px; border-radius:10px; border:1px solid var(--br); margin-bottom:8px; font-size:15px; background:var(--bg); color:var(--tx);">
+        <button class="btn" style="width:100%; background:var(--ios-blue); height:40px;" onclick="sendTwilioReply(${c.id}, '${c.phone}')">Send via Twilio</button>
+      </div>
+
+      <div style="display:flex; gap:8px; margin-top:10px;">
+        <button class="btn bsm bo" onclick="archiveLead(${c.id})" style="flex:1;">Archive Lead</button>
       </div>
     </div>
   `).join('');
 };
 
+window.sendTwilioReply = async function(id, phone) {
+   const msgBox = document.getElementById(`reply-msg-${id}`);
+   const msg = msgBox.value.trim();
+   if(!msg) return alert("Type a message first!");
+
+   const btn = event.target;
+   btn.innerText = "Sending...";
+   btn.disabled = true;
+
+   try {
+       await push(ref(window.fbDb, 'sms_queue'), {
+          to: phone,
+          body: msg,
+          timestamp: Date.now()
+       });
+
+       msgBox.value = '';
+       toast("✅ Sent from Twilio Number!");
+       btn.innerText = "Send via Twilio";
+       btn.disabled = false;
+   } catch (err) {
+       console.error(err);
+       btn.innerText = "Error";
+       btn.disabled = false;
+   }
+}
+
 window.updateInboxBadge = function() {
-    const newLeads = S.contacts.filter(c => c.source === 'Open House iPad' && c.status === 'new');
+    const newLeads = window.S.contacts.filter(c => c.source === 'Open House iPad' && c.status === 'new');
     const badge = document.getElementById('inbox-badge');
     if (badge) badge.style.display = newLeads.length > 0 ? 'block' : 'none';
 };
 
 window.archiveLead = function(id) {
-    const idx = S.contacts.findIndex(c => c.id === id);
+    const idx = window.S.contacts.findIndex(c => c.id === id);
     if(idx > -1) {
-        S.contacts[idx].status = 'archived';
+        window.S.contacts[idx].status = 'archived';
         save(); renderInbox(); toast("Lead archived.");
     }
 };
@@ -859,32 +924,32 @@ window.startHustleWithLead = function(id) {
   launchHustle();
 };
 
-function adj(k,d){
-  S[k]=Math.max(0,(S[k]||0)+d); const today=new Date().toISOString().split('T')[0]; S.history[today]=S.cv;
+window.adj = function(k,d){
+  window.S[k]=Math.max(0,(window.S[k]||0)+d); const today=new Date().toISOString().split('T')[0]; window.S.history[today]=window.S.cv;
   updateC();save();
 }
 
-function updateC(){
-  const rc=S.rc||{}; const cvGoal=rc.convGoal||20; const drGoal=rc.doorGoal||20;
-  document.getElementById('m-cv').textContent=S.cv; document.getElementById('s-cv').textContent=S.cv;
-  document.getElementById('m-dr').textContent=S.dr; document.getElementById('s-dr').textContent=S.dr;
-  document.getElementById('m-nc').textContent=S.nc||0; document.getElementById('s-nc').textContent=S.nc||0;
-  document.getElementById('m-st').textContent=S.streak||0;
-  document.getElementById('p-cv').style.width=Math.min(100,(S.cv/cvGoal)*100)+'%';
-  document.getElementById('p-dr').style.width=Math.min(100,(S.dr/drGoal)*100)+'%';
-  document.getElementById('p-nc').style.width=Math.min(100,((S.nc||0)/20)*100)+'%';
-  const netEarned=S.closings.reduce((a,c)=>a+c.net,0);
-  document.getElementById('m-cl').textContent=S.closings.length; document.getElementById('m-ne').textContent='$'+Math.round(netEarned).toLocaleString();
+window.updateC = function(){
+  const rc=window.S.rc||{}; const cvGoal=rc.convGoal||20; const drGoal=rc.doorGoal||20;
+  document.getElementById('m-cv').textContent=window.S.cv; document.getElementById('s-cv').textContent=window.S.cv;
+  document.getElementById('m-dr').textContent=window.S.dr; document.getElementById('s-dr').textContent=window.S.dr;
+  document.getElementById('m-nc').textContent=window.S.nc||0; document.getElementById('s-nc').textContent=window.S.nc||0;
+  document.getElementById('m-st').textContent=window.S.streak||0;
+  document.getElementById('p-cv').style.width=Math.min(100,(window.S.cv/cvGoal)*100)+'%';
+  document.getElementById('p-dr').style.width=Math.min(100,(window.S.dr/drGoal)*100)+'%';
+  document.getElementById('p-nc').style.width=Math.min(100,((window.S.nc||0)/20)*100)+'%';
+  const netEarned=window.S.closings.reduce((a,c)=>a+c.net,0);
+  document.getElementById('m-cl').textContent=window.S.closings.length; document.getElementById('m-ne').textContent='$'+Math.round(netEarned).toLocaleString();
   const pt=document.getElementById('perf-tracker'),pTitle=document.getElementById('perf-title'),pDesc=document.getElementById('perf-desc');
-  if(S.cv===0&&S.dr===0&&(S.nc||0)===0){ pt.style.borderLeftColor='var(--ios-red)';pTitle.style.color='var(--ios-red)';pTitle.textContent='NO ACTIVITY LOGGED.';pDesc.textContent="Start dialing."; } 
-  else if(S.cv<cvGoal){ pt.style.borderLeftColor='var(--am)';pTitle.style.color='var(--am)';pTitle.textContent='FALLING BEHIND.';pDesc.textContent=`Push harder.`; } 
+  if(window.S.cv===0&&window.S.dr===0&&(window.S.nc||0)===0){ pt.style.borderLeftColor='var(--ios-red)';pTitle.style.color='var(--ios-red)';pTitle.textContent='NO ACTIVITY LOGGED.';pDesc.textContent="Start dialing."; } 
+  else if(window.S.cv<cvGoal){ pt.style.borderLeftColor='var(--am)';pTitle.style.color='var(--am)';pTitle.textContent='FALLING BEHIND.';pDesc.textContent=`Push harder.`; } 
   else { pt.style.borderLeftColor='var(--g)';pTitle.style.color='var(--g)';pTitle.textContent='DAILY GOAL MET.';pDesc.textContent="Keep pushing — 120%."; }
   renderTasks(); if(document.getElementById('cal-month'))renderCal();
   updateInboxBadge();
 }
 
-function renderTasks(){ document.getElementById('tlist').innerHTML=S.tasks.map(t=>`<div class="row" style="cursor:pointer;" onclick="togT('${t.id}')"><div class="cb2 ${t.d?'ck':''}"></div><div class="rt ${t.d?'dn':''}">${t.t}</div></div>`).join(''); }
-window.togT=function(id){const t=S.tasks.find(x=>x.id===id);t.d=!t.d;renderTasks();save();};
+window.renderTasks = function(){ document.getElementById('tlist').innerHTML=window.S.tasks.map(t=>`<div class="row" style="cursor:pointer;" onclick="togT('${t.id}')"><div class="cb2 ${t.d?'ck':''}"></div><div class="rt ${t.d?'dn':''}">${t.t}</div></div>`).join(''); }
+window.togT=function(id){const t=window.S.tasks.find(x=>x.id===id);t.d=!t.d;renderTasks();save();};
 
 window.importICS=function(inp){
   const files=inp.files;if(!files.length)return;
@@ -900,27 +965,27 @@ window.importVCF=function(inp){
       if(!card.includes('END:VCARD'))return;
       const nm=card.match(/FN:(.*)/i)||card.match(/N:(.*)/i); const ph=card.match(/TEL[^:]*:([\d\s\(\)\-\+]+)/i);
       if(nm){ const name=nm[1].trim().replace(/;/g,' ').trim(); const phone=ph?ph[1].trim():'';
-        if(name&&name.length>1&&!S.contacts.find(c=>c.name===name)){ S.contacts.push({id:Date.now()+n,name,phone,type:'general',source:'iPhone Import',status:'new',lt:Date.now()});n++; }
+        if(name&&name.length>1&&!window.S.contacts.find(c=>c.name===name)){ window.S.contacts.push({id:Date.now()+n,name,phone,type:'general',source:'iPhone Import',status:'new',lt:Date.now()});n++; }
       }
-    }); S.nc+=n;window.renderContacts();updateC();save();toast(`✅ Imported ${n} contacts!`);
+    }); window.S.nc+=n;window.renderContacts();updateC();save();toast(`✅ Imported ${n} contacts!`);
   }; r.readAsText(f);inp.value='';
 };
 
 window.addContact=function(){
   const n=document.getElementById('cn').value.trim(),p=document.getElementById('cp').value.trim(),nt=document.getElementById('cnot').value.trim(),src=document.getElementById('cref').value.trim(),type=document.getElementById('ctype').value,st=document.getElementById('cs').value;
-  if(!n)return; S.contacts.unshift({id:Date.now(),name:n,phone:p,note:nt,source:src,type,status:st,lt:Date.now()});
+  if(!n)return; window.S.contacts.unshift({id:Date.now(),name:n,phone:p,note:nt,source:src,type,status:st,lt:Date.now()});
   document.getElementById('cn').value='';document.getElementById('cp').value='';document.getElementById('cnot').value='';document.getElementById('cref').value=''; adj('nc',1);window.renderContacts();save();
 };
 window.setFilter=function(f,el){currentFilter=f;document.querySelectorAll('.fc').forEach(b=>b.classList.remove('on'));el.classList.add('on');window.renderContacts();};
 
 window.renderContacts=function(){
-  const el=document.getElementById('clist'); let filtered=S.contacts;
-  if(currentFilter==='new')filtered=S.contacts.filter(c=>c.status==='new');
-  else if(currentFilter!=='all')filtered=S.contacts.filter(c=>c.type===currentFilter);
+  const el=document.getElementById('clist'); let filtered=window.S.contacts;
+  if(currentFilter==='new')filtered=window.S.contacts.filter(c=>c.status==='new');
+  else if(currentFilter!=='all')filtered=window.S.contacts.filter(c=>c.type===currentFilter);
   if(filtered.length===0){el.innerHTML='<div class="empty-state">No contacts yet.<br>Use the importer above!</div>';return;}
   const tc={military:'var(--bll);color:var(--bl)',firsttime:'var(--al);color:var(--am)',investor:'var(--pul);color:var(--pu)',fsbo:'var(--gl);color:var(--gd)',expired:'var(--rl);color:var(--rd)',referral:'var(--gl);color:var(--gd)',general:'var(--inp);color:var(--tx2)'};
   el.innerHTML=filtered.map(c=>{
-    const col=tc[c.type]||tc.general; const docCount=(S.docs[c.id]||[]).length;
+    const col=tc[c.type]||tc.general; const docCount=(window.S.docs[c.id]||[]).length;
     return `<div class="ci ${selectedContacts.includes(c.id)?'selected':''}" onclick="togSel(${c.id})">
       <div class="sel-box"></div>
       <div class="av" style="background:var(--gl);color:var(--gd);">${(c.name[0]||'').toUpperCase()}</div>
@@ -945,7 +1010,7 @@ window.renderContacts=function(){
 
 window.deleteContact = function(id) {
   if(!confirm("Are you sure you want to delete this contact?")) return;
-  S.contacts = S.contacts.filter(c => c.id !== id);
+  window.S.contacts = window.S.contacts.filter(c => c.id !== id);
   selectedContacts = selectedContacts.filter(x => x !== id);
   window.renderContacts(); save(); toast('🗑️ Contact deleted');
 };
@@ -953,33 +1018,30 @@ window.deleteContact = function(id) {
 window.togSel=function(id){if(selectedContacts.includes(id))selectedContacts=selectedContacts.filter(x=>x!==id);else selectedContacts.push(id);window.renderContacts();};
 window.launchHustle=function(){hIdx=0;showHustle();document.getElementById('hustle-overlay').style.display='flex';};
 function showHustle(){
-  const c=S.contacts.find(x=>x.id===selectedContacts[hIdx]);if(!c)return stopHustle();
+  const c=window.S.contacts.find(x=>x.id===selectedContacts[hIdx]);if(!c)return stopHustle();
   document.getElementById('h-count').textContent=`Queue ${hIdx+1}/${selectedContacts.length}`; document.getElementById('h-name').textContent=c.name;
   document.getElementById('h-note').textContent=c.note||'No notes recorded'; document.getElementById('h-source').textContent=c.source?`Source: ${c.source}`:'';
   document.getElementById('h-av').textContent=(c.name[0]||'').toUpperCase();
 }
 
-// TWILIO CLOUD PUSH
 window.hustleSend=function(){
-  const c=S.contacts.find(x=>x.id===selectedContacts[hIdx]);
+  const c=window.S.contacts.find(x=>x.id===selectedContacts[hIdx]);
   const msg="Hey! It's Christian Carter — I just joined the Tonya Harbin Team here in Abilene as a licensed real estate agent. If you or anyone you know is thinking about buying or selling, I'd love to help!";
   
-  if (fbDb && fbPush && fbRef && c.phone) {
-     fbPush(fbRef(fbDb, 'sms_queue'), {
+  if (window.fbDb && c.phone) {
+     push(ref(window.fbDb, 'sms_queue'), {
         to: c.phone, body: msg, contactId: c.id, status: "pending", timestamp: Date.now()
      });
      adj('cv',1);
      const btn = document.getElementById('h-send-btn');
      btn.innerText = "Sent!";
      
-     // Update status so they drop out of the "new" inbox automatically
      c.status = "contacted";
      save();
      if(document.getElementById('scn-inbox').classList.contains('on')) renderInbox();
      
      setTimeout(() => { btn.innerText = "Send Text"; nextHustle(); }, 800);
   } else {
-     // Fallback to local SMS if cloud isn't ready
      window.location.href=`sms:${(c.phone||'').replace(/\D/g,'')}&body=${encodeURIComponent(msg)}`;
      adj('cv',1);
      c.status = "contacted";
@@ -996,27 +1058,27 @@ window.addClient=function(){
   if(!name||date==='')return alert('Name and close date are required.');
   const gross=price*0.03,afterSplit=gross*0.70,net=afterSplit*0.70,tax=afterSplit*0.30;
   const anivDate=new Date(date);anivDate.setFullYear(anivDate.getFullYear()+1);
-  S.clients.unshift({id:Date.now(),name,addr,price,date,type,notes,net,tax,anivDate:anivDate.toISOString().split('T')[0]});
-  S.closings.push({net,tax,date:new Date().toISOString()});S.zr1x+=net*0.5;
+  window.S.clients.unshift({id:Date.now(),name,addr,price,date,type,notes,net,tax,anivDate:anivDate.toISOString().split('T')[0]});
+  window.S.closings.push({net,tax,date:new Date().toISOString()});window.S.zr1x+=net*0.5;
   document.getElementById('cli-name').value='';document.getElementById('cli-addr').value='';document.getElementById('cli-price').value='';document.getElementById('cli-date').value='';document.getElementById('cli-notes').value='';
   renderClients();renderMoney();updateC();save();toast('🏠 Closing logged!');
 };
 
 function daysUntil(dateStr){const today=new Date();today.setHours(0,0,0,0);const target=new Date(dateStr);target.setHours(0,0,0,0);return Math.round((target-today)/86400000);}
 
-function renderClients(){
+window.renderClients=function(){
   const el=document.getElementById('client-list'),alertEl=document.getElementById('aniv-alert'),anivList=document.getElementById('aniv-list'),anivCount=document.getElementById('aniv-count');
-  if(S.clients.length===0){el.innerHTML='<div class="empty-state">No clients yet.<br>Log your first closing above.</div>';alertEl.style.display='none';return;}
-  const upcoming=S.clients.filter(c=>{const d=daysUntil(c.anivDate);return d>=0&&d<=14;});
+  if(window.S.clients.length===0){el.innerHTML='<div class="empty-state">No clients yet.<br>Log your first closing above.</div>';alertEl.style.display='none';return;}
+  const upcoming=window.S.clients.filter(c=>{const d=daysUntil(c.anivDate);return d>=0&&d<=14;});
   if(upcoming.length>0){
     alertEl.style.display='block'; anivList.innerHTML=upcoming.map(c=>{const d=daysUntil(c.anivDate);return `${c.name} — ${d===0?'TODAY':d===1?'Tomorrow':`in ${d} days`}`;}).join('<br>');
     anivCount.innerHTML=`<span class="aniv-badge">${upcoming.length} anniversary${upcoming.length>1?'s':''}</span>`;
   } else {alertEl.style.display='none';anivCount.innerHTML='';}
   const tl={military:'Military / VA',firsttime:'First-Time',family:'Family',investor:'Investor'}, tc={military:'tag-mil',firsttime:'tag-ft',family:'tag-fam',investor:'tag-inv'};
-  el.innerHTML=S.clients.map(c=>{
+  el.innerHTML=window.S.clients.map(c=>{
     const days=daysUntil(c.anivDate),isUp=days>=0&&days<=14;
     const msg=encodeURIComponent(`Hey ${c.name}! I can't believe it's already been a year since you closed on ${c.addr||'your home'}. Hope you're absolutely loving it! If you ever need anything or know someone looking to buy or sell, I'm always here. Happy home anniversary!`);
-    const docCount=(S.docs[c.id]||[]).length;
+    const docCount=(window.S.docs[c.id]||[]).length;
     return `<div class="client-card">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;">
         <div><div class="client-name">${c.name}</div><div class="client-addr">${c.addr||'No address'}</div></div>
@@ -1036,31 +1098,31 @@ function renderClients(){
 window.logCloseMoney=function(){
   const p=parseFloat(document.getElementById('clp').value)||0,n=document.getElementById('cln').value.trim(); if(p<=0)return;
   const gross=p*0.03,afterSplit=gross*0.70,net=afterSplit*0.70,tax=afterSplit*0.30;
-  S.closings.push({net,tax,date:new Date().toISOString(),name:n});S.zr1x+=net*0.5; document.getElementById('clp').value='';document.getElementById('cln').value=''; renderMoney();updateC();save();toast('💰 Closing logged!');
+  window.S.closings.push({net,tax,date:new Date().toISOString(),name:n});window.S.zr1x+=net*0.5; document.getElementById('clp').value='';document.getElementById('cln').value=''; renderMoney();updateC();save();toast('💰 Closing logged!');
 };
-window.addTax=function(){const v=parseFloat(document.getElementById('ma-tax').value)||0;if(v){S.manualTax+=v;document.getElementById('ma-tax').value='';renderMoney();save();}};
-window.addSav=function(){const v=parseFloat(document.getElementById('ma-sav').value)||0;if(v){S.manualSav+=v;document.getElementById('ma-sav').value='';renderMoney();save();}};
+window.addTax=function(){const v=parseFloat(document.getElementById('ma-tax').value)||0;if(v){window.S.manualTax+=v;document.getElementById('ma-tax').value='';renderMoney();save();}};
+window.addSav=function(){const v=parseFloat(document.getElementById('ma-sav').value)||0;if(v){window.S.manualSav+=v;document.getElementById('ma-sav').value='';renderMoney();save();}};
 window.payDebt=function(){
   const v=parseFloat(document.getElementById('debt-pay').value)||0;if(v<=0)return;
-  if(S.sallie>0){const pay=Math.min(v,S.sallie);S.sallie-=pay;const rem=v-pay;if(rem>0)S.federal=Math.max(0,S.federal-rem);} else{S.federal=Math.max(0,S.federal-v);}
+  if(window.S.sallie>0){const pay=Math.min(v,window.S.sallie);window.S.sallie-=pay;const rem=v-pay;if(rem>0)window.S.federal=Math.max(0,window.S.federal-rem);} else{window.S.federal=Math.max(0,window.S.federal-v);}
   document.getElementById('debt-pay').value='';renderMoney();save();toast('💸 Payment applied!');
 };
 
-function renderMoney(){
-  const net=S.closings.reduce((a,c)=>a+c.net,0), autoTax=S.closings.reduce((a,c)=>a+c.tax,0), totalTax=autoTax+(S.manualTax||0);
-  const autoSav=S.closings.reduce((a,c)=>a+(c.net*0.2),0), totalSav=autoSav+(S.manualSav||0);
-  document.getElementById('me').textContent='$'+Math.round(net).toLocaleString(); document.getElementById('mc').textContent=S.closings.length;
+window.renderMoney=function(){
+  const net=window.S.closings.reduce((a,c)=>a+c.net,0), autoTax=window.S.closings.reduce((a,c)=>a+c.tax,0), totalTax=autoTax+(window.S.manualTax||0);
+  const autoSav=window.S.closings.reduce((a,c)=>a+(c.net*0.2),0), totalSav=autoSav+(window.S.manualSav||0);
+  document.getElementById('me').textContent='$'+Math.round(net).toLocaleString(); document.getElementById('mc').textContent=window.S.closings.length;
   document.getElementById('msav-grid').textContent='$'+Math.round(totalSav).toLocaleString(); document.getElementById('mt-grid').textContent='$'+Math.round(totalTax).toLocaleString();
-  document.getElementById('mt-total').textContent='$'+Math.round(totalTax).toLocaleString(); document.getElementById('tax-breakdown').textContent=`Auto: $${Math.round(autoTax).toLocaleString()} · Manual: $${Math.round(S.manualTax||0).toLocaleString()}`;
-  document.getElementById('msav-total').textContent='$'+Math.round(totalSav).toLocaleString(); document.getElementById('sav-breakdown').textContent=`Auto: $${Math.round(autoSav).toLocaleString()} · Manual: $${Math.round(S.manualSav||0).toLocaleString()}`;
-  document.getElementById('mz').textContent='$'+Math.round(S.zr1x).toLocaleString(); document.getElementById('zf').style.width=Math.min(100,(S.zr1x/25000)*100)+'%';
-  document.getElementById('d-sallie').textContent=Math.round(S.sallie).toLocaleString(); document.getElementById('d-fed').textContent=Math.round(S.federal).toLocaleString();
-  document.getElementById('pb-sallie').style.width=Math.min(100,((24225-S.sallie)/24225)*100)+'%'; document.getElementById('pb-fed').style.width=Math.min(100,((5500-S.federal)/5500)*100)+'%';
+  document.getElementById('mt-total').textContent='$'+Math.round(totalTax).toLocaleString(); document.getElementById('tax-breakdown').textContent=`Auto: $${Math.round(autoTax).toLocaleString()} · Manual: $${Math.round(window.S.manualTax||0).toLocaleString()}`;
+  document.getElementById('msav-total').textContent='$'+Math.round(totalSav).toLocaleString(); document.getElementById('sav-breakdown').textContent=`Auto: $${Math.round(autoSav).toLocaleString()} · Manual: $${Math.round(window.S.manualSav||0).toLocaleString()}`;
+  document.getElementById('mz').textContent='$'+Math.round(window.S.zr1x).toLocaleString(); document.getElementById('zf').style.width=Math.min(100,(window.S.zr1x/25000)*100)+'%';
+  document.getElementById('d-sallie').textContent=Math.round(window.S.sallie).toLocaleString(); document.getElementById('d-fed').textContent=Math.round(window.S.federal).toLocaleString();
+  document.getElementById('pb-sallie').style.width=Math.min(100,((24225-window.S.sallie)/24225)*100)+'%'; document.getElementById('pb-fed').style.width=Math.min(100,((5500-window.S.federal)/5500)*100)+'%';
   renderCharts();
 }
 
-function renderCharts(){
-  const mNet=Array(9).fill(0); S.closings.forEach(c=>{const d=new Date(c.date);const offset=(d.getFullYear()-2026)*12+(d.getMonth()-3);if(offset>=0&&offset<9)mNet[offset]+=c.net;});
+window.renderCharts=function(){
+  const mNet=Array(9).fill(0); window.S.closings.forEach(c=>{const d=new Date(c.date);const offset=(d.getFullYear()-2026)*12+(d.getMonth()-3);if(offset>=0&&offset<9)mNet[offset]+=c.net;});
   const cum=[];let sum=0;mNet.forEach(v=>{sum+=v;cum.push(Math.round(sum));});
   if(rChart)rChart.destroy(); const isDark=document.documentElement.hasAttribute('data-dark');
   rChart=new Chart(document.getElementById('rchart'),{type:'line',data:{labels:MOS,datasets:[{label:'Your Net',data:cum,borderColor:'#1D9E75',fill:true,backgroundColor:'rgba(29,158,117,.1)',tension:.3},{label:'Target',data:TARGETS,borderColor:'#C9A84C',borderDash:[5,4],pointRadius:0,tension:.3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>'$'+Math.round(v/1000)+'K',color:isDark?'#AEAEB2':'#6C6C70'},grid:{color:isDark?'rgba(255,255,255,.06)':'rgba(0,0,0,.06)'}},x:{ticks:{color:isDark?'#AEAEB2':'#6C6C70'},grid:{display:false}}}}});
@@ -1070,14 +1132,14 @@ window.showS=function(k,el){ document.querySelectorAll('.stab').forEach(t=>t.cla
 window.calNav=function(dir){calMonth+=dir;if(calMonth>11){calMonth=0;calYear++;}if(calMonth<0){calMonth=11;calYear--;}renderCal();};
 window.selectDate=function(key){activeDateStr=key;renderCal();};
 
-function renderCal(){
+window.renderCal=function(){
   const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
   document.getElementById('cal-month').textContent=months[calMonth]+' '+calYear; document.getElementById('cal-names').innerHTML=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d=>`<div class="cal-day-name">${d}</div>`).join('');
   const now=new Date(),first=new Date(calYear,calMonth,1).getDay(),total=new Date(calYear,calMonth+1,0).getDate();
   const evColors={openhouse:'#C9A84C',showing:'var(--ios-blue)',listing:'#7B9ED9',closing:'#2E7D52',prospecting:'#5A3472',doorknock:'var(--ios-red)',class:'#6B7280',other:'#9AA0AD'};
   let html='';for(let i=0;i<first;i++)html+='<div></div>';
   for(let d=1;d<=total;d++){
-    const key=`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`; const hit=(S.history[key]||0)>=(S.rc?.convGoal||20); const evs=(S.calEvents||{})[key]||[];
+    const key=`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`; const hit=(window.S.history[key]||0)>=(window.S.rc?.convGoal||20); const evs=(window.S.calEvents||{})[key]||[];
     const isToday=(key===`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`), isSel=(key===activeDateStr);
     let dots='';evs.slice(0,3).forEach(ev=>{dots+=`<div class="cal-dot" style="background:${evColors[ev.type]||'#9AA0AD'}"></div>`;});
     html+=`<div class="cal-d ${isToday?'today':''} ${isSel?'selected':''} ${hit?'hit':''}" onclick="selectDate('${key}')"><div class="cal-d-num">${d}</div><div class="cal-dots">${dots}</div></div>`;
@@ -1085,11 +1147,11 @@ function renderCal(){
 }
 function formatTime(t24){if(!t24)return '';let[h,m]=t24.split(':');let ap='AM';h=parseInt(h);if(h>=12){ap='PM';if(h>12)h-=12;}if(h===0)h=12;return`${h}:${m} ${ap}`;}
 
-function renderCalEventsList(){
+window.renderCalEventsList=function(){
   const evColors={openhouse:'#C9A84C',showing:'var(--ios-blue)',listing:'#7B9ED9',closing:'#2E7D52',prospecting:'#5A3472',doorknock:'var(--ios-red)',class:'#6B7280',other:'#9AA0AD'};
   const evLabels={openhouse:'Open House',showing:'Showing',listing:'Listing Appt',closing:'Closing',prospecting:'Prospecting',doorknock:'Door Knocking',class:'Class',other:'Other'};
   const d=new Date(activeDateStr+'T12:00:00'); document.getElementById('cal-day-header').textContent=d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
-  const evs=(S.calEvents||{})[activeDateStr]||[];
+  const evs=(window.S.calEvents||{})[activeDateStr]||[];
   if(evs.length===0){document.getElementById('cal-events-list').innerHTML='<div style="padding:16px;text-align:center;color:var(--tx3);font-size:14px;">No events</div>';return;}
   document.getElementById('cal-events-list').innerHTML=[...evs].sort((a,b)=>a.start.localeCompare(b.start)).map((ev,i)=>`
     <div class="tl-row" onclick="openModal('${activeDateStr}',${i})"><div class="tl-time">${formatTime(ev.start)}</div><div class="tl-bar" style="background:${evColors[ev.type]||'#C9A84C'};"></div><div class="tl-content"><div class="tl-title">${ev.title}</div>${ev.type?`<div class="tl-sub">${evLabels[ev.type]||ev.type}</div>`:''}</div></div>`).join('');
@@ -1097,21 +1159,19 @@ function renderCalEventsList(){
 
 window.openModal=function(dateKey,editIdx=null){
   document.getElementById('modal-date-title').textContent='Add Event';
-  if(editIdx!==null){ const evs=(S.calEvents||{})[dateKey]||[]; if(evs[editIdx])document.getElementById('existing-events').innerHTML=`<button onclick="deleteEvent('${dateKey}',${editIdx})" style="width:100%;height:44px;border-radius:10px;border:none;background:var(--rl);color:var(--ios-red);font-size:15px;font-weight:600;margin-top:10px;cursor:pointer;">Delete Event</button>`; } else document.getElementById('existing-events').innerHTML='';
+  if(editIdx!==null){ const evs=(window.S.calEvents||{})[dateKey]||[]; if(evs[editIdx])document.getElementById('existing-events').innerHTML=`<button onclick="deleteEvent('${dateKey}',${editIdx})" style="width:100%;height:44px;border-radius:10px;border:none;background:var(--rl);color:var(--ios-red);font-size:15px;font-weight:600;margin-top:10px;cursor:pointer;">Delete Event</button>`; } else document.getElementById('existing-events').innerHTML='';
   document.getElementById('cal-modal').style.display='flex';
 };
 window.closeModal=function(){document.getElementById('cal-modal').style.display='none';};
 window.openAddEvent=function(){document.getElementById('ev-title').value='';document.getElementById('ev-start').value='';document.getElementById('ev-end').value='';openModal(activeDateStr);};
 window.saveEvent=function(){
   const type=document.getElementById('ev-type').value,title=document.getElementById('ev-title').value.trim(),start=document.getElementById('ev-start').value,end=document.getElementById('ev-end').value;
-  if(!title)return; if(!S.calEvents[activeDateStr])S.calEvents[activeDateStr]=[];
-  S.calEvents[activeDateStr].push({type,title,start,end}); S.calEvents[activeDateStr].sort((a,b)=>a.start.localeCompare(b.start));
+  if(!title)return; if(!window.S.calEvents[activeDateStr])window.S.calEvents[activeDateStr]=[];
+  window.S.calEvents[activeDateStr].push({type,title,start,end}); window.S.calEvents[activeDateStr].sort((a,b)=>a.start.localeCompare(b.start));
   document.getElementById('ev-title').value='';document.getElementById('ev-start').value='';document.getElementById('ev-end').value='';
   save();renderCal();closeModal();toast('📅 Event added!');
 };
-window.deleteEvent=function(dateKey,idx){S.calEvents[dateKey].splice(idx,1);if(!S.calEvents[dateKey].length)delete S.calEvents[dateKey];save();renderCal();closeModal();};
-
-window.toggleDark=toggleDark;window.showScn=showScn;window.adj=adj; window.openRC=openRC;window.closeRC=closeRC;window.saveRC=saveRC; window.openDocs=openDocs;window.closeDocs=closeDocs;
+window.deleteEvent=function(dateKey,idx){window.S.calEvents[dateKey].splice(idx,1);if(!window.S.calEvents[dateKey].length)delete window.S.calEvents[dateKey];save();renderCal();closeModal();};
 
 window.onload=()=>{
   load();applyDark();applyRC();
