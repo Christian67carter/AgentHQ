@@ -153,6 +153,14 @@ input,select,textarea{width:100%;border-radius:10px;border:none;background:var(-
 .tl-content{flex:1;padding-bottom:4px;}
 .tl-title{font-size:15px;font-weight:600;color:var(--tx);line-height:1.3;}
 .tl-sub{font-size:13px;color:var(--tx2);margin-top:2px;}
+
+/* PULSING ANIMATION FOR ADMIN PANEL */
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(52, 199, 89, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(52, 199, 89, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(52, 199, 89, 0); }
+}
+.live-dot { background: var(--ios-green) !important; animation: pulse 2s infinite; }
 </style>
 </head>
 <body>
@@ -387,36 +395,49 @@ input,select,textarea{width:100%;border-radius:10px;border:none;background:var(-
 </div>
 
 <div id="scn-open" class="scn">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-    <div style="font-size:22px;font-weight:800;">Open House Admin</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+    <div style="font-size:26px;font-weight:800;letter-spacing:-.5px;">Open House</div>
+  </div>
+
+  <div id="live-status-banner" style="background:var(--card); border: 1px solid var(--br); border-radius:16px; padding:16px; margin-bottom:16px; display:flex; align-items:center; gap:14px; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+    <div style="width:14px;height:14px;border-radius:50%;background:var(--tx3);" id="pulse-dot"></div>
+    <div style="flex:1; min-width:0;">
+      <div style="font-size:11px; font-weight:800; color:var(--tx2); text-transform:uppercase; letter-spacing:1px; margin-bottom:2px;" id="live-status-text">OFFLINE</div>
+      <div style="font-size:16px; font-weight:700; color:var(--tx); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="current-live-addr">No property synced</div>
+    </div>
   </div>
   
-  <div class="card" style="padding:16px; border-left: 4px solid var(--ios-blue);">
-    <div class="sst" style="margin-bottom:10px;">1. Select Active Property</div>
-    
-    <select id="oh-admin-addr-picker" style="margin-bottom:10px; background:var(--inp); border:none; padding:14px; border-radius:10px; font-size:16px; width:100%;">
-        <option value="">Quick Pick from Portfolio...</option>
-    </select>
-
-    <input type="text" id="oh-admin-addr" placeholder="Property Address (e.g. 123 Main St)" style="margin-bottom:8px;">
-    
-    <div class="sst" style="margin-bottom:10px; margin-top:10px;">2. Digital Flyer Link (Optional)</div>
-    <input type="url" id="oh-admin-url" placeholder="TonyaHarbin.com Flyer URL" style="margin-bottom:12px;">
-
-    <input type="text" id="oh-admin-price" placeholder="Price (e.g. $450,000)" style="margin-bottom:8px;">
-    <input type="text" id="oh-admin-details" placeholder="Details (e.g. 4 Bed, 3 Bath, 2,500 sqft)" style="margin-bottom:8px;">
-    
-    <button class="btn" id="oh-admin-btn" style="width:100%;margin-top:16px;background:var(--ios-blue);height:48px;font-size:16px;" onclick="saveActiveOpenHouse()">Update Live Portal</button>
-    
-    <div id="sync-status" style="margin-top:14px; font-size:13px; color:var(--ios-green); font-weight:700; display:none;">
-      ● iPad Live At: <span id="current-live-addr">None</span>
+  <div class="card" style="padding:20px 16px;">
+    <div style="font-size:18px;font-weight:800;margin-bottom:16px;display:flex;align-items:center;gap:8px;">
+      <span>📡 iPad Control Center</span>
     </div>
+    
+    <div style="background:var(--inp); padding:14px; border-radius:14px; margin-bottom:16px;">
+        <div style="font-size:12px; font-weight:700; color:var(--tx2); margin-bottom:8px; text-transform:uppercase; letter-spacing:.05em;">1. Select Listing</div>
+        <select id="oh-admin-addr-picker" style="background:var(--card); border:1px solid var(--br); box-shadow:0 1px 2px rgba(0,0,0,0.05); padding:14px; border-radius:10px; font-size:16px; width:100%; font-weight:600; color:var(--ios-blue); outline:none;" onchange="document.getElementById('oh-admin-addr').value = this.value;">
+            <option value="">Quick Pick from Portfolio...</option>
+        </select>
+    </div>
+
+    <div style="font-size:12px; font-weight:700; color:var(--tx2); margin-bottom:8px; text-transform:uppercase; letter-spacing:.05em; padding-left:4px;">2. Property Details</div>
+    
+    <input type="text" id="oh-admin-addr" placeholder="Property Address (e.g. 123 Main St)" style="margin-bottom:10px; background:var(--bg); border:1px solid var(--br);">
+    <input type="url" id="oh-admin-url" placeholder="TonyaHarbin.com Digital Flyer URL" style="margin-bottom:10px; background:var(--bg); border:1px solid var(--br);">
+    
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;">
+      <input type="text" id="oh-admin-price" placeholder="Price (e.g. $450k)" style="background:var(--bg); border:1px solid var(--br);">
+      <input type="text" id="oh-admin-details" placeholder="Beds/Baths" style="background:var(--bg); border:1px solid var(--br);">
+    </div>
+    
+    <button class="btn" id="oh-admin-btn" style="width:100%; background:var(--ios-blue); height:54px; font-size:17px; font-weight:700; border-radius:14px; box-shadow:0 4px 14px rgba(0,122,255,0.3);" onclick="saveActiveOpenHouse()">Push to iPad</button>
   </div>
 
   <div class="card" style="padding:16px;">
-    <div class="sst">Add New Listing to Portfolio</div>
-    <input type="text" id="new-listing-addr" placeholder="Address (e.g. 123 Maple St)" style="margin-bottom:10px;">
-    <button class="btn bsm bo" style="width:100%; height:40px;" onclick="addNewListing()">Save to Portfolio</button>
+    <div class="sst" style="font-size:12px;">Add to Portfolio</div>
+    <div style="display:flex;gap:8px;margin-top:8px;">
+        <input type="text" id="new-listing-addr" placeholder="Address..." style="flex:1;">
+        <button class="btn bsm bo" style="height:44px; font-weight:700;" onclick="addNewListing()">Save</button>
+    </div>
   </div>
 </div>
 
@@ -676,7 +697,6 @@ onValue(dbRef, snap => {
         renderMoney(); renderContacts(); renderClients();
         if(document.getElementById('scn-inbox').classList.contains('on')) renderInbox();
         
-        // ADMIN AUTO-FILL
         if(window.S.currentOpenHouse) {
            document.getElementById('oh-admin-addr').value = window.S.currentOpenHouse.address || '';
            document.getElementById('oh-admin-price').value = window.S.currentOpenHouse.price || '';
@@ -686,7 +706,6 @@ onValue(dbRef, snap => {
     }
 });
 
-// ADMIN PORTFOLIO DROPDOWN LISTENER
 onValue(ref(window.fbDb, 'agent_hq_data/listings'), (snap) => {
     const listings = snap.val();
     const picker = document.getElementById('oh-admin-addr-picker');
@@ -703,11 +722,20 @@ onValue(ref(window.fbDb, 'agent_hq_data/listings'), (snap) => {
 
 onValue(ref(window.fbDb, 'agent_hq_data/currentOpenHouse'), (snap) => {
     const data = snap.val();
-    const statusDiv = document.getElementById('sync-status');
+    const statusText = document.getElementById('live-status-text');
     const statusAddr = document.getElementById('current-live-addr');
+    const pulseDot = document.getElementById('pulse-dot');
+    
     if(data && data.address) {
-        statusDiv.style.display = 'block';
+        statusText.innerText = "LIVE ON IPAD";
+        statusText.style.color = "var(--ios-green)";
         statusAddr.innerText = data.address;
+        pulseDot.classList.add('live-dot');
+    } else {
+        statusText.innerText = "OFFLINE";
+        statusText.style.color = "var(--tx2)";
+        statusAddr.innerText = "No property synced";
+        pulseDot.classList.remove('live-dot');
     }
 });
 
@@ -821,7 +849,7 @@ window.saveActiveOpenHouse = async function() {
       syncTime: Date.now() 
   }).then(() => {
       toast("🏡 iPad Updated Instantly!");
-      btn.innerText = "Update Live Portal";
+      btn.innerText = "Push to iPad";
       btn.disabled = false;
   });
 }
@@ -845,7 +873,6 @@ window.showScn = function(id,el){
 
 window.renderInbox = function() {
   const el = document.getElementById('inbox-list');
-  // Exclude archived leads
   const leads = window.S.contacts.filter(c => c.status !== 'archived' && c.source === 'Open House iPad');
   
   if(leads.length === 0) {
