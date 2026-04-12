@@ -726,7 +726,7 @@ let rChart=null,selectedContacts=[],hIdx=0,currentFilter='all',activeDocsClientI
 const S={
   dark:false,cv:0,dr:0,nc:0,streak:0,history:{},calEvents:{},
   tasks:[{id:'t1',t:'20 conversations',d:false},{id:'t2',t:'Add 20 new contacts',d:false},{id:'t3',t:'1 hour door knocking',d:false}],
-  contacts:[],clients:[],closings:[],currentOpenHouse:{},portfolio:[],
+  contacts:[],clients:[],closings:[],currentOpenHouse:{},portfolio:[],replies:{},
   sallie:24225,federal:5500,zr1x:0,manualTax:0,manualSav:0,docs:{},
   rc:{convGoal:20,doorGoal:20,nudgeTime:'16:00',showZR1X:true,showDebt:true,sprintMode:false,closingsGoal:21},
   notifPermission:'default'
@@ -965,6 +965,1120 @@ window.deleteDoc=function(i){
 };
 
 // --- INBOX ---
+function buildPreviewSMS(c){
+  const A2P="\nReply STOP to opt-out. -Christian Carter, Licensed RE Agent, Tonya Harbin Team";
+  const firstName=(c.name||'').split(' ')[0]||'there';
+  const prop=c.property||'the property';
+  const flyer='https://tonyaharbin.com';
+  const note=c.note||'';
+  const isMilitary=c.type==='military'||note.toLowerCase().includes('dyess')||note.toLowerCase().includes('afb');
+  const isNeighbor=note.toLowerCase().includes('just browsing')||note.toLowerCase().includes('just a neighbor');
+  const hasAgent=note.toLowerCase().includes('has agent');
+  if(hasAgent) return `Hey ${firstName}, this is Christian! Thanks for stopping by ${prop}. Here's the info if your agent needs it: ${flyer}. Let me know if there's anything I can help with.${A2P}`;
+  if(isNeighbor) return `Hey ${firstName}, this is Christian! Great meeting you at ${prop}. Here's the link if you're ever curious: ${flyer}. Let me know if there's anything I can help with.${A2P}`;
+  if(isMilitary) return `Hey ${firstName}, this is Christian! Thanks for stopping by ${prop}. I'm with the Tonya Harbin Team and we work with a lot of families at Dyess — if you ever have questions about VA loans or anything, let me know. Here's the info on the house: ${flyer}${A2P}`;
+  return `Hey ${firstName}, this is Christian! Thanks for stopping by the open house. If there's anything I can help you or anyone you know with, let me know. Here's the info on the house: ${flyer}${A2P}`;
+}
+
+window.toggleSMSPreview=function(id){
+  const el=document.getElementById('sms-prev-'+id);
+  el.style.display=el.style.display==='none'?'block':'none';
+};
+
+window.toggleThread=function(id){
+  const el=document.getElementById('thread-'+id);
+  el.style.display=el.style.display==='none'?'block':'none';
+};
+
+window.sendReply=async function(contactKey, phone, btnEl){
+  const input=document.getElementById('reply-input-'+contactKey);
+  const body=input.value.trim();
+  if(!body)return;
+  btnEl.textContent='Sending...';btnEl.disabled=true;
+  try{
+    const res=await fetch('https://us-central1-agenthq-3c2c9.cloudfunctions.net/sendReply',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({to:phone,body,contactKey})
+    });
+    const data=await res.json();
+    if(data.success){input.value='';toast('Reply sent!');}
+    else{toast('Failed to send — check Twilio');}
+  }catch(e){toast('Network error');}
+  btnEl.textContent='Send';btnEl.disabled=false;
+};
+
+// Listen for real-time replies from Firebase
+let repliesListener=null;
+function listenForReplies(){
+  if(!fbDb||!fbRef)return;
+  if(repliesListener)return; // already listening
+  repliesListener=true;
+  import('https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js').then(fd=>{
+    fd.onValue(fd.ref(fbDb,'agent_hq_data/replies'),snap=>{
+      S.replies=snap.val()||{};
+      if(document.getElementById('scn-inbox').classList.contains('on'))renderInbox();
+      updateInboxBadge();
+    });
+  });
+}
+
+window.renderInbox=function(){
+  const el=document.getElementById('inbox-list');
+  const leads=S.contacts.filter(c=>c.source==='Open House iPad'&&c.status!=='archived');
+  if(leads.length===0){el.innerHTML='<div class="empty-state">No leads yet.<br>Once someone signs in at the open house, they appear here instantly.</div>';return;}
+
+  // Sort — replied first, then new
+  leads.sort((a,b)=>{
+    if(a.status==='replied'&&b.status!=='replied')return -1;
+    if(b.status==='replied'&&a.status!=='replied')return 1;
+    return (b.lt||0)-(a.lt||0);
+  });
+
+  el.innerHTML=leads.map(c=>{
+    const replies=S.replies?Object.values(S.replies[c.id]||S.replies[Object.keys(S.replies||{}).find(k=>k==c.id)]||{}):[];
+    const hasReplies=replies.length>0;
+    const isNew=c.status==='new';
+    const isReplied=c.status==='replied';
+    const borderColor=isReplied?'var(--ios-green)':isNew?'var(--navy)':'var(--tx3)';
+    const statusLabel=isReplied?'<span style="font-size:10px;font-weight:700;background:#E8F8EE;color:var(--ios-green);padding:2px 8px;border-radius:6px;margin-left:8px;">Replied</span>':isNew?'<span style="font-size:10px;font-weight:700;background:var(--navy-xlt);color:var(--navy);padding:2px 8px;border-radius:6px;margin-left:8px;">New</span>':'';
+
+    const threadHTML=hasReplies?replies.sort((a,b)=>a.timestamp-b.timestamp).map(r=>{
+      const isOut=r.direction==='outbound';
+      return `<div style="display:flex;justify-content:${isOut?'flex-end':'flex-start'};margin-bottom:8px;">
+        <div style="max-width:80%;background:${isOut?'var(--navy)':'var(--inp)'};color:${isOut?'#fff':'var(--tx)'};padding:10px 14px;border-radius:${isOut?'16px 16px 4px 16px':'16px 16px 16px 4px'};font-size:13px;line-height:1.5;">
+          ${r.body}
+          <div style="font-size:10px;opacity:.6;margin-top:4px;">${new Date(r.timestamp).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</div>
+        </div>
+      </div>`;
+    }).join(''):'<div style="font-size:12px;color:var(--tx3);text-align:center;padding:8px 0;">No replies yet</div>';
+
+    return `<div class="card" style="padding:16px;border-left:3px solid ${borderColor};">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <div style="flex:1;">
+          <div style="display:flex;align-items:center;">
+            <div style="font-family:var(--font-display);font-weight:600;font-size:18px;">${c.name}</div>
+            ${statusLabel}
+          </div>
+          <div style="font-size:14px;color:var(--navy);font-weight:600;margin-top:2px;">${c.phone}</div>
+          <div style="background:var(--inp);padding:12px;border-radius:10px;margin-top:12px;font-size:13px;color:var(--tx2);line-height:1.5;">
+            <b style="color:var(--tx);">Intel:</b> ${c.note||'No notes captured'}
+          </div>
+          <button onclick="toggleSMSPreview(${c.id})" style="margin-top:10px;background:none;border:none;font-size:12px;font-weight:600;color:var(--navy);cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:3px;">View text sent →</button>
+          <div id="sms-prev-${c.id}" style="display:none;margin-top:8px;background:var(--gold-xlt);border:.5px solid rgba(201,168,76,.3);border-radius:10px;padding:12px;font-size:12px;color:var(--tx);line-height:1.6;white-space:pre-wrap;">${buildPreviewSMS(c)}</div>
+        </div>
+      </div>
+
+      <div style="margin-top:14px;border-top:.5px solid var(--br);padding-top:12px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--tx2);">Thread ${hasReplies?'('+replies.length+')':''}</div>
+          <button onclick="toggleThread(${c.id})" style="background:none;border:none;font-size:12px;font-weight:600;color:var(--navy);cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:3px;">${hasReplies?'View':'Hide'}</button>
+        </div>
+        <div id="thread-${c.id}" style="display:${hasReplies?'none':'block'};">
+          <div style="max-height:240px;overflow-y:auto;margin-bottom:10px;padding:4px 0;">${threadHTML}</div>
+          <div style="display:flex;gap:8px;">
+            <input type="text" id="reply-input-${c.id}" placeholder="Type a reply..." style="flex:1;height:40px;font-size:14px;">
+            <button class="btn bsm" onclick="sendReply('${c.id}','${c.phone}',this)" style="flex-shrink:0;">Send</button>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-top:12px;">
+        <button class="btn bsm bo" onclick="archiveLead(${c.id})" style="flex:1;">Archive</button>
+      </div>
+    </div>`;
+  }).join('');
+
+  listenForReplies();
+};
+
+OCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Agent HQ">
+<title>Agent HQ — Christian Carter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1A2744;--navy-lt:#243460;--navy-xlt:#EEF1F8;
+  --gold:#C9A84C;--gold-lt:#F5EDD6;--gold-xlt:#FBF6EC;
+  --red:#B94040;--red-lt:#FBEDED;
+  --pu:#5A3472;--pul:#EDE0F0;
+  --bg:#F5F5F0;--card:#FFFFFF;--tx:#0D0D0D;--tx2:#6B6B6B;--tx3:#B0B0B0;
+  --br:rgba(0,0,0,.09);--inp:#F0EFE9;
+  --ios-red:#C0392B;--ios-blue:#2057A7;--ios-green:#27AE60;
+  --st:env(safe-area-inset-top,44px);--th:80px;
+  --font-display:'Playfair Display',Georgia,serif;
+  --font-body:'Inter',system-ui,sans-serif;
+}
+[data-dark]{
+  --bg:#0A0A0A;--card:#141414;--tx:#F0EFE9;--tx2:#8A8A8A;--tx3:#3A3A3A;
+  --br:rgba(255,255,255,.08);--inp:#1E1E1E;--navy-xlt:#141F38;--gold-xlt:#1E1A10;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0;}
+html,body{height:100%;overflow:hidden;background:var(--bg);font-family:var(--font-body);color:var(--tx);-webkit-font-smoothing:antialiased;}
+body{display:flex;flex-direction:column;}
+.ss{height:var(--st);background:var(--card);flex-shrink:0;}
+.hdr{background:var(--card);padding:8px 16px 10px;border-bottom:.5px solid var(--br);flex-shrink:0;display:flex;justify-content:space-between;align-items:flex-end;}
+.hdr-l .t{font-family:var(--font-display);font-size:24px;font-weight:700;letter-spacing:-.3px;color:var(--navy);}
+[data-dark] .hdr-l .t{color:var(--gold);}
+.hdr-l .s{font-size:11px;color:var(--tx2);margin-top:1px;font-weight:400;}
+.hdr-r{display:flex;gap:8px;align-items:center;}
+.dbtn{width:36px;height:36px;border-radius:50%;border:none;background:var(--inp);cursor:pointer;font-size:16px;}
+.bdg{background:var(--navy);color:#fff;font-size:11px;font-weight:600;padding:4px 10px;border-radius:10px;font-family:var(--font-body);}
+.scrl{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 14px calc(var(--th) + env(safe-area-inset-bottom) + 60px);}
+.tbar{position:fixed;bottom:0;left:0;right:0;height:var(--th);background:var(--card);border-top:.5px solid var(--br);display:flex;align-items:flex-start;padding:10px 6px 0;z-index:100;justify-content:space-around;}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:0 2px;}
+.tab svg{width:21px;height:21px;stroke:var(--tx3);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
+.tab .tl{font-size:9px;font-weight:500;color:var(--tx3);font-family:var(--font-body);}
+.tab.on svg{stroke:var(--navy);} .tab.on .tl{color:var(--navy);}
+[data-dark] .tab.on svg{stroke:var(--gold);} [data-dark] .tab.on .tl{color:var(--gold);}
+.scn{display:none;} .scn.on{display:block;animation:su .16s ease;}
+@keyframes su{from{transform:translateY(12px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+.card{background:var(--card);border-radius:16px;margin-bottom:12px;overflow:hidden;border:.5px solid var(--br);}
+.ch{padding:12px 16px 0;font-size:11px;font-weight:600;color:var(--tx2);text-transform:uppercase;letter-spacing:.08em;font-family:var(--font-body);}
+.cb{padding:12px 16px 16px;}
+.dv{height:.5px;background:var(--br);margin:0 16px;}
+.mg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+.m{background:var(--card);border-radius:14px;padding:12px;border:.5px solid var(--br);}
+.mv{font-size:24px;font-weight:700;letter-spacing:-.6px;line-height:1;font-family:var(--font-display);}
+.mv.navy{color:var(--navy);} .mv.gold{color:var(--gold);} .mv.red{color:var(--red);}
+.mv.blue{color:var(--ios-blue);}
+.ml{font-size:11px;color:var(--tx2);margin-top:4px;font-weight:500;}
+.ms{font-size:10px;color:var(--tx3);margin-top:2px;}
+.row{display:flex;align-items:center;padding:12px 16px;gap:12px;border-bottom:.5px solid var(--br);}
+.rt{font-size:15px;color:var(--tx);font-weight:400;}
+.rs{font-size:12px;color:var(--tx2);margin-top:2px;}
+.cb2{width:24px;height:24px;border-radius:50%;border:2px solid var(--tx3);flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+.cb2.ck{background:var(--navy);border-color:var(--navy);}
+.cb2.ck::after{content:'';width:12px;height:8px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translateY(-1px);display:block;}
+.rt.dn{color:var(--tx3);text-decoration:line-through;}
+.stp{display:flex;align-items:center;gap:12px;}
+.sbtn{width:32px;height:32px;border-radius:50%;background:var(--inp);border:none;font-size:20px;color:var(--ios-blue);cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.sv{font-size:22px;font-weight:600;min-width:36px;text-align:center;font-family:var(--font-display);}
+.pb{height:5px;background:var(--inp);border-radius:3px;overflow:hidden;margin-top:6px;}
+.pf{height:100%;border-radius:3px;transition:width .4s;}
+.fst{display:flex;gap:6px;margin-bottom:10px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;}
+.fc{flex-shrink:0;height:32px;padding:0 14px;border-radius:16px;border:.5px solid var(--br);font-size:13px;font-weight:500;cursor:pointer;background:var(--inp);color:var(--tx2);font-family:var(--font-body);}
+.fc.on{background:var(--navy);color:#fff;border-color:var(--navy);}
+.ci{display:flex;align-items:center;padding:12px 16px;gap:12px;border-bottom:.5px solid var(--br);}
+.av{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;flex-shrink:0;font-family:var(--font-display);}
+.stabs{display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;}
+.stab{flex-shrink:0;height:34px;padding:0 16px;border-radius:17px;border:none;font-size:13px;font-weight:600;cursor:pointer;background:var(--inp);color:var(--tx2);font-family:var(--font-body);}
+.stab.on{background:var(--navy);color:#fff;}
+.scard{background:var(--card);border-radius:14px;padding:16px;margin-bottom:12px;border:.5px solid var(--br);}
+.sst{font-size:10px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;}
+[data-dark] .sst{color:var(--gold);}
+.stxt{font-size:15px;color:var(--tx);line-height:1.55;margin-bottom:10px;}
+.stip{font-size:12px;color:var(--tx3);font-style:italic;padding-top:8px;border-top:.5px solid var(--br);}
+.zp{height:14px;background:var(--inp);border-radius:7px;overflow:hidden;margin:8px 0 5px;}
+.zf{height:100%;background:var(--gold);border-radius:7px;transition:width .4s;}
+input,select,textarea{width:100%;border-radius:10px;border:.5px solid var(--br);background:var(--inp);padding:11px 12px;font-size:15px;color:var(--tx);outline:none;font-family:var(--font-body);}
+input:focus,select:focus{border-color:var(--navy);}
+.btn{height:44px;border-radius:10px;border:none;background:var(--navy);color:#fff;font-size:14px;font-weight:600;padding:0 20px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-family:var(--font-body);letter-spacing:.01em;}
+.bsm{height:32px;font-size:12px;padding:0 14px;border-radius:16px;}
+.bo{background:var(--inp);color:var(--navy);}
+.cw{position:relative;height:180px;margin-top:10px;}
+.sel-box{width:22px;height:22px;border-radius:50%;border:2px solid var(--tx3);flex-shrink:0;transition:all .15s;}
+.ci.selected .sel-box{background:var(--navy);border-color:var(--navy);}
+
+/* --- HERO BANNER --- */
+.hero-banner{background:var(--navy);border-radius:18px;padding:22px 22px 18px;margin-bottom:12px;position:relative;overflow:hidden;}
+.hero-banner::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;border:1.5px solid rgba(201,168,76,.2);}
+.hero-banner::after{content:'';position:absolute;bottom:-20px;left:60px;width:80px;height:80px;border-radius:50%;border:1.5px solid rgba(201,168,76,.12);}
+.hero-eyebrow{font-size:10px;font-weight:600;letter-spacing:.15em;color:var(--gold);text-transform:uppercase;margin-bottom:10px;}
+.hero-quote{font-family:var(--font-display);font-size:19px;font-weight:500;color:#fff;line-height:1.45;letter-spacing:-.1px;}
+.hero-divider{height:.5px;background:rgba(201,168,76,.25);margin:14px 0 10px;}
+.hero-date{font-size:12px;color:rgba(255,255,255,.55);font-weight:300;}
+
+/* --- PERF TRACKER --- */
+.perf-tracker{border-left:3px solid var(--red);border-radius:12px;padding:14px 18px;margin-bottom:14px;background:var(--card);border:.5px solid var(--br);border-left:3px solid var(--red);}
+.perf-title{font-family:var(--font-display);font-size:16px;font-weight:600;letter-spacing:-.2px;color:var(--red);}
+.perf-desc{font-size:13px;color:var(--tx2);margin-top:4px;}
+
+/* --- TOAST --- */
+#toast{position:fixed;bottom:calc(var(--th) + 20px);left:50%;transform:translateX(-50%) translateY(20px);background:var(--navy);color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:600;z-index:9999;opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap;font-family:var(--font-body);}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* --- NOTIF BANNER --- */
+#notif-banner{position:fixed;top:var(--st);left:0;right:0;background:var(--navy);color:#fff;padding:14px 20px;z-index:5000;display:none;align-items:center;gap:12px;border-bottom:2px solid var(--gold);}
+#notif-banner .nb-icon{font-size:22px;}
+#notif-banner .nb-body{flex:1;}
+#notif-banner .nb-title{font-size:14px;font-weight:600;color:var(--gold);font-family:var(--font-display);}
+#notif-banner .nb-msg{font-size:12px;color:rgba(255,255,255,.8);margin-top:2px;}
+#notif-banner .nb-close{font-size:22px;color:rgba(255,255,255,.4);cursor:pointer;}
+
+/* --- REMOTE CONFIG PANEL --- */
+#rc-panel{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:4000;display:none;align-items:flex-end;}
+#rc-inner{background:var(--card);border-radius:20px 20px 0 0;padding:20px 20px 50px;width:100%;max-height:80vh;overflow-y:auto;}
+.rc-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:.5px solid var(--br);}
+.rc-label{font-size:15px;font-weight:600;}
+.rc-sub{font-size:12px;color:var(--tx2);margin-top:2px;}
+.rc-val{font-size:22px;font-weight:700;color:var(--navy);min-width:44px;text-align:center;font-family:var(--font-display);}
+.toggle{width:51px;height:31px;background:var(--tx3);border-radius:16px;position:relative;cursor:pointer;transition:background .2s;}
+.toggle.on{background:var(--ios-green);}
+.toggle::after{content:'';position:absolute;width:27px;height:27px;background:#fff;border-radius:50%;top:2px;left:2px;transition:left .2s;box-shadow:0 2px 4px rgba(0,0,0,.25);}
+.toggle.on::after{left:22px;}
+
+/* --- DOCS PANEL --- */
+#docs-panel{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:4000;display:none;align-items:flex-end;}
+#docs-inner{background:var(--card);border-radius:20px 20px 0 0;padding:20px 20px 50px;width:100%;max-height:85vh;overflow-y:auto;}
+.doc-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:.5px solid var(--br);}
+.doc-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.doc-name{font-size:14px;font-weight:600;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.doc-size{font-size:11px;color:var(--tx3);}
+
+/* --- HUSTLE OVERLAY --- */
+#hustle-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:var(--bg);z-index:2000;display:none;padding:20px;flex-direction:column;}
+.h-card{background:var(--card);border-radius:24px;padding:30px;text-align:center;margin-top:24px;flex:1;display:flex;flex-direction:column;justify-content:center;border:.5px solid var(--br);}
+.aniv-badge{background:var(--red);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;margin-left:6px;}
+
+/* --- CLIENT CARDS --- */
+.client-card{background:var(--card);border-radius:14px;padding:14px 16px;margin-bottom:10px;border:.5px solid var(--br);}
+.client-name{font-family:var(--font-display);font-size:17px;font-weight:600;color:var(--tx);}
+.client-addr{font-size:13px;color:var(--tx2);margin-top:2px;}
+.client-row{display:flex;justify-content:space-between;margin-top:8px;font-size:12px;color:var(--tx3);}
+.client-val{font-weight:600;color:var(--tx2);}
+.aniv-row{display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:.5px solid var(--br);}
+.tag{font-size:10px;font-weight:600;padding:2px 8px;border-radius:6px;}
+.tag-mil{background:#EEF1F8;color:var(--navy);}
+.tag-fam{background:var(--gold-xlt);color:#7A5C1E;}
+.tag-inv{background:var(--pul);color:var(--pu);}
+.tag-ft{background:var(--gold-lt);color:#7A5C1E;}
+.empty-state{text-align:center;padding:40px 20px;color:var(--tx3);font-size:14px;}
+
+/* --- CALENDAR --- */
+.ios-header{display:flex;justify-content:space-between;align-items:center;padding:14px 16px 8px;}
+.ios-month{font-family:var(--font-display);font-size:20px;font-weight:600;color:var(--red);}
+.ios-nav-btn{width:32px;height:32px;border-radius:50%;border:none;background:var(--inp);color:var(--tx);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;font-weight:bold;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);padding:0 10px 10px;gap:2px 0;}
+.cal-day-name{font-size:10px;font-weight:600;color:var(--tx3);text-align:center;padding-bottom:8px;text-transform:uppercase;}
+.cal-d{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;cursor:pointer;padding-top:4px;height:44px;position:relative;}
+.cal-d-num{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:400;color:var(--tx);transition:all 0.2s;}
+.cal-d.today .cal-d-num{background:var(--navy);color:#fff;font-weight:600;}
+.cal-d.selected:not(.today) .cal-d-num{background:var(--tx);color:var(--bg);font-weight:600;}
+.cal-dots{display:flex;gap:3px;margin-top:2px;height:4px;justify-content:center;width:100%;}
+.cal-dot{width:4.5px;height:4.5px;border-radius:50%;}
+.cal-d.hit .cal-d-num{box-shadow:0 0 0 2px var(--ios-green);}
+.tl-row{display:flex;align-items:stretch;gap:12px;padding:10px 16px;border-bottom:.5px solid var(--br);}
+.tl-time{width:55px;flex-shrink:0;text-align:right;padding-top:2px;font-size:12px;font-weight:600;color:var(--tx2);}
+.tl-bar{width:4px;border-radius:2px;}
+.tl-content{flex:1;padding-bottom:4px;}
+.tl-title{font-size:15px;font-weight:600;color:var(--tx);line-height:1.3;}
+.tl-sub{font-size:13px;color:var(--tx2);margin-top:2px;}
+
+/* --- LUXURY SECTION HEADER --- */
+.scn-title{font-family:var(--font-display);font-size:24px;font-weight:700;color:var(--tx);margin-bottom:4px;letter-spacing:-.3px;}
+.scn-sub{font-size:13px;color:var(--tx2);margin-bottom:16px;}
+
+/* --- GOLD ACCENT CARD --- */
+.gold-card{background:var(--gold-xlt);border:.5px solid rgba(201,168,76,.3);border-radius:16px;padding:16px;margin-bottom:12px;}
+
+/* --- SPRINT BANNER --- */
+#sprint-banner{display:none;background:var(--red);border-radius:14px;padding:10px 16px;margin-bottom:12px;text-align:center;font-size:12px;font-weight:700;color:#fff;letter-spacing:.08em;}
+
+/* --- PORTFOLIO PANEL --- */
+#portfolio-panel{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:4000;display:none;align-items:flex-end;}
+#portfolio-inner{background:var(--card);border-radius:20px 20px 0 0;padding:20px 20px 50px;width:100%;max-height:80vh;overflow-y:auto;}
+.listing-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:.5px solid var(--br);}
+.listing-addr{font-size:15px;font-weight:500;color:var(--tx);}
+.listing-sub{font-size:12px;color:var(--tx2);margin-top:2px;}
+
+/* --- BROADCAST CONFIRMATION --- */
+#broadcast-confirm{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);z-index:5000;display:none;align-items:center;justify-content:center;padding:20px;}
+#broadcast-inner{background:var(--card);border-radius:20px;padding:24px;width:100%;max-width:360px;text-align:center;}
+</style>
+</head>
+<body>
+
+<div id="toast"></div>
+
+<div id="notif-banner">
+  <div class="nb-icon">🔔</div>
+  <div class="nb-body">
+    <div class="nb-title" id="nb-title">Accountability Check</div>
+    <div class="nb-msg" id="nb-msg">You have conversations to make.</div>
+  </div>
+  <div class="nb-close" onclick="document.getElementById('notif-banner').style.display='none'">×</div>
+</div>
+
+<!-- Remote Config Panel -->
+<div id="rc-panel">
+  <div id="rc-inner">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+      <div style="font-family:var(--font-display);font-size:18px;font-weight:600;">Remote Config</div>
+      <button onclick="closeRC()" style="border:none;background:none;font-size:22px;color:var(--tx3);cursor:pointer;">×</button>
+    </div>
+    <div style="font-size:12px;color:var(--tx2);margin-bottom:16px;">Adjust goals and features — changes apply instantly.</div>
+    <div class="rc-row">
+      <div><div class="rc-label">Daily Conversation Goal</div><div class="rc-sub">Conversations per day</div></div>
+      <div style="display:flex;align-items:center;gap:8px;"><button class="sbtn" onclick="rcAdj('convGoal',-1)">-</button><span class="rc-val" id="rc-convGoal">20</span><button class="sbtn" onclick="rcAdj('convGoal',1)">+</button></div>
+    </div>
+    <div class="rc-row">
+      <div><div class="rc-label">Daily Door Goal</div><div class="rc-sub">Doors knocked per day</div></div>
+      <div style="display:flex;align-items:center;gap:8px;"><button class="sbtn" onclick="rcAdj('doorGoal',-1)">-</button><span class="rc-val" id="rc-doorGoal">20</span><button class="sbtn" onclick="rcAdj('doorGoal',1)">+</button></div>
+    </div>
+    <div class="rc-row">
+      <div><div class="rc-label">Nudge Time</div><div class="rc-sub">Daily accountability check</div></div>
+      <div><input type="time" id="rc-nudgeTime" style="width:120px;font-size:15px;padding:8px;" onchange="rcSet('nudgeTime', this.value)"></div>
+    </div>
+    <div class="rc-row">
+      <div><div class="rc-label">Show ZR1X Fund</div><div class="rc-sub">Corvette savings tracker</div></div>
+      <div class="toggle" id="tog-zr1x" onclick="rcToggle('showZR1X')"></div>
+    </div>
+    <div class="rc-row">
+      <div><div class="rc-label">Show Debt Payoff</div><div class="rc-sub">Debt progress bars</div></div>
+      <div class="toggle" id="tog-debt" onclick="rcToggle('showDebt')"></div>
+    </div>
+    <div class="rc-row">
+      <div><div class="rc-label">Sprint Mode</div><div class="rc-sub">Red banner + max intensity UI</div></div>
+      <div class="toggle" id="tog-sprint" onclick="rcToggle('sprintMode')"></div>
+    </div>
+    <div class="rc-row">
+      <div><div class="rc-label">Closings Goal</div><div class="rc-sub">Annual closing target</div></div>
+      <div style="display:flex;align-items:center;gap:8px;"><button class="sbtn" onclick="rcAdj('closingsGoal',-1)">-</button><span class="rc-val" id="rc-closingsGoal">21</span><button class="sbtn" onclick="rcAdj('closingsGoal',1)">+</button></div>
+    </div>
+    <button class="btn" style="width:100%;margin-top:20px;" onclick="saveRC()">Save & Apply</button>
+  </div>
+</div>
+
+<!-- Docs Panel -->
+<div id="docs-panel">
+  <div id="docs-inner">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+      <div style="font-family:var(--font-display);font-size:18px;font-weight:600;" id="docs-panel-title">Documents</div>
+      <button onclick="closeDocs()" style="border:none;background:none;font-size:22px;color:var(--tx3);cursor:pointer;">×</button>
+    </div>
+    <div style="font-size:12px;color:var(--tx2);margin-bottom:16px;" id="docs-panel-sub">Client documents & photos</div>
+    <label style="display:block;background:var(--inp);border-radius:12px;padding:14px;text-align:center;cursor:pointer;border:1px dashed var(--tx3);margin-bottom:14px;" id="doc-upload-label">
+      <div style="font-size:15px;font-weight:600;margin-bottom:4px;">📎 Upload Document or Photo</div>
+      <div style="font-size:13px;color:var(--tx2);">PDF, JPG, PNG — stored in Firebase</div>
+      <input type="file" id="doc-file-input" accept=".pdf,.jpg,.jpeg,.png,.heic" multiple style="display:none;" onchange="uploadDocs(this)">
+    </label>
+    <div id="docs-list"></div>
+  </div>
+</div>
+
+<!-- Portfolio Panel -->
+<div id="portfolio-panel">
+  <div id="portfolio-inner">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+      <div style="font-family:var(--font-display);font-size:18px;font-weight:600;">Managed Portfolio</div>
+      <button onclick="closePortfolio()" style="border:none;background:none;font-size:22px;color:var(--tx3);cursor:pointer;">×</button>
+    </div>
+    <div style="font-size:12px;color:var(--tx2);margin-bottom:16px;">Add listing addresses you frequently host. One tap to broadcast to the iPad portal.</div>
+    <div style="display:flex;gap:8px;margin-bottom:16px;">
+      <input type="text" id="new-listing-addr" placeholder="e.g. 1427 Pioneer Dr, Abilene TX" style="flex:1;">
+      <button class="btn bsm" onclick="addListing()">Add</button>
+    </div>
+    <div id="portfolio-list"></div>
+  </div>
+</div>
+
+<!-- Broadcast Confirm -->
+<div id="broadcast-confirm">
+  <div id="broadcast-inner">
+    <div style="font-size:32px;margin-bottom:12px;">📡</div>
+    <div style="font-family:var(--font-display);font-size:20px;font-weight:600;margin-bottom:8px;">Broadcast to iPad?</div>
+    <div id="broadcast-addr-preview" style="font-size:13px;color:var(--tx2);margin-bottom:20px;"></div>
+    <div style="display:flex;gap:10px;">
+      <button class="btn bo" style="flex:1;" onclick="closeBroadcast()">Cancel</button>
+      <button class="btn" style="flex:1;" onclick="confirmBroadcast()">Broadcast Now</button>
+    </div>
+  </div>
+</div>
+
+<!-- Hustle Overlay -->
+<div id="hustle-overlay">
+  <div style="display:flex;justify-content:space-between;align-items:center;">
+    <div style="font-family:var(--font-display);font-size:18px;font-weight:600;" id="h-count">Queue 1/20</div>
+    <button class="btn bo bsm" onclick="stopHustle()">Exit</button>
+  </div>
+  <div class="h-card">
+    <div class="av" id="h-av" style="width:80px;height:80px;margin:0 auto 20px;font-size:32px;background:var(--gold-lt);color:#7A5C1E;border-radius:50%;font-family:var(--font-display);"></div>
+    <div style="font-family:var(--font-display);font-size:26px;font-weight:700;" id="h-name">Name</div>
+    <div style="font-size:15px;color:var(--tx2);margin-top:10px;" id="h-note">No notes</div>
+    <div style="margin-top:6px;font-size:12px;font-weight:700;color:var(--navy);" id="h-source"></div>
+    <button class="btn" style="width:100%;margin-top:40px;height:60px;font-size:18px;font-family:var(--font-display);" id="h-send-btn" onclick="hustleSend()">Send Text</button>
+    <button class="btn bo" style="width:100%;margin-top:12px;" onclick="nextHustle()">Skip →</button>
+  </div>
+</div>
+
+<div class="ss"></div>
+<div class="hdr">
+  <div class="hdr-l">
+    <div class="t">Agent HQ</div>
+    <div class="s" id="hdr-sub">Christian Carter · $3,675/closing avg</div>
+  </div>
+  <div class="hdr-r">
+    <button class="dbtn" onclick="openRC()" title="Config">⚙️</button>
+    <button class="dbtn" onclick="toggleDark()">🌙</button>
+    <div class="bdg" id="goal-badge">$140K Goal</div>
+  </div>
+</div>
+
+<div class="scrl">
+
+<!-- INBOX -->
+<div id="scn-inbox" class="scn">
+  <div class="scn-title">Live Inbox</div>
+  <div class="scn-sub">Real-time leads from your Open House iPad</div>
+  <div id="inbox-list"></div>
+</div>
+
+<!-- DAILY -->
+<div id="scn-daily" class="scn on">
+  <div id="sprint-banner">🔥 SPRINT MODE — GIVE EVERYTHING YOU HAVE</div>
+
+  <div class="hero-banner">
+    <div class="hero-eyebrow">Focus the Energy</div>
+    <div class="hero-quote" id="daily-quote">Every call is a closing waiting to happen.</div>
+    <div class="hero-divider"></div>
+    <div class="hero-date" id="todays-date"></div>
+  </div>
+
+  <div class="perf-tracker" id="perf-tracker">
+    <div class="perf-title" id="perf-title">NO ACTIVITY LOGGED.</div>
+    <div class="perf-desc" id="perf-desc">The market doesn't pay for intentions. Start dialing.</div>
+  </div>
+
+  <div class="mg">
+    <div class="m"><div class="mv navy" id="m-cv">0</div><div class="ml">Conversations</div><div class="ms" id="ms-cv">Goal: 20 today</div><div class="pb"><div class="pf" id="p-cv" style="width:0%;background:var(--navy);"></div></div></div>
+    <div class="m"><div class="mv red" id="m-debt">$93,432</div><div class="ml">Total Debt</div><div class="ms">Truck + Student Loans</div></div>
+    <div class="m"><div class="mv blue" id="m-dr">0</div><div class="ml">Doors Knocked</div><div class="ms" id="ms-dr">Goal: 20 today</div><div class="pb"><div class="pf" id="p-dr" style="width:0%;background:var(--ios-blue);"></div></div></div>
+    <div class="m"><div class="mv gold" id="m-nc">0</div><div class="ml">New Contacts</div><div class="ms">Added today</div><div class="pb"><div class="pf" id="p-nc" style="width:0%;background:var(--gold);"></div></div></div>
+  </div>
+  <div class="mg" style="grid-template-columns:1fr 1fr 1fr;">
+    <div class="m"><div class="mv" id="m-st">0</div><div class="ml">Day Streak</div><div class="ms">20+ convos</div></div>
+    <div class="m"><div class="mv navy" id="m-cl">0</div><div class="ml">Closings</div><div class="ms" id="ms-cl">of 21 needed</div></div>
+    <div class="m"><div class="mv navy" id="m-ne">$0</div><div class="ml">Net Earned</div><div class="ms">of $75K</div></div>
+  </div>
+
+  <div class="card"><div class="ch">Quick Counters</div>
+    <div class="row" style="padding:14px 16px;display:flex;justify-content:space-between;align-items:center;">
+      <div><div class="rt">Conversations</div><div class="rs">Real estate related chat</div></div>
+      <div class="stp"><button class="sbtn" onclick="adj('cv',-1)">-</button><span class="sv" id="s-cv">0</span><button class="sbtn" onclick="adj('cv',1)">+</button></div>
+    </div>
+    <div class="dv"></div>
+    <div class="row" style="padding:14px 16px;display:flex;justify-content:space-between;align-items:center;">
+      <div><div class="rt">Doors Knocked</div><div class="rs">Neighborhood / near Dyess</div></div>
+      <div class="stp"><button class="sbtn" onclick="adj('dr',-1)">-</button><span class="sv" id="s-dr">0</span><button class="sbtn" onclick="adj('dr',1)">+</button></div>
+    </div>
+    <div class="dv"></div>
+    <div class="row" style="padding:14px 16px;display:flex;justify-content:space-between;align-items:center;">
+      <div><div class="rt">New Contacts Added</div><div class="rs">Added to database today</div></div>
+      <div class="stp"><button class="sbtn" onclick="adj('nc',-1)">-</button><span class="sv" id="s-nc">0</span><button class="sbtn" onclick="adj('nc',1)">+</button></div>
+    </div>
+  </div>
+
+  <div class="card"><div class="ch">Non-Negotiables</div><div id="tlist"></div></div>
+
+  <div class="card" style="padding:16px;">
+    <div class="sst">Daily Accountability Nudge</div>
+    <div style="font-size:13px;color:var(--tx2);margin-bottom:12px;" id="notif-status-text">Enable push notifications to get nudged if you're below goal.</div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <button class="btn bsm" id="notif-btn" onclick="requestNotifPermission()">Enable Notifications</button>
+      <span style="font-size:12px;color:var(--tx3);" id="notif-perm-status"></span>
+    </div>
+  </div>
+
+  <!-- Calendar -->
+  <div class="card" style="overflow:visible;padding-bottom:0;">
+    <div class="ios-header">
+      <div class="ios-month" id="cal-month"></div>
+      <div style="display:flex;gap:12px;">
+        <button onclick="calNav(-1)" class="ios-nav-btn">‹</button>
+        <button onclick="calNav(1)" class="ios-nav-btn">›</button>
+      </div>
+    </div>
+    <div class="cal-grid" id="cal-names"></div>
+    <div class="cal-grid" id="cal-days"></div>
+    <div style="height:.5px;background:var(--br);width:100%;"></div>
+    <div style="background:var(--card);min-height:180px;border-radius:0 0 16px 16px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px 4px;">
+        <div id="cal-day-header" style="font-size:15px;font-weight:600;color:var(--tx2);"></div>
+        <button onclick="openAddEvent()" style="border:none;background:none;color:var(--red);font-size:26px;font-weight:300;cursor:pointer;padding:0;">+</button>
+      </div>
+      <div id="cal-events-list"></div>
+      <div style="padding:14px 16px;">
+        <label class="btn bo bsm" style="width:100%;height:36px;cursor:pointer;margin:0;display:flex;justify-content:center;">
+          <input type="file" id="ics-upload" accept=".ics" multiple style="display:none;" onchange="importICS(this)">
+          Import .ics Schedule
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div id="cal-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.45);z-index:3000;align-items:flex-end;">
+    <div style="background:var(--card);border-radius:20px 20px 0 0;padding:20px 20px 40px;width:100%;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+        <div style="font-family:var(--font-display);font-size:17px;font-weight:600;" id="modal-date-title">Add Event</div>
+        <button onclick="closeModal()" style="border:none;background:none;font-size:22px;color:var(--tx3);cursor:pointer;">×</button>
+      </div>
+      <div style="display:grid;gap:10px;">
+        <select id="ev-type">
+          <option value="openhouse">Open House</option>
+          <option value="showing">Showing</option>
+          <option value="listing">Listing Appointment</option>
+          <option value="closing">Closing</option>
+          <option value="prospecting">Prospecting Block</option>
+          <option value="doorknock">Door Knocking</option>
+          <option value="class">Class</option>
+          <option value="other">Other</option>
+        </select>
+        <input type="text" id="ev-title" placeholder="Address, client name...">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <input type="time" id="ev-start">
+          <input type="time" id="ev-end">
+        </div>
+        <button class="btn" style="width:100%;" onclick="saveEvent()">Add Event</button>
+      </div>
+      <div id="existing-events" style="margin-top:14px;max-height:200px;overflow-y:auto;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- OPEN HOUSE ADMIN -->
+<div id="scn-open" class="scn">
+  <div class="scn-title">Open House Admin</div>
+  <div class="scn-sub">Broadcast the active listing to your iPad portal instantly</div>
+
+  <div class="card" style="padding:16px;">
+    <div class="sst" style="margin-bottom:10px;">Managed Portfolio</div>
+    <div style="font-size:13px;color:var(--tx2);margin-bottom:12px;">Tap a listing to broadcast it to the iPad — one tap, instant update.</div>
+    <div id="oh-portfolio-quick"></div>
+    <button class="btn bo bsm" style="width:100%;margin-top:10px;" onclick="openPortfolio()">Manage Portfolio →</button>
+  </div>
+
+  <div class="card" style="padding:16px;">
+    <div class="sst" style="margin-bottom:10px;">Custom Broadcast</div>
+    <input type="text" id="oh-admin-addr" placeholder="Property Address (e.g. 123 Main St)" style="margin-bottom:8px;">
+    <input type="url" id="oh-admin-url" placeholder="TonyaHarbin.com Flyer URL" style="margin-bottom:8px;">
+    <input type="text" id="oh-admin-price" placeholder="Price (e.g. $450,000)" style="margin-bottom:8px;">
+    <input type="text" id="oh-admin-details" placeholder="Details (e.g. 4 Bed, 3 Bath, 2,500 sqft)" style="margin-bottom:12px;">
+    <button class="btn" id="oh-admin-btn" style="width:100%;" onclick="saveActiveOpenHouse()">Broadcast to iPad →</button>
+  </div>
+
+  <div class="gold-card">
+    <div style="font-size:11px;font-weight:700;color:#7A5C1E;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;">Currently Broadcasting</div>
+    <div style="font-family:var(--font-display);font-size:18px;font-weight:600;color:var(--tx);" id="oh-current-addr">None</div>
+    <div style="font-size:13px;color:var(--tx2);margin-top:2px;" id="oh-current-details"></div>
+  </div>
+</div>
+
+<!-- CIRCLE -->
+<div id="scn-circle" class="scn">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+    <div class="scn-title">Warm Circle</div>
+    <button id="h-btn" class="btn bsm" style="display:none;" onclick="launchHustle()">Start Hustle</button>
+  </div>
+  <div class="scn-sub">Your contact database & outreach queue</div>
+
+  <div class="card" style="padding:16px;margin-bottom:12px;">
+    <div class="sst" style="margin-bottom:10px;">Import from iPhone</div>
+    <label style="display:block;background:var(--inp);border-radius:12px;padding:14px;text-align:center;cursor:pointer;border:1px dashed var(--tx3);" for="vcf">
+      <div style="font-size:15px;font-weight:600;margin-bottom:4px;">Import .vcf Contacts</div>
+      <div style="font-size:13px;color:var(--tx2);">Export contacts from iPhone & tap here</div>
+    </label>
+    <input type="file" id="vcf" accept=".vcf" style="display:none;" onchange="importVCF(this)">
+  </div>
+
+  <div class="card" style="padding:16px;margin-bottom:12px;">
+    <div class="sst" style="margin-bottom:10px;">Quick Add Contact</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+      <input type="text" id="cn" placeholder="Name">
+      <input type="text" id="cp" placeholder="Phone">
+    </div>
+    <div style="display:grid;grid-template-columns:1.5fr 1fr;gap:8px;margin-bottom:8px;">
+      <input type="text" id="cnot" placeholder="Notes (PCSing, met at...)">
+      <input type="text" id="cref" placeholder="Source">
+    </div>
+    <div style="display:flex;gap:8px;">
+      <select id="ctype" style="flex:1;">
+        <option value="general">General</option>
+        <option value="military">Military / VA</option>
+        <option value="firsttime">First-Time Buyer</option>
+        <option value="investor">Investor</option>
+        <option value="fsbo">FSBO</option>
+        <option value="expired">Expired Listing</option>
+        <option value="referral">Referral</option>
+      </select>
+      <select id="cs" style="flex:1;">
+        <option value="new">New Lead</option>
+        <option value="contacted">Contacted</option>
+        <option value="interested">Interested</option>
+      </select>
+      <button class="btn" onclick="addContact()">Add</button>
+    </div>
+  </div>
+
+  <div class="fst" id="filter-tabs">
+    <button class="fc on" onclick="setFilter('all',this)">All</button>
+    <button class="fc" onclick="setFilter('new',this)">New</button>
+    <button class="fc" onclick="setFilter('military',this)">Military</button>
+    <button class="fc" onclick="setFilter('firsttime',this)">First-Time</button>
+    <button class="fc" onclick="setFilter('investor',this)">Investor</button>
+    <button class="fc" onclick="setFilter('fsbo',this)">FSBO</button>
+  </div>
+  <div class="card" id="clist"></div>
+</div>
+
+<!-- CLIENTS -->
+<div id="scn-clients" class="scn">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+    <div class="scn-title">My Clients</div>
+    <div style="font-size:13px;color:var(--tx2);" id="aniv-count"></div>
+  </div>
+  <div class="scn-sub">Closed transactions & anniversary tracking</div>
+
+  <div class="card" style="padding:16px;margin-bottom:12px;">
+    <div class="sst" style="margin-bottom:10px;">Log a Closing</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+      <input type="text" id="cli-name" placeholder="Client Name">
+      <input type="text" id="cli-addr" placeholder="Property Address">
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px;">
+      <input type="number" id="cli-price" placeholder="Sale Price ($)">
+      <input type="date" id="cli-date">
+      <select id="cli-type">
+        <option value="military">Military / VA</option>
+        <option value="firsttime">First-Time</option>
+        <option value="family">Family Move-Up</option>
+        <option value="investor">Investor</option>
+      </select>
+    </div>
+    <input type="text" id="cli-notes" placeholder="Notes" style="margin-bottom:8px;">
+    <button class="btn" style="width:100%;" onclick="addClient()">Log Closing</button>
+  </div>
+
+  <div id="aniv-alert" style="display:none;background:var(--red-lt);border-radius:12px;padding:14px 16px;margin-bottom:12px;border:.5px solid var(--red);">
+    <div style="font-size:13px;font-weight:700;color:var(--red);">Anniversaries coming up</div>
+    <div style="font-size:12px;color:var(--red);margin-top:4px;" id="aniv-list"></div>
+  </div>
+  <div id="client-list"></div>
+</div>
+
+<!-- SCRIPTS -->
+<div id="scn-scripts" class="scn">
+  <div class="scn-title">Scripts & Dialogues</div>
+  <div class="stabs">
+    <button class="stab on" onclick="showS('sphere',this)">Sphere</button>
+    <button class="stab" onclick="showS('fsbo',this)">FSBO</button>
+    <button class="stab" onclick="showS('expired',this)">Expired</button>
+    <button class="stab" onclick="showS('open',this)">Open House</button>
+    <button class="stab" onclick="showS('follow',this)">Follow-Up</button>
+    <button class="stab" onclick="showS('listing',this)">Listing Appt</button>
+    <button class="stab" onclick="showS('buyer',this)">Buyer Consult</button>
+    <button class="stab" onclick="showS('military',this)">Military / VA</button>
+    <button class="stab" onclick="showS('aniv',this)">Anniversary</button>
+  </div>
+  <div id="scontent"></div>
+</div>
+
+<!-- MONEY -->
+<div id="scn-money" class="scn">
+  <div class="scn-title">Money</div>
+  <div class="scn-sub">Commission tracking · Dec 31, 2026 deadline</div>
+  <div class="mg">
+    <div class="m"><div class="mv navy" id="me">$0</div><div class="ml">Net Earned</div><div class="ms">Goal: $75,000</div></div>
+    <div class="m"><div class="mv navy" id="mc">0</div><div class="ml">Closings</div><div class="ms" id="ms-mc">Need ~21 closings</div></div>
+    <div class="m"><div class="mv blue" id="msav-grid">$0</div><div class="ml">Savings</div><div class="ms">20% auto-split</div></div>
+    <div class="m"><div class="mv gold" id="mt-grid">$0</div><div class="ml">Tax Vault</div><div class="ms">30% auto-split</div></div>
+  </div>
+  <div class="card"><div class="ch">Cumulative Net vs Target</div><div class="cw"><canvas id="rchart"></canvas></div></div>
+  <div class="card" style="padding:16px;">
+    <div class="sst">Log a Closing</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;">
+      <input type="text" id="cln" placeholder="Client Name">
+      <input type="number" id="clp" placeholder="Sale Price ($)">
+    </div>
+    <button class="btn" style="width:100%;margin-top:10px;" onclick="logCloseMoney()">Log Closing</button>
+  </div>
+  <div class="card"><div class="cb">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;">
+      <span style="font-size:16px;font-weight:600;">Tax Vault</span>
+      <span style="font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--gold);" id="mt-total">$0</span>
+    </div>
+    <div style="font-size:12px;color:var(--tx3);margin-bottom:12px;" id="tax-breakdown">Auto: $0 · Manual: $0</div>
+    <div style="display:flex;gap:8px;">
+      <input type="number" id="ma-tax" placeholder="Add extra income ($)">
+      <button class="btn" style="background:var(--gold);" onclick="addTax()">Stash</button>
+    </div>
+  </div></div>
+  <div class="card"><div class="cb">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;">
+      <span style="font-size:16px;font-weight:600;">Savings</span>
+      <span style="font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--ios-blue);" id="msav-total">$0</span>
+    </div>
+    <div style="font-size:12px;color:var(--tx3);margin-bottom:12px;" id="sav-breakdown">Auto: $0 · Manual: $0</div>
+    <div style="display:flex;gap:8px;">
+      <input type="number" id="ma-sav" placeholder="Add extra savings ($)">
+      <button class="btn" style="background:var(--ios-blue);" onclick="addSav()">Stash</button>
+    </div>
+  </div></div>
+  <div class="card" id="zr1x-card"><div class="cb">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;">
+      <span style="font-family:var(--font-display);font-size:16px;font-weight:600;">ZR1X Fund</span>
+      <span style="font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--navy);" id="mz">$0</span>
+    </div>
+    <div class="zp"><div class="zf" id="zf" style="width:0%;"></div></div>
+    <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--tx3);margin-bottom:4px;"><span>$0</span><span>$25,000</span></div>
+  </div></div>
+  <div class="card" id="debt-card"><div class="ch">Debt Payoff — Snowball Method</div><div class="cb" style="padding-top:10px;">
+    <div style="margin-bottom:14px;">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;">
+        <span style="font-size:14px;font-weight:600;">Sallie Mae <span style="font-size:10px;font-weight:600;color:var(--red);background:var(--red-lt);padding:2px 7px;border-radius:6px;margin-left:4px;">PAY FIRST</span></span>
+        <span style="font-family:var(--font-display);font-size:16px;font-weight:700;color:var(--red);">$<span id="d-sallie">24,225</span></span>
+      </div>
+      <div class="pb"><div class="pf" id="pb-sallie" style="width:0%;background:var(--red);"></div></div>
+    </div>
+    <div style="margin-bottom:14px;">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;">
+        <span style="font-size:14px;font-weight:600;">Federal Loans</span>
+        <span style="font-family:var(--font-display);font-size:16px;font-weight:700;color:var(--gold);">$<span id="d-fed">5,500</span></span>
+      </div>
+      <div class="pb"><div class="pf" id="pb-fed" style="width:0%;background:var(--gold);"></div></div>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <input type="number" id="debt-pay" placeholder="Payment amount ($)">
+      <button class="btn bsm" style="background:var(--red);" onclick="payDebt()">Pay Sallie Mae</button>
+    </div>
+  </div></div>
+</div>
+
+</div><!-- end scrl -->
+
+<div class="tbar">
+  <div class="tab" onclick="showScn('inbox',this)" style="position:relative;">
+    <div id="inbox-badge" style="display:none;position:absolute;top:4px;right:calc(50% - 14px);width:10px;height:10px;background:var(--red);border-radius:50%;border:2px solid var(--card);"></div>
+    <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+    <span class="tl">Inbox</span>
+  </div>
+  <div class="tab on" onclick="showScn('daily',this)">
+    <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+    <span class="tl">Daily</span>
+  </div>
+  <div class="tab" onclick="showScn('open',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+    <span class="tl">Open</span>
+  </div>
+  <div class="tab" onclick="showScn('circle',this)">
+    <svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="4"/><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/></svg>
+    <span class="tl">Circle</span>
+  </div>
+  <div class="tab" onclick="showScn('clients',this)">
+    <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    <span class="tl">Clients</span>
+  </div>
+  <div class="tab" onclick="showScn('scripts',this)">
+    <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    <span class="tl">Scripts</span>
+  </div>
+  <div class="tab" onclick="showScn('money',this)">
+    <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+    <span class="tl">Money</span>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const MOS=['Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const TARGETS=[0,0,0,3675,14700,29400,47775,61425,75000];
+const QUOTES=[
+  "Every call is a closing waiting to happen.",
+  "The grind today is the glory tomorrow.",
+  "Pick up the phone. Someone needs a home.",
+  "Discipline beats motivation every single time.",
+  "Your network is your net worth — work it.",
+  "One more door. One more conversation. One more shot.",
+  "The commission goes to the agent who shows up.",
+  "Comfort is the enemy. Go knock the door."
+];
+
+// A2P-compliant SMS footer
+const A2P_FOOTER = "\n\nReply STOP to opt-out. Christian Carter, Licensed Real Estate Agent, Tonya Harbin Team | Real Broker, LLC.";
+
+const SCRIPTS={
+  sphere:[{s:'Announcement — New License',t:'"Hey [name], it\'s Christian — I just got my real estate license and joined the Tonya Harbin Team here in Abilene. I\'m not calling to sell you anything, I just wanted you to hear it from me first. If you ever hear of anyone buying or selling, I\'d love your help!"',tip:'Call 10 people every day in your first 30 days. Make it a conversation, not a pitch.'},{s:'Referral Ask',t:'"Hey [name], just checking in. I know you probably know a lot of people in Abilene — if anyone ever mentions wanting to buy or sell, I hope you\'ll think of me. I\'d take great care of them."',tip:'Short and non-salesy wins more referrals than a long pitch.'}],
+  fsbo:[{s:'Buyer Approach',t:'"Hey, I\'m Christian with the Tonya Harbin Team — I\'m not calling to list your home. I actually have buyers actively looking in your area right now. Would you be open to letting me bring them through?"',tip:'Lead with buyers, not listings. Takes the pressure off immediately.'},{s:'Follow-Up After No Answer',t:'"Hey, I stopped by earlier — I\'m Christian with the Tonya Harbin Team. I have pre-approved buyers looking in this exact area. I\'d love five minutes of your time. Would Tuesday or Wednesday work?"',tip:'Offer two specific times. Never open-ended.'}],
+  expired:[{s:'Solution Opener',t:'"I noticed your home came off the market recently and I didn\'t want to assume you changed your mind about selling. Are you still looking to move? I have some fresh ideas on what we could do differently to get you a solid offer."',tip:'Position yourself as the fresh solution — acknowledge what didn\'t work without piling on their previous agent.'},{s:'Follow-Up Text',t:'"Hey [name], just following up from my call earlier. I know your home didn\'t sell and I have a specific plan for yours. Even if you\'re not ready yet, I\'d love to share it. No pressure at all."',tip:'Text after a call — 70% of voicemails go unheard.'}],
+  open:[{s:'Welcome Greeting',t:'"Welcome! I\'m Christian. Before you look around, can I ask — are you just getting started in your search, or are you a little further along in the process?"',tip:'Always get a name and phone number before they leave. Have the sign-in iPad front and center.'},{s:'End of Open House',t:'"Hey [name], before you head out — I just want to make sure you saw the feature sheet. What did you think overall? Was it a yes, a maybe, or a no?"',tip:'Forcing a yes/no/maybe answer gets more honest feedback than open-ended questions.'}],
+  follow:[{s:'Post-Showing Text',t:'"Hey [name]! Just following up on [address]. What\'d you think? Did anything stand out or was it a no for you?"',tip:'Short texts get more replies than long ones. Send within 2 hours of the showing.'},{s:'30-Day Check-In',t:'"Hey [name], just checking in — has anything changed in your timeline? I\'ve been keeping an eye on inventory and there are a couple of things I think you\'d want to see."',tip:'Always give them a reason to respond — new intel, new listings, market update.'}],
+  listing:[{s:'Motivation Opener',t:'"Before I show you anything, I\'d love to hear from you. What\'s making now the right time to sell, and where are you headed after?"',tip:'Listen for motivation, timeline, and urgency. Those three things determine your entire strategy.'},{s:'Handling the Competition Objection',t:'"I completely understand wanting to interview agents. I\'d encourage it. What I can tell you is that the Tonya Harbin Team has sold over 400 homes in Abilene — most agents can\'t say that. What would a great outcome look like for you?"',tip:'Pivot back to their goal. Don\'t defend yourself — redirect.'}],
+  buyer:[{s:'Consultation Opener',t:'"I want to make sure we find you the right home, not just any home. What\'s bringing you to Abilene, and what does your ideal situation look like?"',tip:'Present the buyer rep agreement with confidence. Tie it to service, not obligation.'},{s:'Pre-Approval Conversation',t:'"The best way I can protect you in this market is to make sure we have financing lined up before we start looking. Have you connected with a lender yet? I have a great one who\'s worked with a lot of families in your situation."',tip:'Pre-approval is a buyer consultation non-negotiable. Don\'t skip it.'}],
+  military:[{s:'VA Buyer Intro',t:'"Hey, I work with a lot of families stationed at Dyess and I know the PCS timeline can be really tight. I\'m very familiar with VA loans and I know how to move fast when orders come through. When are your orders effective?"',tip:'Ask about their report date in the first conversation. That becomes your entire timeline.'},{s:'VA Loan Education',t:'"One thing I want to make sure you understand — with a VA loan, you don\'t need a down payment and you don\'t pay PMI. That\'s a huge advantage in this market. A lot of buyers don\'t realize how strong their VA benefit is."',tip:'Education earns trust faster than any sales pitch. Military buyers respond to straightforward facts.'}],
+  aniv:[{s:'1-Year Anniversary Text',t:'"Hey [name]! I can\'t believe it\'s already been a year since you closed on [address]. I hope you\'re absolutely loving it! If you ever need anything or know someone looking to buy or sell, I\'m always your guy. Happy home anniversary!"',tip:'Send this text the week before the anniversary date. Set a calendar reminder the day you close every transaction.'}]
+};
+
+let rChart=null,selectedContacts=[],hIdx=0,currentFilter='all',activeDocsClientId=null,pendingBroadcastAddr='',pendingBroadcastData=null;
+const S={
+  dark:false,cv:0,dr:0,nc:0,streak:0,history:{},calEvents:{},
+  tasks:[{id:'t1',t:'20 conversations',d:false},{id:'t2',t:'Add 20 new contacts',d:false},{id:'t3',t:'1 hour door knocking',d:false}],
+  contacts:[],clients:[],closings:[],currentOpenHouse:{},portfolio:[],replies:{},
+  sallie:24225,federal:5500,zr1x:0,manualTax:0,manualSav:0,docs:{},
+  rc:{convGoal:20,doorGoal:20,nudgeTime:'16:00',showZR1X:true,showDebt:true,sprintMode:false,closingsGoal:21},
+  notifPermission:'default'
+};
+
+const todayD=new Date();
+let calYear=todayD.getFullYear(),calMonth=todayD.getMonth();
+let activeDateStr=`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(todayD.getDate()).padStart(2,'0')}`;
+
+let dbRef=null,setDb=null,fd_update=null,storageRef=null,fbUploadBytes=null,fbGetDownloadURL=null,fbPush=null,fbDb=null,fbRef=null;
+
+import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js').then(fa=>{
+  Promise.all([
+    import('https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js'),
+    import('https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js')
+  ]).then(([fd,fs])=>{
+    const cfg={
+      apiKey:"AIzaSyBRl0xHETygH2XYB8lWzWOPoGFrzI-zqwg",authDomain:"agenthq-3c2c9.firebaseapp.com",
+      databaseURL:"https://agenthq-3c2c9-default-rtdb.firebaseio.com",projectId:"agenthq-3c2c9",
+      storageBucket:"agenthq-3c2c9.appspot.com",messagingSenderId:"91185374523",appId:"1:91185374523:web:fef9123905c7d416d1831e"
+    };
+    const app=fa.initializeApp(cfg);
+    fbDb=fd.getDatabase(app);fbPush=fd.push;fbRef=fd.ref;fd_update=fd.update;
+    dbRef=fd.ref(fbDb,'agent_hq_data');setDb=fd.set;
+    const storage=fs.getStorage(app);storageRef=fs.ref;fbUploadBytes=fs.uploadBytesResumable;fbGetDownloadURL=fs.getDownloadURL;
+
+    fd.onValue(dbRef,snap=>{
+      const data=snap.val();
+      if(data){
+        Object.assign(S,data);
+        // Firebase push() stores contacts as an object {"-NxKey": {...}, ...}
+        // Convert to array so .filter/.map/.find all work correctly
+        if(S.contacts && !Array.isArray(S.contacts)){
+          S.contacts=Object.values(S.contacts);
+        }
+        if(!S.contacts)S.contacts=[];
+        if(!S.calEvents)S.calEvents={};
+        if(!S.docs)S.docs={};
+        if(!S.rc)S.rc={convGoal:20,doorGoal:20,nudgeTime:'16:00',showZR1X:true,showDebt:true,sprintMode:false,closingsGoal:21};
+        if(!S.portfolio)S.portfolio=[];
+        applyRC();updateC();if(document.getElementById('cal-month'))renderCal();
+        renderMoney();renderContacts();renderClients();renderPortfolioQuick();
+        updateInboxBadge();
+        if(S.currentOpenHouse){
+          document.getElementById('oh-admin-addr').value=S.currentOpenHouse.address||'';
+          document.getElementById('oh-admin-price').value=S.currentOpenHouse.price||'';
+          document.getElementById('oh-admin-details').value=S.currentOpenHouse.details||'';
+          document.getElementById('oh-admin-url').value=S.currentOpenHouse.url||'';
+          document.getElementById('oh-current-addr').textContent=S.currentOpenHouse.address||'None';
+          document.getElementById('oh-current-details').textContent=S.currentOpenHouse.price?`${S.currentOpenHouse.price} · ${S.currentOpenHouse.details||''}`:'';
+        }
+        if(document.getElementById('scn-inbox').classList.contains('on'))renderInbox();
+      }
+    });
+  });
+});
+
+window.save=function(){
+  try{localStorage.setItem('ahq_v7',JSON.stringify(S));}catch(e){}
+  // CRITICAL: Never overwrite agent_hq_data/contacts — the iPad portal owns
+  // that node via push(). Use update() on only the keys the dashboard manages.
+  if(fbDb&&fbRef&&fd_update){
+    const {contacts:_omit,...rest}=S;
+    try{fd_update(fbRef(fbDb,'agent_hq_data'),rest);}catch(e){console.error(e);}
+  }
+};
+window.load=function(){
+  try{
+    const d=JSON.parse(localStorage.getItem('ahq_v7')||'{}');Object.assign(S,d);
+    if(!S.calEvents)S.calEvents={};if(!S.docs)S.docs={};if(!S.contacts)S.contacts=[];
+    if(!S.rc)S.rc={convGoal:20,doorGoal:20,nudgeTime:'16:00',showZR1X:true,showDebt:true,sprintMode:false,closingsGoal:21};
+    if(!S.portfolio)S.portfolio=[];
+  }catch(e){}
+  updateC();
+};
+
+function toast(msg,dur=2500){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),dur);
+}
+function toggleDark(){S.dark=!S.dark;applyDark();save();}
+function applyDark(){document.documentElement.toggleAttribute('data-dark',S.dark);if(rChart)renderCharts();}
+
+function openRC(){
+  const rc=S.rc;
+  document.getElementById('rc-convGoal').textContent=rc.convGoal;
+  document.getElementById('rc-doorGoal').textContent=rc.doorGoal;
+  document.getElementById('rc-nudgeTime').value=rc.nudgeTime||'16:00';
+  document.getElementById('rc-closingsGoal').textContent=rc.closingsGoal;
+  ['zr1x','debt','sprint'].forEach(k=>{
+    const key=k==='zr1x'?'showZR1X':k==='debt'?'showDebt':'sprintMode';
+    document.getElementById('tog-'+k).classList.toggle('on',!!rc[key]);
+  });
+  document.getElementById('rc-panel').style.display='flex';
+}
+function closeRC(){document.getElementById('rc-panel').style.display='none';}
+window.rcAdj=function(k,d){S.rc[k]=Math.max(1,(S.rc[k]||0)+d);document.getElementById('rc-'+k).textContent=S.rc[k];};
+window.rcSet=function(k,v){S.rc[k]=v;};
+window.rcToggle=function(k){
+  S.rc[k]=!S.rc[k];
+  const m={showZR1X:'tog-zr1x',showDebt:'tog-debt',sprintMode:'tog-sprint'};
+  document.getElementById(m[k]).classList.toggle('on',S.rc[k]);
+};
+window.saveRC=function(){applyRC();save();closeRC();toast('Config saved & applied');};
+
+function applyRC(){
+  const rc=S.rc;
+  document.getElementById('ms-cv').textContent=`Goal: ${rc.convGoal} today`;
+  document.getElementById('ms-dr').textContent=`Goal: ${rc.doorGoal} today`;
+  document.getElementById('ms-cl').textContent=`of ${rc.closingsGoal} needed`;
+  document.getElementById('ms-mc').textContent=`Need ~${rc.closingsGoal} closings`;
+  document.getElementById('sprint-banner').style.display=rc.sprintMode?'block':'none';
+  document.getElementById('zr1x-card').style.display=rc.showZR1X===false?'none':'';
+  document.getElementById('debt-card').style.display=rc.showDebt===false?'none':'';
+  document.getElementById('p-cv').style.width=Math.min(100,(S.cv/(rc.convGoal||20))*100)+'%';
+  document.getElementById('p-dr').style.width=Math.min(100,(S.dr/(rc.doorGoal||20))*100)+'%';
+}
+
+// --- PORTFOLIO ---
+function openPortfolio(){renderPortfolioPanel();document.getElementById('portfolio-panel').style.display='flex';}
+window.openPortfolio=openPortfolio;
+function closePortfolio(){document.getElementById('portfolio-panel').style.display='none';}
+window.closePortfolio=closePortfolio;
+
+window.addListing=function(){
+  const addr=document.getElementById('new-listing-addr').value.trim();
+  if(!addr)return;
+  if(!S.portfolio.includes(addr))S.portfolio.push(addr);
+  document.getElementById('new-listing-addr').value='';
+  renderPortfolioPanel();renderPortfolioQuick();save();toast('Listing added to portfolio');
+};
+
+function renderPortfolioPanel(){
+  const el=document.getElementById('portfolio-list');
+  if(!S.portfolio||S.portfolio.length===0){el.innerHTML='<div class="empty-state">No listings yet.<br>Add your first property above.</div>';return;}
+  el.innerHTML=S.portfolio.map((addr,i)=>`
+    <div class="listing-row">
+      <div>
+        <div class="listing-addr">${addr}</div>
+        <div class="listing-sub">Tap to broadcast to iPad</div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn bsm" onclick="broadcastFromPortfolio('${addr.replace(/'/g,"\\'")}')">Broadcast</button>
+        <button class="btn bsm" style="background:var(--red-lt);color:var(--red);" onclick="removeListing(${i})">Remove</button>
+      </div>
+    </div>`).join('');
+}
+
+function renderPortfolioQuick(){
+  const el=document.getElementById('oh-portfolio-quick');
+  if(!S.portfolio||S.portfolio.length===0){el.innerHTML='<div style="font-size:13px;color:var(--tx3);margin-bottom:8px;">No listings in portfolio yet.</div>';return;}
+  el.innerHTML=S.portfolio.slice(0,4).map(addr=>`
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:.5px solid var(--br);">
+      <div style="font-size:14px;font-weight:500;color:var(--tx);">${addr}</div>
+      <button class="btn bsm" onclick="broadcastFromPortfolio('${addr.replace(/'/g,"\\'")}')">Broadcast →</button>
+    </div>`).join('');
+}
+
+window.removeListing=function(i){S.portfolio.splice(i,1);renderPortfolioPanel();renderPortfolioQuick();save();};
+
+window.broadcastFromPortfolio=function(addr){
+  pendingBroadcastAddr=addr;
+  pendingBroadcastData={address:addr,price:'',details:'',url:''};
+  document.getElementById('broadcast-addr-preview').textContent=addr;
+  document.getElementById('broadcast-confirm').style.display='flex';
+};
+
+function closeBroadcast(){document.getElementById('broadcast-confirm').style.display='none';}
+window.closeBroadcast=closeBroadcast;
+
+window.confirmBroadcast=function(){
+  S.currentOpenHouse=pendingBroadcastData;
+  document.getElementById('oh-current-addr').textContent=pendingBroadcastData.address;
+  document.getElementById('oh-current-details').textContent='';
+  document.getElementById('oh-admin-addr').value=pendingBroadcastData.address;
+  closeBroadcast();
+  closePortfolio();
+  save();
+  toast('📡 Broadcast sent to iPad!');
+};
+
+window.saveActiveOpenHouse=async function(){
+  const addr=document.getElementById('oh-admin-addr').value.trim();
+  const price=document.getElementById('oh-admin-price').value.trim();
+  const details=document.getElementById('oh-admin-details').value.trim();
+  const url=document.getElementById('oh-admin-url').value.trim();
+  const btn=document.getElementById('oh-admin-btn');
+  if(!addr)return alert('Property address is required.');
+  btn.textContent='Updating...';btn.disabled=true;
+  S.currentOpenHouse={address:addr,price,details,url};
+  document.getElementById('oh-current-addr').textContent=addr;
+  document.getElementById('oh-current-details').textContent=price?`${price} · ${details}`:'';
+  save();toast('📡 Live Portal Updated!');btn.textContent='Broadcast to iPad →';btn.disabled=false;
+};
+
+// --- NOTIFICATIONS ---
+window.requestNotifPermission=async function(){
+  if(!('Notification' in window)){toast('Notifications not supported here');return;}
+  const p=await Notification.requestPermission();S.notifPermission=p;updateNotifUI();
+  if(p==='granted'){toast('Notifications enabled');save();}
+};
+function updateNotifUI(){
+  const p=('Notification' in window)?Notification.permission:'unsupported';
+  const btn=document.getElementById('notif-btn'),status=document.getElementById('notif-perm-status');
+  if(p==='granted'){btn.textContent='Notifications On';btn.style.background='var(--ios-green)';status.textContent='Nudge active';}
+  else if(p==='denied'){btn.textContent='Blocked';btn.style.background='var(--tx3)';status.textContent='Enable in browser settings';}
+  else{btn.textContent='Enable Notifications';btn.style.background='var(--navy)';status.textContent='';}
+}
+
+// --- DOCS ---
+window.openDocs=function(clientId,clientName){
+  activeDocsClientId=clientId;
+  document.getElementById('docs-panel-title').textContent=clientName;
+  renderDocsList();document.getElementById('docs-panel').style.display='flex';
+};
+window.closeDocs=function(){document.getElementById('docs-panel').style.display='none';activeDocsClientId=null;};
+function renderDocsList(){
+  const el=document.getElementById('docs-list'),clientDocs=(S.docs[activeDocsClientId]||[]);
+  if(clientDocs.length===0){el.innerHTML='<div class="empty-state" style="padding:20px;">No documents yet.</div>';return;}
+  const icons={pdf:'📄',jpg:'🖼️',jpeg:'🖼️',png:'🖼️',heic:'🖼️'};
+  el.innerHTML=clientDocs.map((d,i)=>{
+    const ext=(d.name.split('.').pop()||'').toLowerCase();
+    return `<div class="doc-item">
+      <div class="doc-icon" style="background:var(--inp);">${icons[ext]||'📎'}</div>
+      <div style="flex:1;min-width:0;"><div class="doc-name">${d.name}</div><div class="doc-size">${d.size}</div></div>
+      <div style="display:flex;gap:8px;">
+        ${d.url?`<a href="${d.url}" target="_blank" style="text-decoration:none;"><button class="btn bsm bo">View</button></a>`:''}
+        <button class="btn bsm" style="background:var(--red-lt);color:var(--red);" onclick="deleteDoc(${i})">Del</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+window.deleteDoc=function(i){
+  if(!S.docs[activeDocsClientId])return;
+  S.docs[activeDocsClientId].splice(i,1);renderDocsList();save();
+};
+
+// --- INBOX ---
+function buildPreviewSMS(c){
+  const A2P="\n\nReply STOP to opt-out. Christian Carter, Licensed Real Estate Agent, Tonya Harbin Team | Real Broker, LLC.";
+  const firstName=(c.name||'').split(' ')[0]||'there';
+  const prop=c.property||'the property';
+  const flyer='https://tonyaharbin.com';
+  const note=c.note||'';
+  const isMilitary=c.type==='military'||note.toLowerCase().includes('dyess')||note.toLowerCase().includes('afb');
+  const isNeighbor=note.toLowerCase().includes('just browsing')||note.toLowerCase().includes('just a neighbor');
+  const hasAgent=note.toLowerCase().includes('has agent');
+  if(hasAgent) return `Hey ${firstName}, this is Christian! Thanks for stopping by ${prop}. Here's the info if your agent needs it: ${flyer}. Let me know if there's anything I can help with.${A2P}`;
+  if(isNeighbor) return `Hey ${firstName}, this is Christian! Great meeting you at ${prop}. Here's the link if you're ever curious: ${flyer}. Let me know if there's anything I can help with.${A2P}`;
+  if(isMilitary) return `Hey ${firstName}, this is Christian! Thanks for stopping by ${prop}. I'm with the Tonya Harbin Team and we work with a lot of families at Dyess — if you ever have questions about VA loans or anything, let me know. Here's the info on the house: ${flyer}${A2P}`;
+  return `Hey ${firstName}, this is Christian! Thanks for stopping by the open house. If there's anything I can help you or anyone you know with, let me know. Here's the info on the house: ${flyer}${A2P}`;
+}
+
+window.toggleSMSPreview=function(id){
+  const el=document.getElementById('sms-prev-'+id);
+  el.style.display=el.style.display==='none'?'block':'none';
+};
+
 window.renderInbox=function(){
   const el=document.getElementById('inbox-list');
   const leads=S.contacts.filter(c=>c.source==='Open House iPad'&&c.status==='new');
@@ -978,6 +2092,8 @@ window.renderInbox=function(){
           <div style="background:var(--inp);padding:12px;border-radius:10px;margin-top:12px;font-size:13px;color:var(--tx2);line-height:1.5;">
             <b style="color:var(--tx);">Intel:</b> ${c.note||'No notes captured'}
           </div>
+          <button onclick="toggleSMSPreview(${c.id})" style="margin-top:10px;background:none;border:none;font-size:12px;font-weight:600;color:var(--navy);cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:3px;">View text sent →</button>
+          <div id="sms-prev-${c.id}" style="display:none;margin-top:8px;background:var(--gold-xlt);border:.5px solid rgba(201,168,76,.3);border-radius:10px;padding:12px;font-size:12px;color:var(--tx);line-height:1.6;white-space:pre-wrap;">${buildPreviewSMS(c)}</div>
         </div>
       </div>
       <div style="display:flex;gap:8px;margin-top:14px;">
