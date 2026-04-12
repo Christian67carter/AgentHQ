@@ -736,7 +736,7 @@ const todayD=new Date();
 let calYear=todayD.getFullYear(),calMonth=todayD.getMonth();
 let activeDateStr=`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(todayD.getDate()).padStart(2,'0')}`;
 
-let dbRef=null,setDb=null,storageRef=null,fbUploadBytes=null,fbGetDownloadURL=null,fbPush=null,fbDb=null,fbRef=null;
+let dbRef=null,setDb=null,fd_update=null,storageRef=null,fbUploadBytes=null,fbGetDownloadURL=null,fbPush=null,fbDb=null,fbRef=null;
 
 import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js').then(fa=>{
   Promise.all([
@@ -749,7 +749,7 @@ import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js').then(fa=>{
       storageBucket:"agenthq-3c2c9.appspot.com",messagingSenderId:"91185374523",appId:"1:91185374523:web:fef9123905c7d416d1831e"
     };
     const app=fa.initializeApp(cfg);
-    fbDb=fd.getDatabase(app);fbPush=fd.push;fbRef=fd.ref;
+    fbDb=fd.getDatabase(app);fbPush=fd.push;fbRef=fd.ref;fd_update=fd.update;
     dbRef=fd.ref(fbDb,'agent_hq_data');setDb=fd.set;
     const storage=fs.getStorage(app);storageRef=fs.ref;fbUploadBytes=fs.uploadBytesResumable;fbGetDownloadURL=fs.getDownloadURL;
 
@@ -757,11 +757,19 @@ import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js').then(fa=>{
       const data=snap.val();
       if(data){
         Object.assign(S,data);
-        if(!S.calEvents)S.calEvents={};if(!S.docs)S.docs={};if(!S.contacts)S.contacts=[];
+        // Firebase push() stores contacts as an object {"-NxKey": {...}, ...}
+        // Convert to array so .filter/.map/.find all work correctly
+        if(S.contacts && !Array.isArray(S.contacts)){
+          S.contacts=Object.values(S.contacts);
+        }
+        if(!S.contacts)S.contacts=[];
+        if(!S.calEvents)S.calEvents={};
+        if(!S.docs)S.docs={};
         if(!S.rc)S.rc={convGoal:20,doorGoal:20,nudgeTime:'16:00',showZR1X:true,showDebt:true,sprintMode:false,closingsGoal:21};
         if(!S.portfolio)S.portfolio=[];
         applyRC();updateC();if(document.getElementById('cal-month'))renderCal();
         renderMoney();renderContacts();renderClients();renderPortfolioQuick();
+        updateInboxBadge();
         if(S.currentOpenHouse){
           document.getElementById('oh-admin-addr').value=S.currentOpenHouse.address||'';
           document.getElementById('oh-admin-price').value=S.currentOpenHouse.price||'';
@@ -778,7 +786,12 @@ import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js').then(fa=>{
 
 window.save=function(){
   try{localStorage.setItem('ahq_v7',JSON.stringify(S));}catch(e){}
-  if(setDb&&dbRef){try{setDb(dbRef,S);}catch(e){console.error(e);}}
+  // CRITICAL: Never overwrite agent_hq_data/contacts — the iPad portal owns
+  // that node via push(). Use update() on only the keys the dashboard manages.
+  if(fbDb&&fbRef&&fd_update){
+    const {contacts:_omit,...rest}=S;
+    try{fd_update(fbRef(fbDb,'agent_hq_data'),rest);}catch(e){console.error(e);}
+  }
 };
 window.load=function(){
   try{
