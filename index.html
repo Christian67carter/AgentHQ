@@ -34,12 +34,14 @@ body{display:flex;flex-direction:column;}
 .hdr-r{display:flex;gap:8px;align-items:center;}
 .dbtn{width:36px;height:36px;border-radius:50%;border:none;background:var(--inp);cursor:pointer;font-size:17px;}
 .bdg{background:var(--g);color:#fff;font-size:11px;font-weight:600;padding:4px 10px;border-radius:12px;}
+.bdg-notif{background:var(--ios-red);color:#fff;font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px;display:none;margin-left:5px;}
 .scrl{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 14px calc(var(--th) + env(safe-area-inset-bottom) + 60px);}
 .tbar{position:fixed;bottom:0;left:0;right:0;height:var(--th);background:var(--card);border-top:.5px solid var(--br);display:flex;align-items:flex-start;padding-top:10px;z-index:100;}
-.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:0 2px;}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:0 2px;position:relative;}
 .tab svg{width:22px;height:22px;stroke:var(--tx2);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
 .tab .tl{font-size:9px;font-weight:500;color:var(--tx3);}
 .tab.on svg{stroke:var(--ios-blue);} .tab.on .tl{color:var(--ios-blue);}
+.tab-badge{position:absolute;top:-2px;right:25%;background:var(--ios-red);color:white;font-size:10px;padding:2px 5px;border-radius:10px;font-weight:bold;display:none;}
 .scn{display:none;} .scn.on{display:block;animation:su .18s ease;}
 @keyframes su{from{transform:translateY(14px);opacity:0;}to{transform:translateY(0);opacity:1;}}
 .card{background:var(--card);border-radius:16px;margin-bottom:12px;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,0.02);}
@@ -153,6 +155,17 @@ input,select,textarea{width:100%;border-radius:10px;border:none;background:var(-
 .tl-content{flex:1;padding-bottom:4px;}
 .tl-title{font-size:15px;font-weight:600;color:var(--tx);line-height:1.3;}
 .tl-sub{font-size:13px;color:var(--tx2);margin-top:2px;}
+
+/* INBOX STYLES */
+.msg-card{background:var(--card);border-radius:14px;padding:12px 16px;margin-bottom:10px;border:.5px solid var(--br);display:flex;flex-direction:column;gap:4px;}
+.msg-from{font-size:14px;font-weight:700;color:var(--ios-blue);}
+.msg-text{font-size:15px;color:var(--tx);line-height:1.4;}
+.msg-time{font-size:11px;color:var(--tx3);align-self:flex-end;}
+
+/* LEGAL FOOTER */
+.lft{text-align:center; padding: 40px 20px; background: var(--bg); margin-top: 20px;}
+.lft div{font-size: 11px; color: var(--tx2); margin-bottom: 8px;}
+.lft a{color: var(--ios-blue); text-decoration: none; font-weight: 500; margin: 0 8px;}
 </style>
 </head>
 <body>
@@ -260,7 +273,7 @@ input,select,textarea{width:100%;border-radius:10px;border:none;background:var(-
 
 <div class="ss"></div>
 <div class="hdr">
-  <div class="hdr-l"><div class="t">Agent HQ</div><div class="s" id="hdr-sub">Christian · $3,675/closing</div></div>
+  <div class="hdr-l"><div class="t">Agent HQ</div><div class="s" id="hdr-sub">Christian Carter <span id="hdr-notif" class="bdg-notif">0</span></div></div>
   <div class="hdr-r">
     <button class="dbtn" onclick="openRC()" title="Remote Config">⚙️</button>
     <button class="dbtn" onclick="toggleDark()">🌙</button>
@@ -380,6 +393,14 @@ input,select,textarea{width:100%;border-radius:10px;border:none;background:var(-
   </div>
 </div>
 
+<div id="scn-inbox" class="scn">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+    <div style="font-size:22px;font-weight:800;">Inbox</div>
+    <button class="btn bsm" style="background:var(--inp); color:var(--ios-red);" onclick="clearInbox()">Clear All</button>
+  </div>
+  <div id="inbox-list"></div>
+</div>
+
 <div id="scn-open" class="scn">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
     <div style="font-size:22px;font-weight:800;">Open House Admin</div>
@@ -389,12 +410,6 @@ input,select,textarea{width:100%;border-radius:10px;border:none;background:var(-
     <div class="sst" style="margin-bottom:10px;">Set Active Property for iPad</div>
     <div style="font-size:13px;color:var(--tx2);margin-bottom:12px;">This updates the live Open House Portal instantly.</div>
     
-    <label style="display:block;background:var(--inp);border-radius:12px;padding:14px;text-align:center;cursor:pointer;border:1px dashed var(--tx3);margin-bottom:14px;">
-      <div style="font-size:15px;font-weight:600;margin-bottom:4px;" id="oh-hero-label">📸 Upload Hero Image</div>
-      <div style="font-size:13px;color:var(--tx2);">Select property photo (JPG/PNG)</div>
-      <input type="file" id="oh-admin-photo" accept=".jpg,.jpeg,.png,.heic" style="display:none;" onchange="document.getElementById('oh-hero-label').innerText = '📎 ' + this.files[0].name">
-    </label>
-
     <input type="text" id="oh-admin-addr" placeholder="Property Address (e.g. 123 Main St)">
     <input type="text" id="oh-admin-price" placeholder="Price (e.g. $450,000)" style="margin-top:8px;">
     <input type="text" id="oh-admin-details" placeholder="Details (e.g. 4 Bed, 3 Bath, 2,500 sqft)" style="margin-top:8px;">
@@ -571,12 +586,18 @@ input,select,textarea{width:100%;border-radius:10px;border:none;background:var(-
   </div></div>
 </div>
 
+<div class="lft">
+  <div>© 2026 Christian Carter, REALTOR® | Tonya Harbin Team</div>
+  <a href="privacy.html">Privacy Policy</a> | <a href="terms.html">Terms & Conditions</a>
+</div>
+
 </div><div class="tbar">
   <div class="tab on" onclick="showScn('daily',this)">
     <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span class="tl">Daily</span>
   </div>
-  <div class="tab" onclick="showScn('open',this)">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg><span class="tl">Open</span>
+  <div class="tab" onclick="showScn('inbox',this)">
+    <div id="inbox-badge" class="tab-badge">0</div>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg><span class="tl">Inbox</span>
   </div>
   <div class="tab" onclick="showScn('circle',this)">
     <svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="4"/><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/></svg><span class="tl">Circle</span>
@@ -593,15 +614,30 @@ input,select,textarea{width:100%;border-radius:10px;border:none;background:var(-
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
-<script>
-const MOS = ['Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-const TARGETS = [0,0,0,3675,14700,29400,47775,61425,75000];
-const QUOTES = ["Every call is a closing waiting to happen.", "The grind today is the glory tomorrow.", "Pick up the phone. Someone needs a home.", "Discipline beats motivation every single time."];
-const SCRIPTS = {
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getDatabase, ref, set, onValue, push, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import { getStorage, ref as sRef, uploadBytesResumable, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+
+const cfg={
+  apiKey:"AIzaSyBRl0xHETygH2XYB8lWzWOPoGFrzI-zqwg", authDomain:"agenthq-3c2c9.firebaseapp.com",
+  databaseURL:"https://agenthq-3c2c9-default-rtdb.firebaseio.com", projectId:"agenthq-3c2c9",
+  storageBucket:"agenthq-3c2c9.appspot.com", messagingSenderId:"91185374523", appId:"1:91185374523:web:fef9123905c7d416d1831e"
+};
+const app=initializeApp(cfg);
+const db=getDatabase(app);
+const storage=getStorage(app);
+const dbRef=ref(db,'agent_hq_data');
+
+// GLOBAL STATE
+const MOS=['Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const TARGETS=[0,0,0,3675,14700,29400,47775,61425,75000];
+const QUOTES=["Every call is a closing waiting to happen.", "The grind today is the glory tomorrow.", "Pick up the phone. Someone needs a home.", "Discipline beats motivation every single time."];
+const SCRIPTS={
   sphere:[{s:'Announcement',t:'"Hey [name], it\'s Christian — I just got my real estate license and joined the Tonya Harbin Team here in Abilene. I\'m not calling to sell you anything, I just wanted you to hear it from me. If you ever hear of anyone buying or selling, I\'d love your help!"',tip:'Call 10 people every day in your first 30 days.'}],
   fsbo:[{s:'Buyer Approach',t:'"Hey, I\'m Christian with the Tonya Harbin Team — I\'m not calling to list your home. I actually have buyers looking in your area right now. Would you be open to letting me bring them through?"',tip:'Lead with buyers, not listings.'}],
   expired:[{s:'Solution Opener',t:'"I noticed your home came off the market recently and I didn\'t want to assume you changed your mind about selling. Are you still looking to move? I have some ideas on what we could do differently."',tip:'Position yourself as the fresh solution.'}],
-  open:[{s:'Greeting',t:'"Welcome! I\'m Christian. Before you look around, can I ask — are you just getting started in your search, or are you a little further along in the process?"',tip:'Always get a name and phone number before they leave.'}],
+  open:[{s:'Greeting',t:'"Welcome! I\'m Christian. Feel free to look around. Are you just starting your search, or are you a little further along in the process?"',tip:'Always get a name and phone number before they leave.'}],
   follow:[{s:'Post-Showing Text',t:'"Hey [name]! Just following up on [address]. What\'d you think? Did anything stand out or was it a no for you?"',tip:'Short texts get more replies than long ones.'}],
   listing:[{s:'Motivation Opener',t:'"Before I show you anything, I\'d love to hear from you. What\'s making now the right time to sell, and where are you headed after?"',tip:'Listen for motivation, timeline, and urgency.'}],
   buyer:[{s:'Consultation Opener',t:'"I want to make sure we find you the right home, not just any home. What\'s bringing you to Abilene, and what does your ideal situation look like?"',tip:'Present the buyer rep agreement with confidence.'}],
@@ -609,76 +645,50 @@ const SCRIPTS = {
   aniv:[{s:'1-Year Anniversary Text',t:'"Hey [name]! I can\'t believe it\'s already been a year since you closed on [address]. Hope you\'re absolutely loving it! If you ever need anything or know someone looking to buy or sell, I\'m always here. Happy home anniversary!"',tip:'Send this text the week before the anniversary date.'}]
 };
 
-let rChart=null, selectedContacts=[], hIdx=0, currentFilter='all', activeDocsClientId=null;
-const S = {
-  dark:false, cv:0, dr:0, nc:0, streak:0, history:{}, calEvents:{},
+window.S={
+  dark:false, cv:0, dr:0, nc:0, streak:0, history:{}, calEvents:{}, inbox:{}, lastRead:0,
   tasks:[{id:'t1',t:'20 conversations',d:false},{id:'t2',t:'Add 20 new contacts',d:false},{id:'t3',t:'1 hour door knocking',d:false}],
-  contacts:[], clients:[], closings:[], currentOpenHouse: {},
+  contacts:[], clients:[], closings:[], currentOpenHouse:{},
   sallie:24225, federal:5500, zr1x:0, manualTax:0, manualSav:0, docs:{},
   rc:{ convGoal:20, doorGoal:20, nudgeTime:'16:00', showZR1X:true, showDebt:true, sprintMode:false, closingsGoal:21 },
   notifPermission:'default'
 };
 
-const todayD = new Date();
+let rChart=null, selectedContacts=[], hIdx=0, currentFilter='all', activeDocsClientId=null;
+const todayD=new Date();
 let calYear=todayD.getFullYear(), calMonth=todayD.getMonth();
 let activeDateStr=`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(todayD.getDate()).padStart(2,'0')}`;
 
-let dbRef=null, setDb=null, storageRef=null, fbUploadBytes=null, fbGetDownloadURL=null;
-
-import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js').then(fa=>{
-  Promise.all([
-    import('https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js'),
-    import('https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js')
-  ]).then(([fd, fs])=>{
-    const cfg={
-      apiKey:"AIzaSyBRl0xHETygH2XYB8lWzWOPoGFrzI-zqwg", authDomain:"agenthq-3c2c9.firebaseapp.com",
-      databaseURL:"https://agenthq-3c2c9-default-rtdb.firebaseio.com", projectId:"agenthq-3c2c9",
-      storageBucket:"agenthq-3c2c9.appspot.com", messagingSenderId:"91185374523", appId:"1:91185374523:web:fef9123905c7d416d1831e"
-    };
-    const app=fa.initializeApp(cfg);
-    const db=fd.getDatabase(app);
-    dbRef=fd.ref(db,'agent_hq_data');
-    setDb=fd.set;
-    const storage=fs.getStorage(app); storageRef=fs.ref; fbUploadBytes=fs.uploadBytesResumable; fbGetDownloadURL=fs.getDownloadURL;
-
-    fd.onValue(dbRef,snap=>{
-      const data=snap.val();
-      if(data){
-        Object.assign(S,data);
-        if(!S.calEvents)S.calEvents={}; if(!S.docs)S.docs={}; if(!S.contacts)S.contacts=[];
-        if(!S.rc)S.rc={convGoal:20,doorGoal:20,nudgeTime:'16:00',showZR1X:true,showDebt:true,sprintMode:false,closingsGoal:21};
-        applyRC(); updateC(); if(document.getElementById('cal-month'))renderCal();
-        renderMoney(); renderContacts(); renderClients();
-        
-        if(S.currentOpenHouse) {
-           document.getElementById('oh-admin-addr').value = S.currentOpenHouse.address || '';
-           document.getElementById('oh-admin-price').value = S.currentOpenHouse.price || '';
-           document.getElementById('oh-admin-details').value = S.currentOpenHouse.details || '';
-        }
-      }
-    });
-  });
+// FIREBASE SYNC
+onValue(dbRef,snap=>{
+  const data=snap.val();
+  if(data){
+    Object.assign(window.S,data);
+    if(!S.calEvents)S.calEvents={}; if(!S.docs)S.docs={}; if(!S.contacts)S.contacts=[]; if(!S.inbox)S.inbox={};
+    if(!S.rc)S.rc={convGoal:20,doorGoal:20,nudgeTime:'16:00',showZR1X:true,showDebt:true,sprintMode:false,closingsGoal:21};
+    applyRC(); updateC(); renderCal(); renderMoney(); renderContacts(); renderClients(); renderInbox(); updateBadges();
+    if(S.currentOpenHouse) {
+      document.getElementById('oh-admin-addr').value = S.currentOpenHouse.address || '';
+      document.getElementById('oh-admin-price').value = S.currentOpenHouse.price || '';
+      document.getElementById('oh-admin-details').value = S.currentOpenHouse.details || '';
+    }
+  }
 });
 
-window.save=function(){
-  try{localStorage.setItem('ahq_v6',JSON.stringify(S));}catch(e){}
-  if(setDb&&dbRef){try{setDb(dbRef,S);}catch(e){console.error(e);}}
-};
-window.load=function(){
-  try{const d=JSON.parse(localStorage.getItem('ahq_v6')||'{}');Object.assign(S,d);if(!S.calEvents)S.calEvents={};if(!S.docs)S.docs={};if(!S.contacts)S.contacts=[];if(!S.rc)S.rc={convGoal:20,doorGoal:20,nudgeTime:'16:00',showZR1X:true,showDebt:true,sprintMode:false,closingsGoal:21};}catch(e){}
-  updateC();
-};
+function save(){ set(dbRef,S); }
 
+// UI ENGINE
 function toast(msg,dur=2500){
   const t=document.getElementById('toast');
-  t.textContent=msg;t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),dur);
+  t.textContent=msg; t.style.display='block'; t.classList.add('show');
+  setTimeout(()=>{ t.classList.remove('show'); t.style.display='none'; },dur);
 }
 
-function toggleDark(){S.dark=!S.dark;applyDark();save();}
-function applyDark(){document.documentElement.toggleAttribute('data-dark',S.dark);if(rChart)renderCharts();}
+window.toggleDark=()=>{S.dark=!S.dark; applyDark(); save();};
+function applyDark(){document.documentElement.toggleAttribute('data-dark',S.dark);}
 
-function openRC(){
+// REMOTE CONFIG
+window.openRC=()=>{
   const rc=S.rc;
   document.getElementById('rc-convGoal').textContent=rc.convGoal;
   document.getElementById('rc-doorGoal').textContent=rc.doorGoal;
@@ -686,19 +696,18 @@ function openRC(){
   document.getElementById('rc-closingsGoal').textContent=rc.closingsGoal;
   ['zr1x','debt','sprint'].forEach(k=>{
     const key=k==='zr1x'?'showZR1X':k==='debt'?'showDebt':'sprintMode';
-    const el=document.getElementById('tog-'+k);
-    el.classList.toggle('on',!!rc[key]);
+    document.getElementById('tog-'+k).classList.toggle('on',!!rc[key]);
   });
   document.getElementById('rc-panel').style.display='flex';
-}
-function closeRC(){document.getElementById('rc-panel').style.display='none';}
-window.rcAdj=function(k,d){S.rc[k]=Math.max(1,(S.rc[k]||0)+d);document.getElementById('rc-'+k).textContent=S.rc[k];};
-window.rcSet=function(k,v){S.rc[k]=v;};
-window.rcToggle=function(k){
+};
+window.closeRC=()=>{document.getElementById('rc-panel').style.display='none';};
+window.rcAdj=(k,d)=>{S.rc[k]=Math.max(1,(S.rc[k]||0)+d); document.getElementById('rc-'+k).textContent=S.rc[k];};
+window.rcSet=(k,v)=>{S.rc[k]=v;};
+window.rcToggle=(k)=>{
   S.rc[k]=!S.rc[k]; const elMap={showZR1X:'tog-zr1x',showDebt:'tog-debt',sprintMode:'tog-sprint'};
   document.getElementById(elMap[k]).classList.toggle('on',S.rc[k]);
 };
-window.saveRC=function(){applyRC();save();closeRC();toast('⚙️ Config saved & applied!');};
+window.saveRC=()=>{applyRC(); save(); closeRC(); toast('⚙️ Config applied!');};
 
 function applyRC(){
   const rc=S.rc;
@@ -713,338 +722,257 @@ function applyRC(){
   document.getElementById('p-dr').style.width=Math.min(100,(S.dr/(rc.doorGoal||20))*100)+'%';
 }
 
-window.requestNotifPermission=async function(){
-  if(!('Notification' in window)){toast('Notifications not supported on this browser');return;}
-  const perm=await Notification.requestPermission(); S.notifPermission=perm; updateNotifUI();
-  if(perm==='granted'){toast('🔔 Notifications enabled!');save();}
-};
-
-function updateNotifUI(){
-  const perm = ('Notification' in window) ? Notification.permission : 'unsupported';
-  const btn=document.getElementById('notif-btn'); const status=document.getElementById('notif-perm-status');
-  if(perm==='granted'){ btn.textContent='✅ Notifications On';btn.style.background='var(--ios-green)'; status.textContent='Nudge active'; } 
-  else if(perm==='denied'){ btn.textContent='🚫 Blocked';btn.style.background='var(--tx3)'; status.textContent='Enable in browser settings'; } 
-  else { btn.textContent='Enable Notifications';btn.style.background='var(--g)'; status.textContent=''; }
+// INBOX
+function renderInbox(){
+  const el=document.getElementById('inbox-list');
+  const msgs=S.inbox||{};
+  const sorted=Object.keys(msgs).map(k=>({id:k,...msgs[k]})).sort((a,b)=>b.time-a.time);
+  if(sorted.length===0){ el.innerHTML='<div class="empty-state">No messages yet.</div>'; return; }
+  el.innerHTML=sorted.map(m=>`
+    <div class="msg-card">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div class="msg-from">${m.from}</div>
+        <button class="btn bsm" style="background:var(--ios-blue); color:white;" onclick="replyTo('${m.from}')">Reply</button>
+      </div>
+      <div class="msg-text">${m.text}</div>
+      <div class="msg-time">${new Date(m.time).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</div>
+    </div>
+  `).join('');
 }
 
-window.openDocs=function(clientId, clientName){
-  activeDocsClientId=clientId;
-  document.getElementById('docs-panel-title').textContent='📁 '+clientName;
+function updateBadges(){
+  const msgs=S.inbox||{};
+  const count=Object.values(msgs).filter(m=>m.time>(S.lastRead||0)).length;
+  const hb=document.getElementById('hdr-notif'), tb=document.getElementById('inbox-badge');
+  if(count>0){ hb.innerText=count; hb.style.display='inline-block'; tb.innerText=count; tb.style.display='block'; }
+  else { hb.style.display='none'; tb.style.display='none'; }
+}
+
+window.replyTo=(num)=>{window.location.href=`sms:${num}`;};
+window.clearInbox=()=>{if(confirm('Clear all?')){remove(ref(db,'agent_hq_data/inbox'));}};
+
+// DOCUMENTS
+window.uploadDocs=async(inp)=>{
+  const files=inp.files; if(!files.length||!activeDocsClientId) return;
+  document.getElementById('docs-upload-progress').style.display='block';
+  for(let file of files){
+    const path=`docs/${activeDocsClientId}/${Date.now()}_${file.name}`;
+    const fileRef=sRef(storage,path);
+    const task=uploadBytesResumable(fileRef,file);
+    task.on('state_changed',snap=>{
+      const pct=(snap.bytesTransferred/snap.totalBytes)*100;
+      document.getElementById('docs-progress-bar').style.width=pct+'%';
+    },null,async()=>{
+      const url=await getDownloadURL(task.snapshot.ref);
+      if(!S.docs[activeDocsClientId])S.docs[activeDocsClientId]=[];
+      S.docs[activeDocsClientId].push({name:file.name, size:(file.size/1024).toFixed(1)+'KB', url, path});
+      save(); renderDocsList();
+    });
+  }
+  setTimeout(()=>{document.getElementById('docs-upload-progress').style.display='none';},1000);
+};
+
+window.openDocs=(id,name)=>{
+  activeDocsClientId=id; document.getElementById('docs-panel-title').textContent='📁 '+name;
   renderDocsList(); document.getElementById('docs-panel').style.display='flex';
 };
-window.closeDocs=function(){document.getElementById('docs-panel').style.display='none';activeDocsClientId=null;};
+window.closeDocs=()=>{document.getElementById('docs-panel').style.display='none'; activeDocsClientId=null;};
 
 function renderDocsList(){
-  const el=document.getElementById('docs-list'); const clientDocs=(S.docs[activeDocsClientId]||[]);
-  if(clientDocs.length===0){el.innerHTML='<div class="empty-state" style="padding:20px;">No documents yet.</div>';return;}
-  const iconMap={pdf:'📄',jpg:'🖼️',jpeg:'🖼️',png:'🖼️',heic:'🖼️'};
-  el.innerHTML=clientDocs.map((d,i)=>{
-    const ext=(d.name.split('.').pop()||'').toLowerCase(); const icon=iconMap[ext]||'📎';
-    return `<div class="doc-item">
-      <div class="doc-icon" style="background:var(--inp);">${icon}</div>
+  const el=document.getElementById('docs-list'); const clientDocs=S.docs[activeDocsClientId]||[];
+  if(clientDocs.length===0){el.innerHTML='<div class="empty-state">No documents.</div>'; return;}
+  el.innerHTML=clientDocs.map((d,i)=>`
+    <div class="doc-item">
+      <div class="doc-icon" style="background:var(--inp);">📄</div>
       <div style="flex:1;min-width:0;"><div class="doc-name">${d.name}</div><div class="doc-size">${d.size}</div></div>
       <div style="display:flex;gap:8px;">
-        ${d.url?`<a href="${d.url}" target="_blank" style="text-decoration:none;"><button class="btn bsm bo">View</button></a>`:''}
+        <a href="${d.url}" target="_blank" style="text-decoration:none;"><button class="btn bsm bo">View</button></a>
         <button class="btn bsm" style="background:var(--rl);color:var(--ios-red);" onclick="deleteDoc(${i})">Del</button>
       </div>
-    </div>`;
-  }).join('');
+    </div>`).join('');
 }
 
-// NEW: SAVE ACTIVE OPEN HOUSE TO FIREBASE (FIXED UPLOAD ENGINE)
-window.saveActiveOpenHouse = async function() {
-  const addr = document.getElementById('oh-admin-addr').value.trim();
-  const price = document.getElementById('oh-admin-price').value.trim();
-  const details = document.getElementById('oh-admin-details').value.trim();
-  const fileInput = document.getElementById('oh-admin-photo');
-  const btn = document.getElementById('oh-admin-btn');
-  
-  if(!addr) return alert("Property address is required.");
-
-  btn.innerText = "Updating...";
-  btn.disabled = true;
-
-  let photoUrl = S.currentOpenHouse?.photoUrl || "";
-
-  if(fileInput.files.length > 0) {
-      const file = fileInput.files[0];
-      try {
-          const path = `openhouse/cover_${Date.now()}_${file.name}`;
-          const fs = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js');
-          const storage = fs.getStorage();
-          const fileRef = fs.ref(storage, path);
-          const task = fs.uploadBytesResumable(fileRef, file);
-          
-          photoUrl = await new Promise((resolve, reject) => {
-              task.on('state_changed', 
-                  (snap) => {
-                      const pct = Math.round((snap.bytesTransferred / snap.totalBytes) * 100);
-                      btn.innerText = `Uploading Image... ${pct}%`;
-                  }, 
-                  (err) => reject(err), 
-                  async () => {
-                      const url = await fs.getDownloadURL(task.snapshot.ref);
-                      resolve(url);
-                  }
-              );
-          });
-      } catch(e) {
-          console.error("Image upload failed", e);
-          toast("Image upload failed. Saving text only.");
-      }
-  }
-
-  S.currentOpenHouse = { address: addr, price, details, photoUrl };
-  save();
-  toast("🏡 Live Portal Updated!");
-  btn.innerText = "Update Live Portal";
-  btn.disabled = false;
-  fileInput.value = ''; 
-  document.getElementById('oh-hero-label').innerText = '📸 Upload Hero Image';
-}
-
-
-function showScn(id,el){
-  document.querySelectorAll('.scn').forEach(s=>s.classList.remove('on'));
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
-  document.getElementById('scn-'+id).classList.add('on');if(el)el.classList.add('on');
-  if(id==='money')renderMoney(); if(id==='circle')renderContacts(); if(id==='clients')renderClients();
-}
-
-function adj(k,d){
-  S[k]=Math.max(0,(S[k]||0)+d); const today=new Date().toISOString().split('T')[0]; S.history[today]=S.cv;
-  updateC();save();
-}
-
-function updateC(){
-  const rc=S.rc||{}; const cvGoal=rc.convGoal||20; const drGoal=rc.doorGoal||20;
-  document.getElementById('m-cv').textContent=S.cv; document.getElementById('s-cv').textContent=S.cv;
-  document.getElementById('m-dr').textContent=S.dr; document.getElementById('s-dr').textContent=S.dr;
-  document.getElementById('m-nc').textContent=S.nc||0; document.getElementById('s-nc').textContent=S.nc||0;
-  document.getElementById('m-st').textContent=S.streak||0;
-  document.getElementById('p-cv').style.width=Math.min(100,(S.cv/cvGoal)*100)+'%';
-  document.getElementById('p-dr').style.width=Math.min(100,(S.dr/drGoal)*100)+'%';
-  document.getElementById('p-nc').style.width=Math.min(100,((S.nc||0)/20)*100)+'%';
-  const netEarned=S.closings.reduce((a,c)=>a+c.net,0);
-  document.getElementById('m-cl').textContent=S.closings.length; document.getElementById('m-ne').textContent='$'+Math.round(netEarned).toLocaleString();
-  const pt=document.getElementById('perf-tracker'),pTitle=document.getElementById('perf-title'),pDesc=document.getElementById('perf-desc');
-  if(S.cv===0&&S.dr===0&&(S.nc||0)===0){ pt.style.borderLeftColor='var(--ios-red)';pTitle.style.color='var(--ios-red)';pTitle.textContent='NO ACTIVITY LOGGED.';pDesc.textContent="Start dialing."; } 
-  else if(S.cv<cvGoal){ pt.style.borderLeftColor='var(--am)';pTitle.style.color='var(--am)';pTitle.textContent='FALLING BEHIND.';pDesc.textContent=`Push harder.`; } 
-  else { pt.style.borderLeftColor='var(--g)';pTitle.style.color='var(--g)';pTitle.textContent='DAILY GOAL MET.';pDesc.textContent="Keep pushing — 120%."; }
-  renderTasks(); if(document.getElementById('cal-month'))renderCal();
-}
-
-function renderTasks(){ document.getElementById('tlist').innerHTML=S.tasks.map(t=>`<div class="row" style="cursor:pointer;" onclick="togT('${t.id}')"><div class="cb2 ${t.d?'ck':''}"></div><div class="rt ${t.d?'dn':''}">${t.t}</div></div>`).join(''); }
-window.togT=function(id){const t=S.tasks.find(x=>x.id===id);t.d=!t.d;renderTasks();save();};
-
-window.importICS=function(inp){
-  const files=inp.files;if(!files.length)return;
-  Array.from(files).forEach(f=>{ const r=new FileReader(); r.onload=e=>{ save();renderCal();toast(`✅ Schedule loaded!`); }; r.readAsText(f); }); inp.value='';
+window.deleteDoc=async(idx)=>{
+  const doc=S.docs[activeDocsClientId][idx];
+  if(doc.path) await deleteObject(sRef(storage,doc.path));
+  S.docs[activeDocsClientId].splice(idx,1); save(); renderDocsList();
 };
 
-window.importVCF=function(inp){
-  const f=inp.files[0];if(!f)return;
+// CONTACTS & HUSTLE
+window.importVCF=(inp)=>{
+  const f=inp.files[0]; if(!f) return;
   const r=new FileReader();
   r.onload=e=>{
-    const cards=e.target.result.split('BEGIN:VCARD');let n=0;
+    const cards=e.target.result.split('BEGIN:VCARD'); let n=0;
     cards.forEach(card=>{
       if(!card.includes('END:VCARD'))return;
       const nm=card.match(/FN:(.*)/i)||card.match(/N:(.*)/i); const ph=card.match(/TEL[^:]*:([\d\s\(\)\-\+]+)/i);
-      if(nm){ const name=nm[1].trim().replace(/;/g,' ').trim(); const phone=ph?ph[1].trim():'';
-        if(name&&name.length>1&&!S.contacts.find(c=>c.name===name)){ S.contacts.push({id:Date.now()+n,name,phone,type:'general',source:'iPhone Import',status:'new',lt:Date.now()});n++; }
+      if(nm){
+        const name=nm[1].trim().replace(/;/g,' '); const phone=ph?ph[1].trim():'';
+        if(name&&!S.contacts.find(c=>c.name===name)){ S.contacts.push({id:Date.now()+n,name,phone,type:'general',status:'new',source:'VCF'}); n++; }
       }
-    }); S.nc+=n;window.renderContacts();updateC();save();toast(`✅ Imported ${n} contacts!`);
-  }; r.readAsText(f);inp.value='';
+    });
+    save(); toast(`Imported ${n} contacts!`);
+  }; r.readAsText(f);
 };
 
-window.addContact=function(){
-  const n=document.getElementById('cn').value.trim(),p=document.getElementById('cp').value.trim(),nt=document.getElementById('cnot').value.trim(),src=document.getElementById('cref').value.trim(),type=document.getElementById('ctype').value,st=document.getElementById('cs').value;
-  if(!n)return; S.contacts.unshift({id:Date.now(),name:n,phone:p,note:nt,source:src,type,status:st,lt:Date.now()});
-  document.getElementById('cn').value='';document.getElementById('cp').value='';document.getElementById('cnot').value='';document.getElementById('cref').value=''; adj('nc',1);window.renderContacts();save();
+window.addContact=()=>{
+  const n=document.getElementById('cn').value.trim(), p=document.getElementById('cp').value.trim();
+  if(!n) return; S.contacts.unshift({id:Date.now(),name:n,phone:p,note:document.getElementById('cnot').value,source:document.getElementById('cref').value,type:document.getElementById('ctype').value,status:document.getElementById('cs').value});
+  document.getElementById('cn').value=''; document.getElementById('cp').value=''; adj('nc',1); save();
 };
-window.setFilter=function(f,el){currentFilter=f;document.querySelectorAll('.fc').forEach(b=>b.classList.remove('on'));el.classList.add('on');window.renderContacts();};
 
-window.renderContacts=function(){
+window.setFilter=(f,el)=>{currentFilter=f; document.querySelectorAll('.fc').forEach(b=>b.classList.remove('on')); el.classList.add('on'); renderContacts();};
+
+function renderContacts(){
   const el=document.getElementById('clist'); let filtered=S.contacts;
-  if(currentFilter==='new')filtered=S.contacts.filter(c=>c.status==='new');
-  else if(currentFilter!=='all')filtered=S.contacts.filter(c=>c.type===currentFilter);
-  if(filtered.length===0){el.innerHTML='<div class="empty-state">No contacts yet.<br>Use the importer above!</div>';return;}
-  const tc={military:'var(--bll);color:var(--bl)',firsttime:'var(--al);color:var(--am)',investor:'var(--pul);color:var(--pu)',fsbo:'var(--gl);color:var(--gd)',expired:'var(--rl);color:var(--rd)',referral:'var(--gl);color:var(--gd)',general:'var(--inp);color:var(--tx2)'};
-  el.innerHTML=filtered.map(c=>{
-    const col=tc[c.type]||tc.general; const docCount=(S.docs[c.id]||[]).length;
-    return `<div class="ci ${selectedContacts.includes(c.id)?'selected':''}" onclick="togSel(${c.id})">
+  if(currentFilter!=='all') filtered=S.contacts.filter(c=>c.type===currentFilter||c.status===currentFilter);
+  if(filtered.length===0){el.innerHTML='<div class="empty-state">No contacts found.</div>'; return;}
+  el.innerHTML=filtered.map(c=>`
+    <div class="ci ${selectedContacts.includes(c.id)?'selected':''}" onclick="togSel(${c.id})">
       <div class="sel-box"></div>
       <div class="av" style="background:var(--gl);color:var(--gd);">${(c.name[0]||'').toUpperCase()}</div>
-      <div style="flex:1;min-width:0;">
-        <div style="font-weight:700;font-size:15px;">${c.name}</div>
-        <div style="font-size:12px;color:var(--tx2);">${c.status||'new'} · ${c.phone||'No phone'}</div>
-        <div style="display:flex;gap:5px;margin-top:4px;flex-wrap:wrap;">
-          <span style="font-size:10px;background:${col};padding:2px 8px;border-radius:6px;">${c.type||'general'}</span>
-          ${c.source?`<span style="font-size:10px;background:var(--inp);padding:2px 8px;border-radius:6px;">${c.source}</span>`:''}
-          ${docCount?`<span style="font-size:10px;background:var(--inp);padding:2px 8px;border-radius:6px;">📎 ${docCount} doc${docCount>1?'s':''}</span>`:''}
-        </div>
+      <div style="flex:1;">
+        <div style="font-weight:700;">${c.name}</div>
+        <div style="font-size:12px;color:var(--tx2);">${c.phone||'No phone'}</div>
       </div>
-      <div style="display:flex;gap:8px;align-items:center;">
-        <button onclick="event.stopPropagation();openDocs(${c.id},'${c.name.replace(/'/g,'')}')" style="width:32px;height:32px;border-radius:50%;background:var(--inp);border:none;font-size:16px;cursor:pointer;" title="Documents">📎</button>
-        ${c.phone?`<a href="tel:${c.phone.replace(/\D/g,'')}" onclick="event.stopPropagation()" style="width:36px;height:36px;border-radius:50%;background:var(--ios-blue);display:flex;align-items:center;justify-content:center;text-decoration:none;color:#fff;flex-shrink:0;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.77 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></a>`:''}
-        <button onclick="event.stopPropagation(); deleteContact(${c.id})" style="width:32px;height:32px;border-radius:50%;background:var(--rl);color:var(--ios-red);border:none;font-size:14px;font-weight:700;cursor:pointer;" title="Delete">X</button>
-      </div>
-    </div>`;
-  }).join('');
+      <button onclick="event.stopPropagation();openDocs(${c.id},'${c.name}')" class="dbtn" style="background:var(--inp); font-size:14px;">📎</button>
+    </div>`).join('');
   document.getElementById('h-btn').style.display=selectedContacts.length?'block':'none';
-};
+}
 
-window.deleteContact = function(id) {
-  if(!confirm("Are you sure you want to delete this contact?")) return;
-  S.contacts = S.contacts.filter(c => c.id !== id);
-  selectedContacts = selectedContacts.filter(x => x !== id);
-  window.renderContacts(); save(); toast('🗑️ Contact deleted');
-};
-
-window.togSel=function(id){if(selectedContacts.includes(id))selectedContacts=selectedContacts.filter(x=>x!==id);else selectedContacts.push(id);window.renderContacts();};
-window.launchHustle=function(){hIdx=0;showHustle();document.getElementById('hustle-overlay').style.display='flex';};
+window.togSel=(id)=>{if(selectedContacts.includes(id))selectedContacts=selectedContacts.filter(x=>x!==id);else selectedContacts.push(id);renderContacts();};
+window.launchHustle=()=>{hIdx=0; showHustle(); document.getElementById('hustle-overlay').style.display='flex';};
 function showHustle(){
-  const c=S.contacts.find(x=>x.id===selectedContacts[hIdx]);if(!c)return stopHustle();
-  document.getElementById('h-count').textContent=`Queue ${hIdx+1}/${selectedContacts.length}`; document.getElementById('h-name').textContent=c.name;
-  document.getElementById('h-note').textContent=c.note||'No notes recorded'; document.getElementById('h-source').textContent=c.source?`Source: ${c.source}`:'';
+  const c=S.contacts.find(x=>x.id===selectedContacts[hIdx]); if(!c) return stopHustle();
+  document.getElementById('h-count').textContent=`Queue ${hIdx+1}/${selectedContacts.length}`;
+  document.getElementById('h-name').textContent=c.name; document.getElementById('h-note').textContent=c.note||'No notes';
   document.getElementById('h-av').textContent=(c.name[0]||'').toUpperCase();
 }
-window.hustleSend=function(){
+window.hustleSend=()=>{
   const c=S.contacts.find(x=>x.id===selectedContacts[hIdx]);
-  const msg="Hey! It's Christian Carter — I just joined the Tonya Harbin Team here in Abilene as a licensed real estate agent. If you or anyone you know is thinking about buying or selling, I'd love to help!";
-  window.location.href=`sms:${(c.phone||'').replace(/\D/g,'')}&body=${encodeURIComponent(msg)}`; adj('cv',1);setTimeout(()=>nextHustle(),500);
+  const msg="Hey! Christian Carter here — hope your day is going well! I'm just following up on our real estate chat. Let me know if you need anything!";
+  window.location.href=`sms:${c.phone}&body=${encodeURIComponent(msg)}`; adj('cv',1); nextHustle();
 };
-window.nextHustle=function(){hIdx++;if(hIdx>=selectedContacts.length)stopHustle();else showHustle();};
-window.stopHustle=function(){document.getElementById('hustle-overlay').style.display='none';selectedContacts=[];window.renderContacts();};
+window.nextHustle=()=>{hIdx++; if(hIdx>=selectedContacts.length)stopHustle(); else showHustle();};
+window.stopHustle=()=>{document.getElementById('hustle-overlay').style.display='none'; selectedContacts=[]; renderContacts();};
 
-window.addClient=function(){
-  const name=document.getElementById('cli-name').value.trim(),addr=document.getElementById('cli-addr').value.trim(),price=parseFloat(document.getElementById('cli-price').value)||0,date=document.getElementById('cli-date').value,type=document.getElementById('cli-type').value,notes=document.getElementById('cli-notes').value.trim();
-  if(!name||!date)return alert('Name and close date are required.');
-  const gross=price*0.03,afterSplit=gross*0.70,net=afterSplit*0.70,tax=afterSplit*0.30;
-  const anivDate=new Date(date);anivDate.setFullYear(anivDate.getFullYear()+1);
-  S.clients.unshift({id:Date.now(),name,addr,price,date,type,notes,net,tax,anivDate:anivDate.toISOString().split('T')[0]});
-  S.closings.push({net,tax,date:new Date().toISOString()});S.zr1x+=net*0.5;
-  document.getElementById('cli-name').value='';document.getElementById('cli-addr').value='';document.getElementById('cli-price').value='';document.getElementById('cli-date').value='';document.getElementById('cli-notes').value='';
-  renderClients();renderMoney();updateC();save();toast('🏠 Closing logged!');
+// FINANCIALS
+window.addClient=()=>{
+  const n=document.getElementById('cli-name').value, p=parseFloat(document.getElementById('cli-price').value)||0, d=document.getElementById('cli-date').value;
+  if(!n||!d) return;
+  const gross=p*0.03, afterSplit=gross*0.7, net=afterSplit*0.7, tax=afterSplit*0.3;
+  const aniv=new Date(d); aniv.setFullYear(aniv.getFullYear()+1);
+  S.clients.unshift({id:Date.now(),name:n,addr:document.getElementById('cli-addr').value,price:p,date:d,net,anivDate:aniv.toISOString().split('T')[0]});
+  S.closings.push({net,tax,date:new Date().toISOString()}); S.zr1x+=net*0.5;
+  save(); toast('🏠 Closing Logged!');
 };
-
-function daysUntil(dateStr){const today=new Date();today.setHours(0,0,0,0);const target=new Date(dateStr);target.setHours(0,0,0,0);return Math.round((target-today)/86400000);}
 
 function renderClients(){
-  const el=document.getElementById('client-list'),alertEl=document.getElementById('aniv-alert'),anivList=document.getElementById('aniv-list'),anivCount=document.getElementById('aniv-count');
-  if(S.clients.length===0){el.innerHTML='<div class="empty-state">No clients yet.<br>Log your first closing above.</div>';alertEl.style.display='none';return;}
-  const upcoming=S.clients.filter(c=>{const d=daysUntil(c.anivDate);return d>=0&&d<=14;});
-  if(upcoming.length>0){
-    alertEl.style.display='block'; anivList.innerHTML=upcoming.map(c=>{const d=daysUntil(c.anivDate);return `${c.name} — ${d===0?'TODAY':d===1?'Tomorrow':`in ${d} days`}`;}).join('<br>');
-    anivCount.innerHTML=`<span class="aniv-badge">${upcoming.length} anniversary${upcoming.length>1?'s':''}</span>`;
-  } else {alertEl.style.display='none';anivCount.innerHTML='';}
-  const tl={military:'Military / VA',firsttime:'First-Time',family:'Family',investor:'Investor'}, tc={military:'tag-mil',firsttime:'tag-ft',family:'tag-fam',investor:'tag-inv'};
-  el.innerHTML=S.clients.map(c=>{
-    const days=daysUntil(c.anivDate),isUp=days>=0&&days<=14;
-    const msg=encodeURIComponent(`Hey ${c.name}! I can't believe it's already been a year since you closed on ${c.addr||'your home'}. Hope you're absolutely loving it! If you ever need anything or know someone looking to buy or sell, I'm always here. Happy home anniversary!`);
-    const docCount=(S.docs[c.id]||[]).length;
-    return `<div class="client-card">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;">
-        <div><div class="client-name">${c.name}</div><div class="client-addr">${c.addr||'No address'}</div></div>
-        <div style="display:flex;gap:6px;align-items:center;"><span class="tag ${tc[c.type]||'tag-fam'}">${tl[c.type]||c.type}</span><button onclick="openDocs(${c.id},'${c.name.replace(/'/g,'')}')" style="width:30px;height:30px;border-radius:8px;background:var(--inp);border:none;font-size:14px;cursor:pointer;" title="Documents">📎${docCount?`<span style="font-size:9px;font-weight:700;color:var(--ios-blue);">${docCount}</span>`:''}</button></div>
+  const el=document.getElementById('client-list');
+  el.innerHTML=S.clients.map(c=>`
+    <div class="client-card">
+      <div class="client-name">${c.name}</div>
+      <div class="client-addr">${c.addr}</div>
+      <div class="client-row"><span>Closed</span><span>${c.date}</span></div>
+      <div class="client-row"><span>Anniversary</span><span style="color:var(--ios-red);font-weight:700;">${c.anivDate}</span></div>
+      <div style="margin-top:10px; display:flex; gap:8px;">
+        <button class="btn bsm bo" onclick="openDocs(${c.id},'${c.name}')">📎 Docs</button>
+        <button class="btn bsm" onclick="replyTo('${c.phone}')">Text</button>
       </div>
-      <div class="client-row"><span>Sale Price</span><span class="client-val">${c.price?'$'+Number(c.price).toLocaleString():'—'}</span></div>
-      <div class="client-row"><span>Closed</span><span class="client-val">${c.date||'—'}</span></div>
-      <div class="client-row"><span>Your Net</span><span class="client-val" style="color:var(--g);">$${Math.round(c.net).toLocaleString()}</span></div>
-      <div class="aniv-row">
-        <div><div style="font-size:12px;font-weight:600;color:${isUp?'var(--ios-red)':'var(--tx2)'};">${isUp?(days===0?'🎉 Anniversary TODAY!':days===1?'🎉 Anniversary TOMORROW!':days+' days to anniversary'):'Anniversary: '+c.anivDate}</div></div>
-        ${c.phone?`<a href="sms:${c.phone.replace(/\D/g,'')}&body=${msg}" style="text-decoration:none;"><button class="btn bsm" style="background:${isUp?'var(--ios-red)':'var(--inp)'};color:${isUp?'#fff':'var(--ios-blue)'};">Send Text</button></a>`:'<button class="btn bsm bo" onclick="alert(\'Add phone number first\')">Send Text</button>'}
-      </div>
-    </div>`;
-  }).join('');
+    </div>`).join('');
 }
 
-window.logCloseMoney=function(){
-  const p=parseFloat(document.getElementById('clp').value)||0,n=document.getElementById('cln').value.trim(); if(p<=0)return;
-  const gross=p*0.03,afterSplit=gross*0.70,net=afterSplit*0.70,tax=afterSplit*0.30;
-  S.closings.push({net,tax,date:new Date().toISOString(),name:n});S.zr1x+=net*0.5; document.getElementById('clp').value='';document.getElementById('cln').value=''; renderMoney();updateC();save();toast('💰 Closing logged!');
-};
-window.addTax=function(){const v=parseFloat(document.getElementById('ma-tax').value)||0;if(v){S.manualTax+=v;document.getElementById('ma-tax').value='';renderMoney();save();}};
-window.addSav=function(){const v=parseFloat(document.getElementById('ma-sav').value)||0;if(v){S.manualSav+=v;document.getElementById('ma-sav').value='';renderMoney();save();}};
-window.payDebt=function(){
-  const v=parseFloat(document.getElementById('debt-pay').value)||0;if(v<=0)return;
-  if(S.sallie>0){const pay=Math.min(v,S.sallie);S.sallie-=pay;const rem=v-pay;if(rem>0)S.federal=Math.max(0,S.federal-rem);} else{S.federal=Math.max(0,S.federal-v);}
-  document.getElementById('debt-pay').value='';renderMoney();save();toast('💸 Payment applied!');
-};
-
 function renderMoney(){
-  const net=S.closings.reduce((a,c)=>a+c.net,0), autoTax=S.closings.reduce((a,c)=>a+c.tax,0), totalTax=autoTax+(S.manualTax||0);
-  const autoSav=S.closings.reduce((a,c)=>a+(c.net*0.2),0), totalSav=autoSav+(S.manualSav||0);
-  document.getElementById('me').textContent='$'+Math.round(net).toLocaleString(); document.getElementById('mc').textContent=S.closings.length;
-  document.getElementById('msav-grid').textContent='$'+Math.round(totalSav).toLocaleString(); document.getElementById('mt-grid').textContent='$'+Math.round(totalTax).toLocaleString();
-  document.getElementById('mt-total').textContent='$'+Math.round(totalTax).toLocaleString(); document.getElementById('tax-breakdown').textContent=`Auto: $${Math.round(autoTax).toLocaleString()} · Manual: $${Math.round(S.manualTax||0).toLocaleString()}`;
-  document.getElementById('msav-total').textContent='$'+Math.round(totalSav).toLocaleString(); document.getElementById('sav-breakdown').textContent=`Auto: $${Math.round(autoSav).toLocaleString()} · Manual: $${Math.round(S.manualSav||0).toLocaleString()}`;
-  document.getElementById('mz').textContent='$'+Math.round(S.zr1x).toLocaleString(); document.getElementById('zf').style.width=Math.min(100,(S.zr1x/25000)*100)+'%';
-  document.getElementById('d-sallie').textContent=Math.round(S.sallie).toLocaleString(); document.getElementById('d-fed').textContent=Math.round(S.federal).toLocaleString();
-  document.getElementById('pb-sallie').style.width=Math.min(100,((24225-S.sallie)/24225)*100)+'%'; document.getElementById('pb-fed').style.width=Math.min(100,((5500-S.federal)/5500)*100)+'%';
+  const net=S.closings.reduce((a,c)=>a+c.net,0); const tax=S.closings.reduce((a,c)=>a+c.tax,0)+S.manualTax;
+  const sav=net*0.2+S.manualSav;
+  document.getElementById('me').textContent='$'+Math.round(net).toLocaleString();
+  document.getElementById('msav-grid').textContent='$'+Math.round(sav).toLocaleString();
+  document.getElementById('mt-total').textContent='$'+Math.round(tax).toLocaleString();
+  document.getElementById('mz').textContent='$'+Math.round(S.zr1x).toLocaleString();
+  document.getElementById('zf').style.width=Math.min(100,(S.zr1x/25000)*100)+'%';
+  document.getElementById('d-sallie').textContent=Math.round(S.sallie).toLocaleString();
+  document.getElementById('pb-sallie').style.width=Math.min(100,((24225-S.sallie)/24225)*100)+'%';
   renderCharts();
 }
 
-function renderCharts(){
-  const mNet=Array(9).fill(0); S.closings.forEach(c=>{const d=new Date(c.date);const offset=(d.getFullYear()-2026)*12+(d.getMonth()-3);if(offset>=0&&offset<9)mNet[offset]+=c.net;});
-  const cum=[];let sum=0;mNet.forEach(v=>{sum+=v;cum.push(Math.round(sum));});
-  if(rChart)rChart.destroy(); const isDark=document.documentElement.hasAttribute('data-dark');
-  rChart=new Chart(document.getElementById('rchart'),{type:'line',data:{labels:MOS,datasets:[{label:'Your Net',data:cum,borderColor:'#1D9E75',fill:true,backgroundColor:'rgba(29,158,117,.1)',tension:.3},{label:'Target',data:TARGETS,borderColor:'#C9A84C',borderDash:[5,4],pointRadius:0,tension:.3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>'$'+Math.round(v/1000)+'K',color:isDark?'#AEAEB2':'#6C6C70'},grid:{color:isDark?'rgba(255,255,255,.06)':'rgba(0,0,0,.06)'}},x:{ticks:{color:isDark?'#AEAEB2':'#6C6C70'},grid:{display:false}}}}});
-}
-
-window.showS=function(k,el){ document.querySelectorAll('.stab').forEach(t=>t.classList.remove('on'));el.classList.add('on'); document.getElementById('scontent').innerHTML=(SCRIPTS[k]||[]).map(s=>`<div class="scard"><div class="sst">${s.s}</div><div class="stxt">${s.t}</div><div class="stip">PRO TIP: ${s.tip}</div></div>`).join(''); };
-window.calNav=function(dir){calMonth+=dir;if(calMonth>11){calMonth=0;calYear++;}if(calMonth<0){calMonth=11;calYear--;}renderCal();};
-window.selectDate=function(key){activeDateStr=key;renderCal();};
-
+// CALENDAR ENGINE
 function renderCal(){
-  const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
-  document.getElementById('cal-month').textContent=months[calMonth]+' '+calYear; document.getElementById('cal-names').innerHTML=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d=>`<div class="cal-day-name">${d}</div>`).join('');
-  const now=new Date(),first=new Date(calYear,calMonth,1).getDay(),total=new Date(calYear,calMonth+1,0).getDate();
-  const evColors={openhouse:'#C9A84C',showing:'var(--ios-blue)',listing:'#7B9ED9',closing:'#2E7D52',prospecting:'#5A3472',doorknock:'var(--ios-red)',class:'#6B7280',other:'#9AA0AD'};
-  let html='';for(let i=0;i<first;i++)html+='<div></div>';
+  const now=new Date(); document.getElementById('cal-month').textContent=MOS[calMonth]+' '+calYear;
+  document.getElementById('cal-names').innerHTML=['S','M','T','W','T','F','S'].map(d=>`<div class="cal-day-name">${d}</div>`).join('');
+  const first=new Date(calYear,calMonth,1).getDay(); const total=new Date(calYear,calMonth+1,0).getDate();
+  let html=''; for(let i=0;i<first;i++)html+='<div></div>';
   for(let d=1;d<=total;d++){
-    const key=`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`; const hit=(S.history[key]||0)>=(S.rc?.convGoal||20); const evs=(S.calEvents||{})[key]||[];
-    const isToday=(key===`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`), isSel=(key===activeDateStr);
-    let dots='';evs.slice(0,3).forEach(ev=>{dots+=`<div class="cal-dot" style="background:${evColors[ev.type]||'#9AA0AD'}"></div>`;});
+    const key=`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const hit=(S.history[key]||0)>=S.rc.convGoal; const evs=S.calEvents[key]||[];
+    const isToday=(key===todayD.toISOString().split('T')[0]); const isSel=(key===activeDateStr);
+    let dots=''; evs.slice(0,3).forEach(e=>dots+=`<div class="cal-dot" style="background:var(--ios-blue);"></div>`);
     html+=`<div class="cal-d ${isToday?'today':''} ${isSel?'selected':''} ${hit?'hit':''}" onclick="selectDate('${key}')"><div class="cal-d-num">${d}</div><div class="cal-dots">${dots}</div></div>`;
-  } document.getElementById('cal-days').innerHTML=html;renderCalEventsList();
-}
-function formatTime(t24){if(!t24)return '';let[h,m]=t24.split(':');let ap='AM';h=parseInt(h);if(h>=12){ap='PM';if(h>12)h-=12;}if(h===0)h=12;return`${h}:${m} ${ap}`;}
-
-function renderCalEventsList(){
-  const evColors={openhouse:'#C9A84C',showing:'var(--ios-blue)',listing:'#7B9ED9',closing:'#2E7D52',prospecting:'#5A3472',doorknock:'var(--ios-red)',class:'#6B7280',other:'#9AA0AD'};
-  const evLabels={openhouse:'Open House',showing:'Showing',listing:'Listing Appt',closing:'Closing',prospecting:'Prospecting',doorknock:'Door Knocking',class:'Class',other:'Other'};
-  const d=new Date(activeDateStr+'T12:00:00'); document.getElementById('cal-day-header').textContent=d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
-  const evs=(S.calEvents||{})[activeDateStr]||[];
-  if(evs.length===0){document.getElementById('cal-events-list').innerHTML='<div style="padding:16px;text-align:center;color:var(--tx3);font-size:14px;">No events</div>';return;}
-  document.getElementById('cal-events-list').innerHTML=[...evs].sort((a,b)=>a.start.localeCompare(b.start)).map((ev,i)=>`
-    <div class="tl-row" onclick="openModal('${activeDateStr}',${i})"><div class="tl-time">${formatTime(ev.start)}</div><div class="tl-bar" style="background:${evColors[ev.type]||'#C9A84C'};"></div><div class="tl-content"><div class="tl-title">${ev.title}</div>${ev.type?`<div class="tl-sub">${evLabels[ev.type]||ev.type}</div>`:''}</div></div>`).join('');
+  }
+  document.getElementById('cal-days').innerHTML=html; renderCalList();
 }
 
-window.openModal=function(dateKey,editIdx=null){
-  document.getElementById('modal-date-title').textContent='Add Event';
-  if(editIdx!==null){ const evs=(S.calEvents||{})[dateKey]||[]; if(evs[editIdx])document.getElementById('existing-events').innerHTML=`<button onclick="deleteEvent('${dateKey}',${editIdx})" style="width:100%;height:44px;border-radius:10px;border:none;background:var(--rl);color:var(--ios-red);font-size:15px;font-weight:600;margin-top:10px;cursor:pointer;">Delete Event</button>`; } else document.getElementById('existing-events').innerHTML='';
-  document.getElementById('cal-modal').style.display='flex';
-};
-window.closeModal=function(){document.getElementById('cal-modal').style.display='none';};
-window.openAddEvent=function(){document.getElementById('ev-title').value='';document.getElementById('ev-start').value='';document.getElementById('ev-end').value='';openModal(activeDateStr);};
-window.saveEvent=function(){
-  const type=document.getElementById('ev-type').value,title=document.getElementById('ev-title').value.trim(),start=document.getElementById('ev-start').value,end=document.getElementById('ev-end').value;
-  if(!title)return; if(!S.calEvents[activeDateStr])S.calEvents[activeDateStr]=[];
-  S.calEvents[activeDateStr].push({type,title,start,end}); S.calEvents[activeDateStr].sort((a,b)=>a.start.localeCompare(b.start));
-  document.getElementById('ev-title').value='';document.getElementById('ev-start').value='';document.getElementById('ev-end').value='';
-  save();renderCal();closeModal();toast('📅 Event added!');
-};
-window.deleteEvent=function(dateKey,idx){S.calEvents[dateKey].splice(idx,1);if(!S.calEvents[dateKey].length)delete S.calEvents[dateKey];save();renderCal();closeModal();};
+function selectDate(key){activeDateStr=key; renderCal();}
+function renderCalList(){
+  const evs=S.calEvents[activeDateStr]||[]; const el=document.getElementById('cal-events-list');
+  document.getElementById('cal-day-header').textContent=activeDateStr;
+  if(!evs.length){ el.innerHTML='<div style="text-align:center;padding:20px;color:var(--tx3);">No events.</div>'; return; }
+  el.innerHTML=evs.map((e,i)=>`
+    <div class="tl-row" onclick="openModal('${activeDateStr}',${i})">
+      <div class="tl-time">${e.start}</div>
+      <div class="tl-bar" style="background:var(--ios-blue);"></div>
+      <div class="tl-content"><div class="tl-title">${e.title}</div></div>
+    </div>`).join('');
+}
 
-window.toggleDark=toggleDark;window.showScn=showScn;window.adj=adj; window.openRC=openRC;window.closeRC=closeRC;window.saveRC=saveRC; window.openDocs=openDocs;window.closeDocs=closeDocs;
+window.calNav=(dir)=>{calMonth+=dir; if(calMonth>11){calMonth=0; calYear++;} if(calMonth<0){calMonth=11; calYear--;} renderCal();};
+window.openAddEvent=()=>{ document.getElementById('modal-date-title').textContent='Add to '+activeDateStr; document.getElementById('cal-modal').style.display='flex'; };
+window.closeModal=()=>{document.getElementById('cal-modal').style.display='none';};
+window.saveEvent=()=>{
+  const title=document.getElementById('ev-title').value; if(!title) return;
+  if(!S.calEvents[activeDateStr])S.calEvents[activeDateStr]=[];
+  S.calEvents[activeDateStr].push({title, start:document.getElementById('ev-start').value, type:document.getElementById('ev-type').value});
+  save(); closeModal(); renderCal();
+};
+
+// SYSTEM CORE
+window.showScn=(id,el)=>{
+  document.querySelectorAll('.scn').forEach(s=>s.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.getElementById('scn-'+id).classList.add('on'); el.classList.add('on');
+  if(id==='inbox'){ S.lastRead=Date.now(); save(); updateBadges(); }
+};
+
+window.adj=(k,d)=>{S[k]=Math.max(0,S[k]+d); const today=new Date().toISOString().split('T')[0]; S.history[today]=S.cv; updateC(); save();};
+function updateC(){
+  document.getElementById('m-cv').textContent=S.cv; document.getElementById('s-cv').textContent=S.cv;
+  document.getElementById('m-dr').textContent=S.dr; document.getElementById('m-nc').textContent=S.nc;
+  document.getElementById('p-cv').style.width=Math.min(100,(S.cv/S.rc.convGoal)*100)+'%';
+  renderTasks();
+}
+
+function renderTasks(){ document.getElementById('tlist').innerHTML=S.tasks.map(t=>`<div class="row" onclick="togT('${t.id}')"><div class="cb2 ${t.d?'ck':''}"></div><div class="rt ${t.d?'dn':''}">${t.t}</div></div>`).join(''); }
+window.togT=(id)=>{const t=S.tasks.find(x=>x.id===id); t.d=!t.d; renderTasks(); save();};
+
+window.saveActiveOpenHouse=()=>{
+  S.currentOpenHouse={ address:document.getElementById('oh-admin-addr').value, price:document.getElementById('oh-admin-price').value, details:document.getElementById('oh-admin-details').value };
+  save(); toast('🏡 iPad Updated!');
+};
+
+function renderCharts(){
+  const ctx=document.getElementById('rchart'); if(!ctx) return;
+  if(rChart) rChart.destroy();
+  rChart=new Chart(ctx,{type:'line',data:{labels:MOS,datasets:[{label:'Net',data:[0,0,0,S.closings.reduce((a,c)=>a+c.net,0)],borderColor:'#1D9E75',tension:.3},{label:'Target',data:TARGETS,borderColor:'#C9A84C',borderDash:[5,4]}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}}});
+}
+
+window.showS=(k,el)=>{
+  document.querySelectorAll('.stab').forEach(t=>t.classList.remove('on')); el.classList.add('on');
+  document.getElementById('scontent').innerHTML=SCRIPTS[k].map(s=>`<div class="scard"><div class="sst">${s.s}</div><div class="stxt">${s.t}</div><div class="stip">PRO TIP: ${s.tip}</div></div>`).join('');
+};
 
 window.onload=()=>{
-  load();applyDark();applyRC();
-  const day=Math.floor((new Date()-new Date(new Date().getFullYear(),0,1))/86400000);
-  document.getElementById('daily-quote').textContent=QUOTES[day%QUOTES.length];
-  document.getElementById('todays-date').textContent=new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
-  showS('sphere',document.querySelector('.stab')); updateNotifUI();
+  applyDark(); updateC(); renderCal(); showS('sphere',document.querySelector('.stab'));
+  document.getElementById('todays-date').textContent=new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
 };
 </script>
 </body>
