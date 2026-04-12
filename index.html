@@ -1052,7 +1052,11 @@ function showHustle(){
 
 window.hustleSend=function(){
   const c=window.S.contacts.find(x=>x.id===selectedContacts[hIdx]);
-  const msg="Hey! It's Christian Carter — I just joined the Tonya Harbin Team here in Abilene as a licensed real estate agent. If you or anyone you know is thinking about buying or selling, I'd love to help!";
+  // UPDATED COMPLIANT SCRIPT
+  const msg="Hey! It's Christian Carter — I just officially got my Texas real estate license! I'm currently working with buyers and hosting open houses here in Abilene. If you or anyone you know is thinking about making a move, I'd love to help!";
+  
+  if (window.fbDb && c.phone) {
+// ... rest of the function stays the same
   
   if (window.fbDb && c.phone) {
      push(ref(window.fbDb, 'sms_queue'), {
