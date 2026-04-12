@@ -102,11 +102,9 @@ input,select,textarea{width:100%;border-radius:10px;border:none;background:var(-
 .empty-state{text-align:center;padding:40px 20px;color:var(--tx3);font-size:14px;}
 #perf-tracker{transition:all 0.3s ease;}
 
-/* TOAST */
+/* TOAST & NOTIFICATIONS */
 #toast{position:fixed;bottom:calc(var(--th) + 20px);left:50%;transform:translateX(-50%) translateY(20px);background:#1A2744;color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:600;z-index:9999;opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap;}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-
-/* NOTIFICATION BANNER */
 #notif-banner{position:fixed;top:var(--st);left:0;right:0;background:#1A2744;color:#fff;padding:14px 20px;z-index:5000;display:none;align-items:center;gap:12px;border-bottom:2px solid var(--am);}
 #notif-banner .nb-icon{font-size:24px;}
 #notif-banner .nb-body{flex:1;}
@@ -183,50 +181,13 @@ input,select,textarea{width:100%;border-radius:10px;border:none;background:var(-
       <button onclick="closeRC()" style="border:none;background:none;font-size:22px;color:var(--tx3);cursor:pointer;">×</button>
     </div>
     <div style="font-size:12px;color:var(--tx2);margin-bottom:16px;">Change goals and features instantly — no code needed.</div>
-
-    <div class="rc-row">
-      <div><div class="rc-label">Daily Conversation Goal</div><div class="rc-sub">Conversations needed per day</div></div>
-      <div style="display:flex;align-items:center;gap:8px;">
-        <button class="sbtn" onclick="rcAdj('convGoal',-1)">-</button>
-        <span class="rc-val" id="rc-convGoal">20</span>
-        <button class="sbtn" onclick="rcAdj('convGoal',1)">+</button>
-      </div>
-    </div>
-    <div class="rc-row">
-      <div><div class="rc-label">Daily Door Goal</div><div class="rc-sub">Doors knocked per day</div></div>
-      <div style="display:flex;align-items:center;gap:8px;">
-        <button class="sbtn" onclick="rcAdj('doorGoal',-1)">-</button>
-        <span class="rc-val" id="rc-doorGoal">20</span>
-        <button class="sbtn" onclick="rcAdj('doorGoal',1)">+</button>
-      </div>
-    </div>
-    <div class="rc-row">
-      <div><div class="rc-label">Nudge Time</div><div class="rc-sub">Daily accountability check time</div></div>
-      <div>
-        <input type="time" id="rc-nudgeTime" style="width:120px;font-size:15px;padding:8px;" onchange="rcSet('nudgeTime', this.value)">
-      </div>
-    </div>
-    <div class="rc-row">
-      <div><div class="rc-label">Show ZR1X Fund</div><div class="rc-sub">Display Corvette savings tracker</div></div>
-      <div class="toggle" id="tog-zr1x" onclick="rcToggle('showZR1X')"></div>
-    </div>
-    <div class="rc-row">
-      <div><div class="rc-label">Show Debt Payoff</div><div class="rc-sub">Display debt progress bars</div></div>
-      <div class="toggle" id="tog-debt" onclick="rcToggle('showDebt')"></div>
-    </div>
-    <div class="rc-row">
-      <div><div class="rc-label">Sprint Mode</div><div class="rc-sub">Red banner + max intensity UI</div></div>
-      <div class="toggle" id="tog-sprint" onclick="rcToggle('sprintMode')"></div>
-    </div>
-    <div class="rc-row">
-      <div><div class="rc-label">Closings Goal</div><div class="rc-sub">Annual closing target</div></div>
-      <div style="display:flex;align-items:center;gap:8px;">
-        <button class="sbtn" onclick="rcAdj('closingsGoal',-1)">-</button>
-        <span class="rc-val" id="rc-closingsGoal">21</span>
-        <button class="sbtn" onclick="rcAdj('closingsGoal',1)">+</button>
-      </div>
-    </div>
-
+    <div class="rc-row"><div><div class="rc-label">Daily Conversation Goal</div></div><div style="display:flex;align-items:center;gap:8px;"><button class="sbtn" onclick="rcAdj('convGoal',-1)">-</button><span class="rc-val" id="rc-convGoal">20</span><button class="sbtn" onclick="rcAdj('convGoal',1)">+</button></div></div>
+    <div class="rc-row"><div><div class="rc-label">Daily Door Goal</div></div><div style="display:flex;align-items:center;gap:8px;"><button class="sbtn" onclick="rcAdj('doorGoal',-1)">-</button><span class="rc-val" id="rc-doorGoal">20</span><button class="sbtn" onclick="rcAdj('doorGoal',1)">+</button></div></div>
+    <div class="rc-row"><div><div class="rc-label">Nudge Time</div></div><div><input type="time" id="rc-nudgeTime" style="width:120px;font-size:15px;padding:8px;" onchange="rcSet('nudgeTime', this.value)"></div></div>
+    <div class="rc-row"><div><div class="rc-label">Show ZR1X Fund</div></div><div class="toggle" id="tog-zr1x" onclick="rcToggle('showZR1X')"></div></div>
+    <div class="rc-row"><div><div class="rc-label">Show Debt Payoff</div></div><div class="toggle" id="tog-debt" onclick="rcToggle('showDebt')"></div></div>
+    <div class="rc-row"><div><div class="rc-label">Sprint Mode</div></div><div class="toggle" id="tog-sprint" onclick="rcToggle('sprintMode')"></div></div>
+    <div class="rc-row"><div><div class="rc-label">Closings Goal</div></div><div style="display:flex;align-items:center;gap:8px;"><button class="sbtn" onclick="rcAdj('closingsGoal',-1)">-</button><span class="rc-val" id="rc-closingsGoal">21</span><button class="sbtn" onclick="rcAdj('closingsGoal',1)">+</button></div></div>
     <button class="btn" style="width:100%;margin-top:20px;background:var(--g);" onclick="saveRC()">Save & Apply</button>
   </div>
 </div>
@@ -408,7 +369,9 @@ input,select,textarea{width:100%;border-radius:10px;border:none;background:var(-
   </div>
   
   <div class="card" style="padding:20px 16px;">
-    <div style="font-size:18px;font-weight:800;margin-bottom:16px;">📡 iPad Control Center</div>
+    <div style="font-size:18px;font-weight:800;margin-bottom:16px;display:flex;align-items:center;gap:8px;">
+      <span>📡 iPad Control Center</span>
+    </div>
     
     <div style="background:var(--inp); padding:14px; border-radius:14px; margin-bottom:16px;">
         <div style="font-size:12px; font-weight:700; color:var(--tx2); margin-bottom:8px; text-transform:uppercase; letter-spacing:.05em;">1. Quick Load</div>
@@ -441,40 +404,6 @@ input,select,textarea{width:100%;border-radius:10px;border:none;background:var(-
     <div class="sst" style="font-size:12px;">Save to Portfolio Database</div>
     <div style="font-size:12px; color:var(--tx2); margin-bottom:10px;">Fills out the dropdown above so you never have to re-type this house again.</div>
     <button class="btn bsm bo" style="width:100%; height:44px; font-weight:700;" onclick="addNewSmartListing()">💾 Save Current Details to Portfolio</button>
-  </div>
-</div>
-  
-  <div class="card" style="padding:20px 16px;">
-    <div style="font-size:18px;font-weight:800;margin-bottom:16px;display:flex;align-items:center;gap:8px;">
-      <span>📡 iPad Control Center</span>
-    </div>
-    
-    <div style="background:var(--inp); padding:14px; border-radius:14px; margin-bottom:16px;">
-        <div style="font-size:12px; font-weight:700; color:var(--tx2); margin-bottom:8px; text-transform:uppercase; letter-spacing:.05em;">1. Select Listing</div>
-        <select id="oh-admin-addr-picker" style="background:var(--card); border:1px solid var(--br); box-shadow:0 1px 2px rgba(0,0,0,0.05); padding:14px; border-radius:10px; font-size:16px; width:100%; font-weight:600; color:var(--ios-blue); outline:none;" onchange="document.getElementById('oh-admin-addr').value = this.value;">
-            <option value="">Quick Pick from Portfolio...</option>
-        </select>
-    </div>
-
-    <div style="font-size:12px; font-weight:700; color:var(--tx2); margin-bottom:8px; text-transform:uppercase; letter-spacing:.05em; padding-left:4px;">2. Property Details</div>
-    
-    <input type="text" id="oh-admin-addr" placeholder="Property Address (e.g. 123 Main St)" style="margin-bottom:10px; background:var(--bg); border:1px solid var(--br);">
-    <input type="url" id="oh-admin-url" placeholder="TonyaHarbin.com Digital Flyer URL" style="margin-bottom:10px; background:var(--bg); border:1px solid var(--br);">
-    
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;">
-      <input type="text" id="oh-admin-price" placeholder="Price (e.g. $450k)" style="background:var(--bg); border:1px solid var(--br);">
-      <input type="text" id="oh-admin-details" placeholder="Beds/Baths" style="background:var(--bg); border:1px solid var(--br);">
-    </div>
-    
-    <button class="btn" id="oh-admin-btn" style="width:100%; background:var(--ios-blue); height:54px; font-size:17px; font-weight:700; border-radius:14px; box-shadow:0 4px 14px rgba(0,122,255,0.3);" onclick="saveActiveOpenHouse()">Push to iPad</button>
-  </div>
-
-  <div class="card" style="padding:16px;">
-    <div class="sst" style="font-size:12px;">Add to Portfolio</div>
-    <div style="display:flex;gap:8px;margin-top:8px;">
-        <input type="text" id="new-listing-addr" placeholder="Address..." style="flex:1;">
-        <button class="btn bsm bo" style="height:44px; font-weight:700;" onclick="addNewListing()">Save</button>
-    </div>
   </div>
 </div>
 
@@ -717,10 +646,13 @@ window.S = {
   notifPermission:'default'
 };
 
+let smartPortfolio = {};
+
 const todayD = new Date();
 let calYear=todayD.getFullYear(), calMonth=todayD.getMonth();
 let activeDateStr=`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(todayD.getDate()).padStart(2,'0')}`;
 
+// 1. Listen for Master Data
 onValue(dbRef, snap => {
     const data = snap.val();
     if(data) {
@@ -733,30 +665,26 @@ onValue(dbRef, snap => {
         applyRC(); updateC(); if(document.getElementById('cal-month'))renderCal();
         renderMoney(); renderContacts(); renderClients();
         if(document.getElementById('scn-inbox').classList.contains('on')) renderInbox();
-        
-        if(window.S.currentOpenHouse) {
-           document.getElementById('oh-admin-addr').value = window.S.currentOpenHouse.address || '';
-           document.getElementById('oh-admin-price').value = window.S.currentOpenHouse.price || '';
-           document.getElementById('oh-admin-details').value = window.S.currentOpenHouse.details || '';
-           document.getElementById('oh-admin-url').value = window.S.currentOpenHouse.url || '';
-        }
     }
 });
 
-onValue(ref(window.fbDb, 'agent_hq_data/listings'), (snap) => {
-    const listings = snap.val();
+// 2. Listen for Smart Portfolio Data
+onValue(ref(window.fbDb, 'agent_hq_data/smart_listings'), (snap) => {
+    smartPortfolio = snap.val() || {};
     const picker = document.getElementById('oh-admin-addr-picker');
-    if(listings) {
-        picker.innerHTML = '<option value="">Quick Pick from Portfolio...</option>';
-        Object.values(listings).forEach(addr => {
+    if(picker) {
+        picker.innerHTML = '<option value="">Select from Portfolio...</option>';
+        Object.keys(smartPortfolio).forEach(key => {
+            const item = smartPortfolio[key];
             let opt = document.createElement('option');
-            opt.value = addr;
-            opt.innerText = addr;
+            opt.value = key;
+            opt.innerText = item.address;
             picker.appendChild(opt);
         });
     }
 });
 
+// 3. Listen for Current Live Open House Status
 onValue(ref(window.fbDb, 'agent_hq_data/currentOpenHouse'), (snap) => {
     const data = snap.val();
     const statusText = document.getElementById('live-status-text');
@@ -776,6 +704,146 @@ onValue(ref(window.fbDb, 'agent_hq_data/currentOpenHouse'), (snap) => {
     }
 });
 
+// SMART OPEN HOUSE FUNCTIONS
+window.loadSmartListing = function(key) {
+    if(!key || !smartPortfolio[key]) {
+        document.getElementById('oh-admin-addr').value = '';
+        document.getElementById('oh-admin-url').value = '';
+        document.getElementById('oh-admin-price').value = '';
+        document.getElementById('oh-admin-details').value = '';
+        updateSMSPreview();
+        return;
+    }
+    const item = smartPortfolio[key];
+    document.getElementById('oh-admin-addr').value = item.address || '';
+    document.getElementById('oh-admin-url').value = item.url || '';
+    document.getElementById('oh-admin-price').value = item.price || '';
+    document.getElementById('oh-admin-details').value = item.details || '';
+    updateSMSPreview();
+};
+
+window.updateSMSPreview = function() {
+    const addr = document.getElementById('oh-admin-addr').value.trim() || "[Property Address]";
+    const url = document.getElementById('oh-admin-url').value.trim() || "tonyaharbin.com";
+    document.getElementById('preview-addr').innerText = addr;
+    document.getElementById('preview-url').innerText = url.length > 30 ? url.substring(0, 30) + '...' : url;
+};
+
+window.addNewSmartListing = function() {
+    const addr = document.getElementById('oh-admin-addr').value.trim();
+    const url = document.getElementById('oh-admin-url').value.trim();
+    const price = document.getElementById('oh-admin-price').value.trim();
+    const details = document.getElementById('oh-admin-details').value.trim();
+    
+    if(!addr) return alert("You need an address to save it to the portfolio!");
+    
+    const payload = { address: addr, url: url, price: price, details: details };
+    push(ref(window.fbDb, 'agent_hq_data/smart_listings'), payload).then(() => {
+        toast("💾 Complete Listing Saved!");
+    });
+};
+
+window.saveActiveOpenHouse = async function() {
+  const addr = document.getElementById('oh-admin-addr').value.trim();
+  const price = document.getElementById('oh-admin-price').value.trim();
+  const details = document.getElementById('oh-admin-details').value.trim();
+  const url = document.getElementById('oh-admin-url').value.trim();
+  const btn = document.getElementById('oh-admin-btn');
+  
+  if(!addr) return alert("Property address is required.");
+
+  btn.innerText = "Syncing...";
+  btn.disabled = true;
+
+  window.S.currentOpenHouse = { address: addr, price, details, url };
+  update(ref(window.fbDb, 'agent_hq_data/currentOpenHouse'), { 
+      address: addr, 
+      url: url || "https://tonyaharbin.com",
+      syncTime: Date.now() 
+  }).then(() => {
+      toast("🏡 iPad Updated Instantly!");
+      btn.innerText = "Push to iPad";
+      btn.disabled = false;
+  });
+}
+
+// INBOX RENDER & TWILIO REPLY
+window.renderInbox = function() {
+  const el = document.getElementById('inbox-list');
+  const leads = window.S.contacts.filter(c => c.status !== 'archived' && c.source === 'Open House iPad');
+  
+  if(leads.length === 0) {
+    el.innerHTML = '<div class="empty-state">No active Open House leads.<br>They will appear here instantly.</div>';
+    return;
+  }
+
+  el.innerHTML = leads.map(c => `
+    <div class="card" style="padding:16px; border-left: 4px solid var(--ios-blue);">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+        <div style="flex:1;">
+          <div style="font-weight:700; font-size:18px;">${c.name}</div>
+          <div style="font-size:14px; color:var(--ios-blue); font-weight:600; margin-top:2px;">${c.phone}</div>
+          
+          <div style="background:var(--inp); padding:12px; border-radius:10px; margin-top:12px; font-size:13px; color:var(--tx2); line-height:1.5;">
+            <b style="color:var(--tx)">Intel:</b> ${c.note}
+          </div>
+        </div>
+      </div>
+      
+      <div style="margin-top:14px; padding-top:14px; border-top:.5px solid var(--br);">
+        <input type="text" id="reply-msg-${c.id}" placeholder="Type reply here..." style="width:100%; padding:12px; border-radius:10px; border:1px solid var(--br); margin-bottom:8px; font-size:15px; background:var(--bg); color:var(--tx);">
+        <button class="btn" style="width:100%; background:var(--ios-blue); height:40px;" onclick="sendTwilioReply(${c.id}, '${c.phone}')">Send via Twilio</button>
+      </div>
+
+      <div style="display:flex; gap:8px; margin-top:10px;">
+        <button class="btn bsm bo" onclick="archiveLead(${c.id})" style="flex:1;">Archive Lead</button>
+      </div>
+    </div>
+  `).join('');
+};
+
+window.sendTwilioReply = async function(id, phone) {
+   const msgBox = document.getElementById(`reply-msg-${id}`);
+   const msg = msgBox.value.trim();
+   if(!msg) return alert("Type a message first!");
+
+   const btn = event.target;
+   btn.innerText = "Sending...";
+   btn.disabled = true;
+
+   try {
+       await push(ref(window.fbDb, 'sms_queue'), {
+          to: phone,
+          body: msg,
+          timestamp: Date.now()
+       });
+
+       msgBox.value = '';
+       toast("✅ Sent from Twilio Number!");
+       btn.innerText = "Send via Twilio";
+       btn.disabled = false;
+   } catch (err) {
+       console.error(err);
+       btn.innerText = "Error";
+       btn.disabled = false;
+   }
+}
+
+window.updateInboxBadge = function() {
+    const newLeads = window.S.contacts.filter(c => c.source === 'Open House iPad' && c.status === 'new');
+    const badge = document.getElementById('inbox-badge');
+    if (badge) badge.style.display = newLeads.length > 0 ? 'block' : 'none';
+};
+
+window.archiveLead = function(id) {
+    const idx = window.S.contacts.findIndex(c => c.id === id);
+    if(idx > -1) {
+        window.S.contacts[idx].status = 'archived';
+        save(); renderInbox(); toast("Lead archived.");
+    }
+};
+
+// CORE APP FUNCTIONS
 window.save = function(){
   try{localStorage.setItem('ahq_v6',JSON.stringify(window.S));}catch(e){}
   if(dbRef){try{set(dbRef,window.S);}catch(e){console.error(e);}}
@@ -867,39 +935,6 @@ window.renderDocsList = function(){
   }).join('');
 }
 
-window.saveActiveOpenHouse = async function() {
-  const addr = document.getElementById('oh-admin-addr').value.trim() || document.getElementById('oh-admin-addr-picker').value;
-  const price = document.getElementById('oh-admin-price').value.trim();
-  const details = document.getElementById('oh-admin-details').value.trim();
-  const url = document.getElementById('oh-admin-url').value.trim();
-  const btn = document.getElementById('oh-admin-btn');
-  
-  if(!addr) return alert("Property address is required.");
-
-  btn.innerText = "Updating...";
-  btn.disabled = true;
-
-  window.S.currentOpenHouse = { address: addr, price, details, url };
-  update(ref(window.fbDb, 'agent_hq_data/currentOpenHouse'), { 
-      address: addr, 
-      url: url || "https://tonyaharbin.com",
-      syncTime: Date.now() 
-  }).then(() => {
-      toast("🏡 iPad Updated Instantly!");
-      btn.innerText = "Push to iPad";
-      btn.disabled = false;
-  });
-}
-
-window.addNewListing = function() {
-    const addr = document.getElementById('new-listing-addr').value.trim();
-    if(!addr) return;
-    push(ref(window.fbDb, 'agent_hq_data/listings'), addr).then(() => {
-        document.getElementById('new-listing-addr').value = '';
-        toast("✅ Added to Portfolio");
-    });
-};
-
 window.showScn = function(id,el){
   document.querySelectorAll('.scn').forEach(s=>s.classList.remove('on'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
@@ -907,81 +942,6 @@ window.showScn = function(id,el){
   if(id==='money')renderMoney(); if(id==='circle')renderContacts(); if(id==='clients')renderClients();
   if(id==='inbox')renderInbox();
 }
-
-window.renderInbox = function() {
-  const el = document.getElementById('inbox-list');
-  const leads = window.S.contacts.filter(c => c.status !== 'archived' && c.source === 'Open House iPad');
-  
-  if(leads.length === 0) {
-    el.innerHTML = '<div class="empty-state">No active Open House leads.<br>They will appear here instantly.</div>';
-    return;
-  }
-
-  el.innerHTML = leads.map(c => `
-    <div class="card" style="padding:16px; border-left: 4px solid var(--ios-blue);">
-      <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-        <div style="flex:1;">
-          <div style="font-weight:700; font-size:18px;">${c.name}</div>
-          <div style="font-size:14px; color:var(--ios-blue); font-weight:600; margin-top:2px;">${c.phone}</div>
-          
-          <div style="background:var(--inp); padding:12px; border-radius:10px; margin-top:12px; font-size:13px; color:var(--tx2); line-height:1.5;">
-            <b style="color:var(--tx)">Intel:</b> ${c.note}
-          </div>
-        </div>
-      </div>
-      
-      <div style="margin-top:14px; padding-top:14px; border-top:.5px solid var(--br);">
-        <input type="text" id="reply-msg-${c.id}" placeholder="Type reply here..." style="width:100%; padding:12px; border-radius:10px; border:1px solid var(--br); margin-bottom:8px; font-size:15px; background:var(--bg); color:var(--tx);">
-        <button class="btn" style="width:100%; background:var(--ios-blue); height:40px;" onclick="sendTwilioReply(${c.id}, '${c.phone}')">Send via Twilio</button>
-      </div>
-
-      <div style="display:flex; gap:8px; margin-top:10px;">
-        <button class="btn bsm bo" onclick="archiveLead(${c.id})" style="flex:1;">Archive Lead</button>
-      </div>
-    </div>
-  `).join('');
-};
-
-window.sendTwilioReply = async function(id, phone) {
-   const msgBox = document.getElementById(`reply-msg-${id}`);
-   const msg = msgBox.value.trim();
-   if(!msg) return alert("Type a message first!");
-
-   const btn = event.target;
-   btn.innerText = "Sending...";
-   btn.disabled = true;
-
-   try {
-       await push(ref(window.fbDb, 'sms_queue'), {
-          to: phone,
-          body: msg,
-          timestamp: Date.now()
-       });
-
-       msgBox.value = '';
-       toast("✅ Sent from Twilio Number!");
-       btn.innerText = "Send via Twilio";
-       btn.disabled = false;
-   } catch (err) {
-       console.error(err);
-       btn.innerText = "Error";
-       btn.disabled = false;
-   }
-}
-
-window.updateInboxBadge = function() {
-    const newLeads = window.S.contacts.filter(c => c.source === 'Open House iPad' && c.status === 'new');
-    const badge = document.getElementById('inbox-badge');
-    if (badge) badge.style.display = newLeads.length > 0 ? 'block' : 'none';
-};
-
-window.archiveLead = function(id) {
-    const idx = window.S.contacts.findIndex(c => c.id === id);
-    if(idx > -1) {
-        window.S.contacts[idx].status = 'archived';
-        save(); renderInbox(); toast("Lead archived.");
-    }
-};
 
 window.startHustleWithLead = function(id) {
   selectedContacts = [id];
