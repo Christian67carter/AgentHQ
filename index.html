@@ -1168,10 +1168,10 @@ window.updateInboxBadge=function(){
   const totalNew = n.length + unknown;
   const b=document.getElementById('inbox-badge');if(b)b.style.display=totalNew>0?'block':'none';
 };
-
 window.archiveLead = function(id) {
   const strId = String(id);
 
+  // 1. Handle "Unknown" Leads
   if (strId.startsWith('unknown_')) {
      if(!confirm('Archive this unknown lead?')) {
          renderInbox(); 
@@ -1188,9 +1188,19 @@ window.archiveLead = function(id) {
      return;
   }
   
+  // 2. Handle Known Contacts
   const i = S.contacts.findIndex(c => String(c.id) === strId);
   if (i > -1) {
+      // Update locally
       S.contacts[i].status = 'archived';
+      
+      // 🔥 THE FIX: Send a surgical update to Firebase for this exact lead
+      if (fbDb && fbRef && fd_update) {
+          fd_update(fbRef(fbDb, `agent_hq_data/contacts/${strId}`), { 
+              status: 'archived' 
+          }).catch(err => console.error("Firebase update failed:", err));
+      }
+      
       save();
       renderInbox();
       toast('Lead archived');
