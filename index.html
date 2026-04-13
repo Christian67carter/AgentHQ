@@ -746,7 +746,6 @@ const QUOTES=[
   "Comfort is the enemy. Go knock the door."
 ];
 
-// A2P-compliant SMS footer
 const A2P_FOOTER = "\n\nReply STOP to opt-out. Christian Carter, Licensed Real Estate Agent, Tonya Harbin Team | Real Broker, LLC.";
 
 const SCRIPTS={
@@ -761,7 +760,7 @@ const SCRIPTS={
   aniv:[{s:'1-Year Anniversary Text',t:'"Hey [name]! I can\'t believe it\'s already been a year since you closed on [address]. I hope you\'re absolutely loving it! If you ever need anything or know someone looking to buy or sell, I\'m always your guy. Happy home anniversary!"',tip:'Send this text the week before the anniversary date. Set a calendar reminder the day you close every transaction.'}]
 };
 
-let rChart=null,selectedContacts=[],hIdx=0,currentFilter='all',activeDocsClientId=null,pendingBroadcastAddr='',pendingBroadcastData=null;
+let rChart=null, selectedContacts=[], hIdx=0, currentFilter='all', activeDocsClientId=null, pendingBroadcastAddr='', pendingBroadcastData=null;
 
 const S={
   dark:false,cv:0,dr:0,nc:0,streak:0,history:{},calEvents:{},
@@ -798,7 +797,6 @@ import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js').then(fa=>{
       if(data){
         Object.assign(S,data);
         
-        // 🔥 THE FIX: Store the real Firebase Key so we can update it later
         if(S.contacts && !Array.isArray(S.contacts)){
           S.contacts = Object.entries(S.contacts).map(([key, val]) => {
             return { ...val, fbKey: key, id: val.id || key }; 
@@ -839,6 +837,7 @@ window.save=function(){
     try{fd_update(fbRef(fbDb,'agent_hq_data'),rest);}catch(e){console.error(e);}
   }
 };
+
 window.load=function(){
   try{
     const d=JSON.parse(localStorage.getItem('ahq_v7')||'{}');Object.assign(S,d);
@@ -891,7 +890,6 @@ function applyRC(){
   document.getElementById('p-dr').style.width=Math.min(100,(S.dr/(rc.doorGoal||20))*100)+'%';
 }
 
-// --- PORTFOLIO ---
 function openPortfolio(){renderPortfolioPanel();document.getElementById('portfolio-panel').style.display='flex';}
 window.openPortfolio=openPortfolio;
 function closePortfolio(){document.getElementById('portfolio-panel').style.display='none';}
@@ -1044,9 +1042,12 @@ window.renderInbox = function() {
   const inboxItems = leads.map(c => {
     const targetKey = c.fbKey || c.id;
     const replies = S.replies ? Object.values(S.replies[targetKey] || {}).sort((a,b)=>a.timestamp-b.timestamp) : [];
-    if (replies.length === 0 && c.status !== 'new' && !String(targetKey).startsWith('unknown')) return null;
     
-    const lastMsg = replies.length > 0 ? replies[replies.length-1] : {body: 'New Lead — Tap to message', direction: 'inbound', timestamp: c.lt || Date.now()};
+    const hasReplies = replies.length > 0;
+    const isUnknown = String(targetKey).startsWith('unknown');
+    if (!hasReplies && c.status !== 'new' && c.status !== 'replied' && !isUnknown) return null;
+    
+    const lastMsg = hasReplies ? replies[replies.length-1] : {body: 'New Lead — Tap to message', direction: 'inbound', timestamp: c.lt || Date.now()};
     const isUnread = lastMsg.direction === 'inbound' && !lastMsg.read;
 
     return { ...c, targetKey, replies, lastMsg, isUnread, ts: lastMsg.timestamp };
@@ -1131,7 +1132,6 @@ window.openConversation = function(id, name, phone) {
   const i = S.contacts.findIndex(c => String(c.fbKey) === String(id) || String(c.id) === String(id));
   if(i > -1) { 
       S.contacts[i].status = 'replied'; 
-      
       const targetKey = S.contacts[i].fbKey || S.contacts[i].id;
       if (fbDb && fbRef && fd_update) {
           fd_update(fbRef(fbDb, `agent_hq_data/contacts/${targetKey}`), { status: 'replied' })
@@ -1350,12 +1350,13 @@ window.importVCF=function(inp){
     cards.forEach(card=>{
       if(!card.includes('END:VCARD'))return;
       const nm=card.match(/FN:(.*)/i)||card.match(/N:(.*)/i);const ph=card.match(/TEL[^:]*:([\d\s\(\)\-\+]+)/i);
-      if(nm){const name=nm[1].trim().replace(/;/g,' ').trim();const phone=ph?ph[1].trim():'';
+      if(nm){
+        const name=nm[1].trim().replace(/;/g,' ').trim();const phone=ph?ph[1].trim():'';
         if(name&&name.length>1&&!S.contacts.find(c=>c.name===name)){
             const newC = {id:Date.now()+n,name,phone,type:'general',source:'iPhone Import',status:'new',lt:Date.now()};
-            if (fbDb && fbPush && fbRef) {
+            if (fbDb && fbPush && fbRef && setDb) {
                 const newRef = fbPush(fbRef(fbDb, 'agent_hq_data/contacts'));
-                newRef.set(newC);
+                setDb(newRef, newC);
                 newC.fbKey = newRef.key;
             }
             S.contacts.push(newC);
@@ -1373,10 +1374,10 @@ window.addContact=function(){
   
   const newContact = {id:Date.now(),name:n,phone:p,note:nt,source:src,type,status:st,lt:Date.now()};
   
-  if (fbDb && fbPush && fbRef) {
+  if (fbDb && fbPush && fbRef && setDb) {
       const newRef = fbPush(fbRef(fbDb, 'agent_hq_data/contacts'));
-      newRef.set(newContact);
-      newContact.fbKey = newRef.key; // Store it locally immediately
+      setDb(newRef, newContact);
+      newContact.fbKey = newRef.key; 
   }
   
   S.contacts.unshift(newContact);
@@ -1396,7 +1397,7 @@ window.renderContacts=function(){
   el.innerHTML=filtered.map(c=>{
     const col=tc[c.type]||tc.general;const docCount=(S.docs[c.id]||[]).length;
     const targetKey = c.fbKey || c.id;
-    return `<div class="ci ${selectedContacts.includes(targetKey)?'selected':''}" onclick="togSel('${targetKey}')">
+    return `<div class="ci ${selectedContacts.includes(String(targetKey))?'selected':''}" onclick="togSel('${targetKey}')">
       <div class="sel-box"></div>
       <div class="av" style="background:var(--gold-lt);color:#7A5C1E;">${(c.name[0]||'').toUpperCase()}</div>
       <div style="flex:1;min-width:0;">
@@ -1426,11 +1427,11 @@ window.deleteContact=function(keyStr){
   const c = S.contacts.find(x => String(x.fbKey) === targetKey || String(x.id) === targetKey);
   
   if (c && fbDb && fbRef && setDb) {
-      setDb(fbRef(fbDb, `agent_hq_data/contacts/${c.fbKey || c.id}`), null);
+      setDb(fbRef(fbDb, `agent_hq_data/contacts/${c.fbKey || c.id}`), null).catch(err => console.error(err));
   }
   
-  S.contacts=S.contacts.filter(x => String(x.fbKey) !== targetKey && String(x.id) !== targetKey);
-  selectedContacts=selectedContacts.filter(x=> String(x) !== targetKey);
+  S.contacts = S.contacts.filter(x => String(x.fbKey) !== targetKey && String(x.id) !== targetKey);
+  selectedContacts = selectedContacts.filter(x => String(x) !== targetKey);
   window.renderContacts();save();toast('Contact deleted');
 };
 
@@ -1444,6 +1445,7 @@ window.togSel=function(keyStr){
 // --- HUSTLE ---
 window.launchHustle=function(){hIdx=0;showHustle();document.getElementById('hustle-overlay').style.display='flex';};
 function showHustle(){
+  if (selectedContacts.length === 0) return stopHustle();
   const targetKey = String(selectedContacts[hIdx]);
   const c=S.contacts.find(x => String(x.fbKey) === targetKey || String(x.id) === targetKey);
   if(!c)return stopHustle();
@@ -1673,7 +1675,6 @@ window.onload=()=>{
   updateNotifUI();
   if(document.getElementById('cal-month'))renderCal();
   
-  // Kick off the background tracker
   startNudgeEngine(); 
 };
 </script>
