@@ -204,7 +204,7 @@ input:focus,select:focus{border-color:var(--navy);}
 .ios-msg-row { position: relative; overflow: hidden; background: var(--card); cursor: pointer; }
 .ios-swipe-bg { position: absolute; top: 0; right: 0; bottom: 0; left: 0; background: var(--ios-red); color: white; display: flex; align-items: center; justify-content: flex-end; padding-right: 24px; font-weight: 600; font-size: 15px; z-index: 0; }
 .ios-msg-row-inner { position: relative; z-index: 1; background: var(--card); width: 100%; display: flex; padding: 12px 16px; align-items: center; transition: transform 0.2s ease-out; border-bottom: .5px solid var(--br); }
-.ios-msg-avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--navy-xlt); color: var(--navy); display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 600; flex-shrink: 0; margin-right: 14px; font-family: var(--font-display); }
+.ios-msg-avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--navy-xlt); color: var(--navy); display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 600; flex-shrink: 0; margin-right: 14px; font-family: var(--font-display); text-transform: uppercase; }
 [data-dark] .ios-msg-avatar { background: #1C1C1E; color: #fff; }
 .ios-msg-content { flex: 1; min-width: 0; }
 .ios-msg-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; }
@@ -221,11 +221,11 @@ input:focus,select:focus{border-color:var(--navy);}
 [data-dark] .ios-conv-header { background: rgba(20,20,20,0.85); }
 .ios-conv-back { color: var(--ios-blue); font-size: 17px; cursor: pointer; display: flex; align-items: center; gap: 4px; padding: 4px 8px 4px 0; font-weight: 400; }
 .ios-conv-title { display: flex; flex-direction: column; align-items: center; position: absolute; left: 50%; transform: translateX(-50%); }
-.ios-conv-title-av { width: 28px; height: 28px; border-radius: 50%; background: var(--tx3); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 12px; margin-bottom: 2px; font-family: var(--font-display); }
+.ios-conv-title-av { width: 28px; height: 28px; border-radius: 50%; background: var(--tx3); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 12px; margin-bottom: 2px; font-family: var(--font-display); text-transform: uppercase; }
 .ios-conv-title-name { font-size: 11px; font-weight: 600; color: var(--tx); }
 
 .ios-bubbles { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 6px; }
-.ios-bubble { max-width: 75%; padding: 8px 14px; border-radius: 18px; font-size: 15px; line-height: 1.35; position: relative; }
+.ios-bubble { max-width: 75%; padding: 8px 14px; border-radius: 18px; font-size: 15px; line-height: 1.35; position: relative; word-wrap: break-word; }
 .ios-bubble.in { background: #E9E9EB; color: #000; align-self: flex-start; border-bottom-left-radius: 4px; }
 [data-dark] .ios-bubble.in { background: #262628; color: #fff; }
 .ios-bubble.out { background: var(--ios-blue); color: #fff; align-self: flex-end; border-bottom-right-radius: 4px; }
@@ -233,7 +233,7 @@ input:focus,select:focus{border-color:var(--navy);}
 
 .ios-input-area { padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 20px)); background: var(--card); border-top: .5px solid var(--br); display: flex; gap: 10px; align-items: flex-end; }
 .ios-input { flex: 1; border: 1px solid var(--br); border-radius: 20px; padding: 8px 14px; font-size: 15px; min-height: 36px; background: var(--inp); color: var(--tx); outline: none; }
-.ios-send-btn { width: 34px; height: 34px; border-radius: 50%; background: var(--ios-blue); color: white; display: flex; align-items: center; justify-content: center; border: none; font-size: 16px; font-weight: bold; flex-shrink: 0; padding-bottom: 2px; }
+.ios-send-btn { width: 34px; height: 34px; border-radius: 50%; background: var(--ios-blue); color: white; display: flex; align-items: center; justify-content: center; border: none; font-size: 16px; font-weight: bold; flex-shrink: 0; padding-bottom: 2px; cursor: pointer; }
 </style>
 </head>
 <body>
@@ -337,7 +337,7 @@ input:focus,select:focus{border-color:var(--navy);}
     <button class="btn bo bsm" onclick="stopHustle()">Exit</button>
   </div>
   <div class="h-card">
-    <div class="av" id="h-av" style="width:80px;height:80px;margin:0 auto 20px;font-size:32px;background:var(--gold-lt);color:#7A5C1E;border-radius:50%;font-family:var(--font-display);"></div>
+    <div class="av" id="h-av" style="width:80px;height:80px;margin:0 auto 20px;font-size:32px;background:var(--gold-lt);color:#7A5C1E;border-radius:50%;font-family:var(--font-display);text-transform:uppercase;"></div>
     <div style="font-family:var(--font-display);font-size:26px;font-weight:700;" id="h-name">Name</div>
     <div style="font-size:15px;color:var(--tx2);margin-top:10px;" id="h-note">No notes</div>
     <div style="margin-top:6px;font-size:12px;font-weight:700;color:var(--navy);" id="h-source"></div>
@@ -350,7 +350,7 @@ input:focus,select:focus{border-color:var(--navy);}
 <div class="hdr">
   <div class="hdr-l">
     <div class="t">Agent HQ</div>
-    <div class="s" id="hdr-sub">Christian Carter · $3,675/closing avg</div>
+    <div class="s" id="hdr-sub">Christian Carter · Real Estate</div>
   </div>
   <div class="hdr-r">
     <button class="dbtn" onclick="openRC()" title="Config">⚙️</button>
@@ -370,18 +370,20 @@ input:focus,select:focus{border-color:var(--navy);}
 
 <div id="ios-conv-overlay">
   <div class="ios-conv-header">
-    <div class="ios-conv-back" onclick="closeConversation()">‹ <span id="ios-back-text" style="font-size:17px;">Filters</span></div>
+    <div class="ios-conv-back" onclick="closeConversation()">‹ <span style="font-size:17px;">Inbox</span></div>
     <div class="ios-conv-title">
       <div class="ios-conv-title-av" id="ios-conv-av"></div>
       <div class="ios-conv-title-name" id="ios-conv-name">Name</div>
     </div>
-    <div style="width: 50px;"></div> </div>
+    <div style="width: 50px;"></div>
+  </div>
   <div class="ios-bubbles" id="ios-bubbles-container"></div>
   <div class="ios-input-area">
     <input type="text" id="ios-reply-input" class="ios-input" placeholder="iMessage" onkeypress="if(event.key==='Enter') sendIOSReply()">
     <button class="ios-send-btn" onclick="sendIOSReply()">↑</button>
   </div>
 </div>
+
 <div id="scn-daily" class="scn on">
   <div id="sprint-banner">🔥 SPRINT MODE — GIVE EVERYTHING YOU HAVE</div>
 
@@ -695,7 +697,9 @@ input:focus,select:focus{border-color:var(--navy);}
   </div></div>
 </div>
 
-</div><div class="tbar">
+</div>
+
+<div class="tbar">
   <div class="tab" onclick="showScn('inbox',this)" style="position:relative;">
     <div id="inbox-badge" style="display:none;position:absolute;top:4px;right:calc(50% - 14px);width:10px;height:10px;background:var(--red);border-radius:50%;border:2px solid var(--card);"></div>
     <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
@@ -758,6 +762,7 @@ const SCRIPTS={
 };
 
 let rChart=null,selectedContacts=[],hIdx=0,currentFilter='all',activeDocsClientId=null,pendingBroadcastAddr='',pendingBroadcastData=null;
+
 const S={
   dark:false,cv:0,dr:0,nc:0,streak:0,history:{},calEvents:{},
   tasks:[{id:'t1',t:'20 conversations',d:false},{id:'t2',t:'Add 20 new contacts',d:false},{id:'t3',t:'1 hour door knocking',d:false}],
@@ -784,25 +789,35 @@ import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js').then(fa=>{
       storageBucket:"agenthq-3c2c9.appspot.com",messagingSenderId:"91185374523",appId:"1:91185374523:web:fef9123905c7d416d1831e"
     };
     const app=fa.initializeApp(cfg);
-    fbDb=fd.getDatabase(app);fbPush=fd.push;fbRef=fd.ref;fd_update=fd.update;
-    dbRef=fd.ref(fbDb,'agent_hq_data');setDb=fd.set;
+    fbDb=fd.getDatabase(app);fbPush=fd.push;fbRef=fd.ref;fd_update=fd.update;setDb=fd.set;
+    dbRef=fd.ref(fbDb,'agent_hq_data');
     const storage=fs.getStorage(app);storageRef=fs.ref;fbUploadBytes=fs.uploadBytesResumable;fbGetDownloadURL=fs.getDownloadURL;
 
     fd.onValue(dbRef,snap=>{
       const data=snap.val();
       if(data){
         Object.assign(S,data);
+        
+        // 🔥 THE FIX: Store the real Firebase Key so we can update it later
         if(S.contacts && !Array.isArray(S.contacts)){
-          S.contacts=Object.values(S.contacts);
+          S.contacts = Object.entries(S.contacts).map(([key, val]) => {
+            return { ...val, fbKey: key, id: val.id || key }; 
+          });
+        } else if (Array.isArray(S.contacts)) {
+          S.contacts = S.contacts.filter(Boolean);
+        } else {
+          S.contacts = [];
         }
-        if(!S.contacts)S.contacts=[];
+        
         if(!S.calEvents)S.calEvents={};
         if(!S.docs)S.docs={};
         if(!S.rc)S.rc={convGoal:20,doorGoal:20,nudgeTime:'16:00',showZR1X:true,showDebt:true,sprintMode:false,closingsGoal:21};
         if(!S.portfolio)S.portfolio=[];
+        
         applyRC();updateC();if(document.getElementById('cal-month'))renderCal();
         renderMoney();renderContacts();renderClients();renderPortfolioQuick();
         updateInboxBadge();
+        
         if(S.currentOpenHouse){
           document.getElementById('oh-admin-addr').value=S.currentOpenHouse.address||'';
           document.getElementById('oh-admin-price').value=S.currentOpenHouse.price||'';
@@ -1013,9 +1028,9 @@ window.renderInbox = function() {
   let leads = [...S.contacts.filter(c => c.status !== 'archived')];
   
   Object.keys(S.replies || {}).forEach(key => {
-    if (key.startsWith('unknown_') && !leads.find(l => l.id === key)) {
+    if (key.startsWith('unknown_') && !leads.find(l => (l.fbKey === key || l.id === key))) {
       leads.push({
-        id: key, name: "Unknown Number", phone: key.replace('unknown_', ''),
+        id: key, fbKey: key, name: "Unknown Number", phone: key.replace('unknown_', ''),
         status: "new", note: "Direct text"
       });
     }
@@ -1027,19 +1042,20 @@ window.renderInbox = function() {
   }
 
   const inboxItems = leads.map(c => {
-    const replies = S.replies ? Object.values(S.replies[c.id] || {}).sort((a,b)=>a.timestamp-b.timestamp) : [];
-    if (replies.length === 0 && c.status !== 'new' && !c.id.toString().startsWith('unknown')) return null;
+    const targetKey = c.fbKey || c.id;
+    const replies = S.replies ? Object.values(S.replies[targetKey] || {}).sort((a,b)=>a.timestamp-b.timestamp) : [];
+    if (replies.length === 0 && c.status !== 'new' && !String(targetKey).startsWith('unknown')) return null;
     
     const lastMsg = replies.length > 0 ? replies[replies.length-1] : {body: 'New Lead — Tap to message', direction: 'inbound', timestamp: c.lt || Date.now()};
     const isUnread = lastMsg.direction === 'inbound' && !lastMsg.read;
 
-    return { ...c, replies, lastMsg, isUnread, ts: lastMsg.timestamp };
+    return { ...c, targetKey, replies, lastMsg, isUnread, ts: lastMsg.timestamp };
   }).filter(Boolean).sort((a,b) => b.ts - a.ts); 
 
   el.innerHTML = inboxItems.map(c => `
-    <div class="ios-msg-row" data-id="${c.id}">
+    <div class="ios-msg-row" data-id="${c.targetKey}">
       <div class="ios-swipe-bg">Archive</div>
-      <div class="ios-msg-row-inner" onclick="openConversation('${c.id}', '${c.name.replace(/'/g,"\\'")}', '${c.phone}')">
+      <div class="ios-msg-row-inner" onclick="openConversation('${c.targetKey}', '${c.name.replace(/'/g,"\\'")}', '${c.phone}')">
         <div class="ios-msg-avatar">${(c.name[0]||'#').toUpperCase()}</div>
         <div class="ios-msg-content">
           <div class="ios-msg-top">
@@ -1060,22 +1076,29 @@ window.renderInbox = function() {
 };
 
 function attachSwipeGestures() {
-  let startX = 0, currentX = 0;
   document.querySelectorAll('.ios-msg-row').forEach(row => {
     const inner = row.querySelector('.ios-msg-row-inner');
     const id = row.dataset.id;
-    
-    inner.addEventListener('touchstart', e => {
-      startX = e.touches[0].clientX;
+    let startX = 0, currentX = 0, isDragging = false;
+
+    const startDrag = (e) => {
+      isDragging = true;
+      startX = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
       inner.style.transition = 'none';
-    }, {passive: true});
-    
-    inner.addEventListener('touchmove', e => {
-      currentX = e.touches[0].clientX - startX;
-      if (currentX < 0 && currentX > -120) inner.style.transform = `translateX(${currentX}px)`; 
-    }, {passive: true});
-    
-    inner.addEventListener('touchend', e => {
+    };
+
+    const drag = (e) => {
+      if (!isDragging) return;
+      const x = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
+      currentX = x - startX;
+      if (currentX < 0 && currentX > -120) {
+        inner.style.transform = `translateX(${currentX}px)`;
+      }
+    };
+
+    const endDrag = () => {
+      if (!isDragging) return;
+      isDragging = false;
       inner.style.transition = 'transform 0.2s ease-out';
       if (currentX < -65) {
         inner.style.transform = `translateX(-100%)`;
@@ -1084,7 +1107,16 @@ function attachSwipeGestures() {
         inner.style.transform = `translateX(0)`; 
       }
       currentX = 0;
-    });
+    };
+
+    inner.addEventListener('touchstart', startDrag, {passive: true});
+    inner.addEventListener('touchmove', drag, {passive: true});
+    inner.addEventListener('touchend', endDrag);
+
+    inner.addEventListener('mousedown', startDrag);
+    inner.addEventListener('mousemove', drag);
+    inner.addEventListener('mouseup', endDrag);
+    inner.addEventListener('mouseleave', endDrag); 
   });
 }
 
@@ -1096,8 +1128,17 @@ window.openConversation = function(id, name, phone) {
   const replies = S.replies ? Object.values(S.replies[id] || {}).sort((a,b)=>a.timestamp-b.timestamp) : [];
   renderBubbles(replies);
 
-  const i=S.contacts.findIndex(c=>c.id===id);
-  if(i>-1) { S.contacts[i].status='replied'; save(); }
+  const i = S.contacts.findIndex(c => String(c.fbKey) === String(id) || String(c.id) === String(id));
+  if(i > -1) { 
+      S.contacts[i].status = 'replied'; 
+      
+      const targetKey = S.contacts[i].fbKey || S.contacts[i].id;
+      if (fbDb && fbRef && fd_update) {
+          fd_update(fbRef(fbDb, `agent_hq_data/contacts/${targetKey}`), { status: 'replied' })
+            .catch(err => console.error("Firebase update failed:", err));
+      }
+      save(); 
+  }
 
   const overlay = document.getElementById('ios-conv-overlay');
   overlay.style.display = 'flex';
@@ -1168,37 +1209,32 @@ window.updateInboxBadge=function(){
   const totalNew = n.length + unknown;
   const b=document.getElementById('inbox-badge');if(b)b.style.display=totalNew>0?'block':'none';
 };
+
 window.archiveLead = function(id) {
   const strId = String(id);
 
-  // 1. Handle "Unknown" Leads
   if (strId.startsWith('unknown_')) {
      if(!confirm('Archive this unknown lead?')) {
          renderInbox(); 
          return;
      }
-     
      if (fbDb && fbRef && setDb) {
          setDb(fbRef(fbDb, `agent_hq_data/replies/${strId}`), null);
      }
-     
      if (S.replies) delete S.replies[strId];
      renderInbox();
      toast('Unknown lead archived');
      return;
   }
   
-  // 2. Handle Known Contacts
-  const i = S.contacts.findIndex(c => String(c.id) === strId);
+  const i = S.contacts.findIndex(c => String(c.fbKey) === strId || String(c.id) === strId);
   if (i > -1) {
-      // Update locally
       S.contacts[i].status = 'archived';
+      const targetKey = S.contacts[i].fbKey || S.contacts[i].id;
       
-      // 🔥 THE FIX: Send a surgical update to Firebase for this exact lead
       if (fbDb && fbRef && fd_update) {
-          fd_update(fbRef(fbDb, `agent_hq_data/contacts/${strId}`), { 
-              status: 'archived' 
-          }).catch(err => console.error("Firebase update failed:", err));
+          fd_update(fbRef(fbDb, `agent_hq_data/contacts/${targetKey}`), { status: 'archived' })
+            .catch(err => console.error("Firebase update failed:", err));
       }
       
       save();
@@ -1315,7 +1351,17 @@ window.importVCF=function(inp){
       if(!card.includes('END:VCARD'))return;
       const nm=card.match(/FN:(.*)/i)||card.match(/N:(.*)/i);const ph=card.match(/TEL[^:]*:([\d\s\(\)\-\+]+)/i);
       if(nm){const name=nm[1].trim().replace(/;/g,' ').trim();const phone=ph?ph[1].trim():'';
-        if(name&&name.length>1&&!S.contacts.find(c=>c.name===name)){S.contacts.push({id:Date.now()+n,name,phone,type:'general',source:'iPhone Import',status:'new',lt:Date.now()});n++;}}
+        if(name&&name.length>1&&!S.contacts.find(c=>c.name===name)){
+            const newC = {id:Date.now()+n,name,phone,type:'general',source:'iPhone Import',status:'new',lt:Date.now()};
+            if (fbDb && fbPush && fbRef) {
+                const newRef = fbPush(fbRef(fbDb, 'agent_hq_data/contacts'));
+                newRef.set(newC);
+                newC.fbKey = newRef.key;
+            }
+            S.contacts.push(newC);
+            n++;
+        }
+      }
     });
     S.nc+=n;window.renderContacts();updateC();save();toast(`Imported ${n} contacts`);
   };r.readAsText(f);inp.value='';
@@ -1324,10 +1370,20 @@ window.importVCF=function(inp){
 window.addContact=function(){
   const n=document.getElementById('cn').value.trim(),p=document.getElementById('cp').value.trim(),nt=document.getElementById('cnot').value.trim(),src=document.getElementById('cref').value.trim(),type=document.getElementById('ctype').value,st=document.getElementById('cs').value;
   if(!n)return;
-  S.contacts.unshift({id:Date.now(),name:n,phone:p,note:nt,source:src,type,status:st,lt:Date.now()});
+  
+  const newContact = {id:Date.now(),name:n,phone:p,note:nt,source:src,type,status:st,lt:Date.now()};
+  
+  if (fbDb && fbPush && fbRef) {
+      const newRef = fbPush(fbRef(fbDb, 'agent_hq_data/contacts'));
+      newRef.set(newContact);
+      newContact.fbKey = newRef.key; // Store it locally immediately
+  }
+  
+  S.contacts.unshift(newContact);
   ['cn','cp','cnot','cref'].forEach(id=>document.getElementById(id).value='');
   adj('nc',1);window.renderContacts();save();
 };
+
 window.setFilter=function(f,el){currentFilter=f;document.querySelectorAll('.fc').forEach(b=>b.classList.remove('on'));el.classList.add('on');window.renderContacts();};
 
 window.renderContacts=function(){
@@ -1339,7 +1395,8 @@ window.renderContacts=function(){
   const tc={military:'background:#EEF1F8;color:#1A2744',firsttime:'background:var(--gold-lt);color:#7A5C1E',investor:'background:var(--pul);color:var(--pu)',fsbo:'background:#F0EFE9;color:#6B6B6B',expired:'background:var(--red-lt);color:var(--red)',referral:'background:var(--gold-xlt);color:#7A5C1E',general:'background:var(--inp);color:var(--tx2)'};
   el.innerHTML=filtered.map(c=>{
     const col=tc[c.type]||tc.general;const docCount=(S.docs[c.id]||[]).length;
-    return `<div class="ci ${selectedContacts.includes(c.id)?'selected':''}" onclick="togSel(${c.id})">
+    const targetKey = c.fbKey || c.id;
+    return `<div class="ci ${selectedContacts.includes(targetKey)?'selected':''}" onclick="togSel('${targetKey}')">
       <div class="sel-box"></div>
       <div class="av" style="background:var(--gold-lt);color:#7A5C1E;">${(c.name[0]||'').toUpperCase()}</div>
       <div style="flex:1;min-width:0;">
@@ -1352,27 +1409,44 @@ window.renderContacts=function(){
         </div>
       </div>
       <div style="display:flex;gap:6px;align-items:center;">
-        <button onclick="event.stopPropagation();openDocs(${c.id},'${c.name.replace(/'/g,'')}')" style="width:32px;height:32px;border-radius:50%;background:var(--inp);border:none;font-size:14px;cursor:pointer;" title="Docs">📎</button>
+        <button onclick="event.stopPropagation();openDocs('${targetKey}','${c.name.replace(/'/g,'')}')" style="width:32px;height:32px;border-radius:50%;background:var(--inp);border:none;font-size:14px;cursor:pointer;" title="Docs">📎</button>
         ${c.phone?`<a href="tel:${c.phone.replace(/\D/g,'')}" onclick="event.stopPropagation()" style="width:36px;height:36px;border-radius:50%;background:var(--navy);display:flex;align-items:center;justify-content:center;text-decoration:none;color:#fff;flex-shrink:0;">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.77 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></a>`:''}
-        <button onclick="event.stopPropagation();deleteContact(${c.id})" style="width:30px;height:30px;border-radius:50%;background:var(--red-lt);color:var(--red);border:none;font-size:12px;font-weight:700;cursor:pointer;" title="Delete">✕</button>
+        <button onclick="event.stopPropagation();deleteContact('${targetKey}')" style="width:30px;height:30px;border-radius:50%;background:var(--red-lt);color:var(--red);border:none;font-size:12px;font-weight:700;cursor:pointer;" title="Delete">✕</button>
       </div>
     </div>`;
   }).join('');
   document.getElementById('h-btn').style.display=selectedContacts.length?'block':'none';
 };
 
-window.deleteContact=function(id){
+window.deleteContact=function(keyStr){
   if(!confirm('Delete this contact?'))return;
-  S.contacts=S.contacts.filter(c=>c.id!==id);selectedContacts=selectedContacts.filter(x=>x!==id);
+  
+  const targetKey = String(keyStr);
+  const c = S.contacts.find(x => String(x.fbKey) === targetKey || String(x.id) === targetKey);
+  
+  if (c && fbDb && fbRef && setDb) {
+      setDb(fbRef(fbDb, `agent_hq_data/contacts/${c.fbKey || c.id}`), null);
+  }
+  
+  S.contacts=S.contacts.filter(x => String(x.fbKey) !== targetKey && String(x.id) !== targetKey);
+  selectedContacts=selectedContacts.filter(x=> String(x) !== targetKey);
   window.renderContacts();save();toast('Contact deleted');
 };
-window.togSel=function(id){if(selectedContacts.includes(id))selectedContacts=selectedContacts.filter(x=>x!==id);else selectedContacts.push(id);window.renderContacts();};
+
+window.togSel=function(keyStr){
+    const targetKey = String(keyStr);
+    if(selectedContacts.includes(targetKey)) selectedContacts = selectedContacts.filter(x=> String(x) !== targetKey);
+    else selectedContacts.push(targetKey);
+    window.renderContacts();
+};
 
 // --- HUSTLE ---
 window.launchHustle=function(){hIdx=0;showHustle();document.getElementById('hustle-overlay').style.display='flex';};
 function showHustle(){
-  const c=S.contacts.find(x=>x.id===selectedContacts[hIdx]);if(!c)return stopHustle();
+  const targetKey = String(selectedContacts[hIdx]);
+  const c=S.contacts.find(x => String(x.fbKey) === targetKey || String(x.id) === targetKey);
+  if(!c)return stopHustle();
   document.getElementById('h-count').textContent=`Queue ${hIdx+1}/${selectedContacts.length}`;
   document.getElementById('h-name').textContent=c.name;
   document.getElementById('h-note').textContent=c.note||'No notes recorded';
@@ -1390,18 +1464,25 @@ function buildOutreachSMS(contact){
 }
 
 window.hustleSend=function(){
-  const c=S.contacts.find(x=>x.id===selectedContacts[hIdx]);if(!c)return;
+  const targetKey = String(selectedContacts[hIdx]);
+  const c=S.contacts.find(x => String(x.fbKey) === targetKey || String(x.id) === targetKey);
+  if(!c)return;
   const msg=buildOutreachSMS(c);
   if(fbDb&&fbPush&&fbRef&&c.phone){
-    fbPush(fbRef(fbDb,'sms_queue'),{to:c.phone,body:msg,contactId:c.id,status:'pending',timestamp:Date.now()});
+    fbPush(fbRef(fbDb,'sms_queue'),{to:c.phone,body:msg,contactId:c.fbKey||c.id,status:'pending',timestamp:Date.now()});
     adj('cv',1);
     const btn=document.getElementById('h-send-btn');btn.textContent='Sent!';
-    c.status='contacted';save();
+    c.status='contacted';
+    if (fbDb && fbRef && fd_update) fd_update(fbRef(fbDb, `agent_hq_data/contacts/${c.fbKey||c.id}`), { status: 'contacted' });
+    save();
     if(document.getElementById('scn-inbox').classList.contains('on'))renderInbox();
     setTimeout(()=>{btn.textContent='Send Text';nextHustle();},800);
   } else {
     window.location.href=`sms:${(c.phone||'').replace(/\D/g,'')}&body=${encodeURIComponent(msg)}`;
-    adj('cv',1);c.status='contacted';save();
+    adj('cv',1);
+    c.status='contacted';
+    if (fbDb && fbRef && fd_update) fd_update(fbRef(fbDb, `agent_hq_data/contacts/${c.fbKey||c.id}`), { status: 'contacted' });
+    save();
     setTimeout(()=>nextHustle(),500);
   }
 };
