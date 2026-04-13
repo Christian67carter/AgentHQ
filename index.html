@@ -1170,30 +1170,24 @@ window.updateInboxBadge=function(){
 };
 
 window.archiveLead = function(id) {
-  // Convert the incoming ID to a string so it always matches properly
   const strId = String(id);
 
-  // 1. Handle "Unknown" Leads (Deletes their text thread)
   if (strId.startsWith('unknown_')) {
      if(!confirm('Archive this unknown lead?')) {
-         renderInbox(); // Resets the swipe position if you cancel
+         renderInbox(); 
          return;
      }
      
-     // Delete from Firebase using setDb(..., null) instead of .remove()
      if (fbDb && fbRef && setDb) {
          setDb(fbRef(fbDb, `agent_hq_data/replies/${strId}`), null);
      }
      
-     // Delete locally and instantly remove from screen
      if (S.replies) delete S.replies[strId];
      renderInbox();
      toast('Unknown lead archived');
      return;
   }
   
-  // 2. Handle Known Contacts (Changes status to 'archived')
-  // Using String(c.id) fixes the Number vs. String mismatch
   const i = S.contacts.findIndex(c => String(c.id) === strId);
   if (i > -1) {
       S.contacts[i].status = 'archived';
@@ -1201,11 +1195,6 @@ window.archiveLead = function(id) {
       renderInbox();
       toast('Lead archived');
   }
-};
-
-  }
-  const i=S.contacts.findIndex(c=>c.id===id);
-  if(i>-1){S.contacts[i].status='archived';save();renderInbox();toast('Lead archived');}
 };
 
 window.startHustleWithLead=function(id){selectedContacts=[id];launchHustle();};
