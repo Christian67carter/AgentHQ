@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Agent HQ">
@@ -85,7 +85,7 @@ body{display:flex;flex-direction:column;}
 .stip{font-size:12px;color:var(--tx3);font-style:italic;padding-top:8px;border-top:.5px solid var(--br);}
 .zp{height:14px;background:var(--inp);border-radius:7px;overflow:hidden;margin:8px 0 5px;}
 .zf{height:100%;background:var(--gold);border-radius:7px;transition:width .4s;}
-input,select,textarea{width:100%;border-radius:10px;border:.5px solid var(--br);background:var(--inp);padding:11px 12px;font-size:15px;color:var(--tx);outline:none;font-family:var(--font-body);}
+input,select,textarea{width:100%;border-radius:10px;border:.5px solid var(--br);background:var(--inp);padding:11px 12px;font-size:15px;color:var(--tx);outline:none;font-family:var(--font-body);appearance:none;-webkit-appearance:none;}
 input:focus,select:focus{border-color:var(--navy);}
 .btn{height:44px;border-radius:10px;border:none;background:var(--navy);color:#fff;font-size:14px;font-weight:600;padding:0 20px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-family:var(--font-body);letter-spacing:.01em;}
 .bsm{height:32px;font-size:12px;padding:0 14px;border-radius:16px;}
@@ -199,6 +199,41 @@ input:focus,select:focus{border-color:var(--navy);}
 /* --- BROADCAST CONFIRMATION --- */
 #broadcast-confirm{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);z-index:5000;display:none;align-items:center;justify-content:center;padding:20px;}
 #broadcast-inner{background:var(--card);border-radius:20px;padding:24px;width:100%;max-width:360px;text-align:center;}
+
+/* --- iOS MESSAGES UI OVERHAUL --- */
+.ios-msg-row { position: relative; overflow: hidden; background: var(--card); cursor: pointer; }
+.ios-swipe-bg { position: absolute; top: 0; right: 0; bottom: 0; left: 0; background: var(--ios-red); color: white; display: flex; align-items: center; justify-content: flex-end; padding-right: 24px; font-weight: 600; font-size: 15px; z-index: 0; }
+.ios-msg-row-inner { position: relative; z-index: 1; background: var(--card); width: 100%; display: flex; padding: 12px 16px; align-items: center; transition: transform 0.2s ease-out; border-bottom: .5px solid var(--br); }
+.ios-msg-avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--navy-xlt); color: var(--navy); display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 600; flex-shrink: 0; margin-right: 14px; font-family: var(--font-display); }
+[data-dark] .ios-msg-avatar { background: #1C1C1E; color: #fff; }
+.ios-msg-content { flex: 1; min-width: 0; }
+.ios-msg-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; }
+.ios-msg-name { font-size: 16px; font-weight: 600; color: var(--tx); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: -0.2px; }
+.ios-msg-time { font-size: 14px; color: var(--tx3); flex-shrink: 0; margin-left: 8px; font-weight: 400; }
+.ios-msg-bot { display: flex; align-items: center; justify-content: space-between; }
+.ios-msg-preview { font-size: 14px; color: var(--tx2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; }
+.ios-msg-unread { width: 10px; height: 10px; border-radius: 50%; background: var(--ios-blue); margin-left: 8px; flex-shrink: 0; }
+
+/* Conversation Slide-Over */
+#ios-conv-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--bg); z-index: 6000; display: none; flex-direction: column; transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1); }
+#ios-conv-overlay.active { transform: translateX(0); }
+.ios-conv-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; background: rgba(255,255,255,0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: .5px solid var(--br); z-index: 2; padding-top: calc(env(safe-area-inset-top, 44px) + 10px); }
+[data-dark] .ios-conv-header { background: rgba(20,20,20,0.85); }
+.ios-conv-back { color: var(--ios-blue); font-size: 17px; cursor: pointer; display: flex; align-items: center; gap: 4px; padding: 4px 8px 4px 0; font-weight: 400; }
+.ios-conv-title { display: flex; flex-direction: column; align-items: center; position: absolute; left: 50%; transform: translateX(-50%); }
+.ios-conv-title-av { width: 28px; height: 28px; border-radius: 50%; background: var(--tx3); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 12px; margin-bottom: 2px; font-family: var(--font-display); }
+.ios-conv-title-name { font-size: 11px; font-weight: 600; color: var(--tx); }
+
+.ios-bubbles { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 6px; }
+.ios-bubble { max-width: 75%; padding: 8px 14px; border-radius: 18px; font-size: 15px; line-height: 1.35; position: relative; }
+.ios-bubble.in { background: #E9E9EB; color: #000; align-self: flex-start; border-bottom-left-radius: 4px; }
+[data-dark] .ios-bubble.in { background: #262628; color: #fff; }
+.ios-bubble.out { background: var(--ios-blue); color: #fff; align-self: flex-end; border-bottom-right-radius: 4px; }
+.ios-ts { font-size: 10px; color: var(--tx3); align-self: center; margin: 12px 0 4px; font-weight: 500; }
+
+.ios-input-area { padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 20px)); background: var(--card); border-top: .5px solid var(--br); display: flex; gap: 10px; align-items: flex-end; }
+.ios-input { flex: 1; border: 1px solid var(--br); border-radius: 20px; padding: 8px 14px; font-size: 15px; min-height: 36px; background: var(--inp); color: var(--tx); outline: none; }
+.ios-send-btn { width: 34px; height: 34px; border-radius: 50%; background: var(--ios-blue); color: white; display: flex; align-items: center; justify-content: center; border: none; font-size: 16px; font-weight: bold; flex-shrink: 0; padding-bottom: 2px; }
 </style>
 </head>
 <body>
@@ -327,11 +362,26 @@ input:focus,select:focus{border-color:var(--navy);}
 <div class="scrl">
 
 <div id="scn-inbox" class="scn">
-  <div class="scn-title">Live Inbox</div>
-  <div class="scn-sub">Real-time leads from your Open House iPad</div>
-  <div id="inbox-list"></div>
+  <div style="padding: 12px 16px 4px; background: var(--card);">
+    <div class="scn-title" style="margin-bottom:0;">Messages</div>
+  </div>
+  <div id="inbox-list" style="background:var(--card); margin-top:0;"></div>
 </div>
 
+<div id="ios-conv-overlay">
+  <div class="ios-conv-header">
+    <div class="ios-conv-back" onclick="closeConversation()">‹ <span id="ios-back-text" style="font-size:17px;">Filters</span></div>
+    <div class="ios-conv-title">
+      <div class="ios-conv-title-av" id="ios-conv-av"></div>
+      <div class="ios-conv-title-name" id="ios-conv-name">Name</div>
+    </div>
+    <div style="width: 50px;"></div> </div>
+  <div class="ios-bubbles" id="ios-bubbles-container"></div>
+  <div class="ios-input-area">
+    <input type="text" id="ios-reply-input" class="ios-input" placeholder="iMessage" onkeypress="if(event.key==='Enter') sendIOSReply()">
+    <button class="ios-send-btn" onclick="sendIOSReply()">↑</button>
+  </div>
+</div>
 <div id="scn-daily" class="scn on">
   <div id="sprint-banner">🔥 SPRINT MODE — GIVE EVERYTHING YOU HAVE</div>
 
@@ -742,8 +792,6 @@ import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js').then(fa=>{
       const data=snap.val();
       if(data){
         Object.assign(S,data);
-        // Firebase push() stores contacts as an object {"-NxKey": {...}, ...}
-        // Convert to array so .filter/.map/.find all work correctly
         if(S.contacts && !Array.isArray(S.contacts)){
           S.contacts=Object.values(S.contacts);
         }
@@ -771,8 +819,6 @@ import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js').then(fa=>{
 
 window.save=function(){
   try{localStorage.setItem('ahq_v7',JSON.stringify(S));}catch(e){}
-  // CRITICAL: Never overwrite agent_hq_data/contacts — the iPad portal owns
-  // that node via push(). Use update() on only the keys the dashboard manages.
   if(fbDb&&fbRef&&fd_update){
     const {contacts:_omit,...rest}=S;
     try{fd_update(fbRef(fbDb,'agent_hq_data'),rest);}catch(e){console.error(e);}
@@ -949,101 +995,168 @@ window.deleteDoc=function(i){
   S.docs[activeDocsClientId].splice(i,1);renderDocsList();save();
 };
 
-// --- INBOX ---
+// --- iOS INBOX OVERHAUL ---
+let activeConvId = null;
+let activeConvPhone = null;
+
+function formatMsgTime(ts) {
+  if (!ts) return '';
+  const d = new Date(ts), now = new Date();
+  if (d.toDateString() === now.toDateString()) {
+    return d.toLocaleTimeString('en-US', {hour:'numeric', minute:'2-digit'});
+  }
+  return d.toLocaleDateString('en-US', {weekday: 'short'});
+}
+
 window.renderInbox = function() {
   const el = document.getElementById('inbox-list');
-  
-  // 1. Get ALL contacts + a "fake" contact for unknown numbers
   let leads = [...S.contacts.filter(c => c.status !== 'archived')];
   
-  // 2. Add 'Unknown' leads from the replies node if they aren't in contacts
   Object.keys(S.replies || {}).forEach(key => {
     if (key.startsWith('unknown_') && !leads.find(l => l.id === key)) {
       leads.push({
-        id: key,
-        name: "Unknown Lead",
-        phone: key.replace('unknown_', ''),
-        source: "Direct Text",
-        status: "new",
-        note: "This person texted you directly but isn't in your contacts yet."
+        id: key, name: "Unknown Number", phone: key.replace('unknown_', ''),
+        status: "new", note: "Direct text"
       });
     }
   });
 
   if (leads.length === 0) {
-    el.innerHTML = '<div class="empty-state">No messages yet.</div>';
+    el.innerHTML = '<div class="empty-state">No messages.</div>';
     return;
   }
 
-  // Sort — replied first, then new
-  leads.sort((a,b) => (a.status === 'replied' ? -1 : 1));
-
-  el.innerHTML = leads.map(c => {
-    // Look for replies by ID OR by the 'unknown' key
-    const replies = S.replies ? Object.values(S.replies[c.id] || {}) : [];
+  const inboxItems = leads.map(c => {
+    const replies = S.replies ? Object.values(S.replies[c.id] || {}).sort((a,b)=>a.timestamp-b.timestamp) : [];
+    if (replies.length === 0 && c.status !== 'new' && !c.id.toString().startsWith('unknown')) return null;
     
-    // If it's a regular contact with NO replies and isn't 'new', hide it from inbox
-    if (replies.length === 0 && c.status !== 'new' && !c.id.toString().startsWith('unknown')) return '';
+    const lastMsg = replies.length > 0 ? replies[replies.length-1] : {body: 'New Lead — Tap to message', direction: 'inbound', timestamp: c.lt || Date.now()};
+    const isUnread = lastMsg.direction === 'inbound' && !lastMsg.read;
 
-    return `
-      <div class="card" style="padding:16px; border-left:3px solid ${c.status === 'replied' ? 'var(--ios-green)' : 'var(--navy)'};">
-        <div style="display:flex; justify-content:space-between;">
-           <div>
-              <div style="font-family:var(--font-display); font-weight:600; font-size:18px;">${c.name}</div>
-              <div style="font-size:14px; color:var(--navy); font-weight:600;">${c.phone}</div>
-           </div>
-           ${c.status === 'replied' ? '<span class="tag tag-mil">Replied</span>' : ''}
-        </div>
-        
-        <div style="max-height:200px; overflow-y:auto; margin-top:12px; padding:8px; background:var(--bg); border-radius:10px;">
-          ${replies.length > 0 ? replies.sort((a,b)=>a.timestamp-b.timestamp).map(r => `
-            <div style="margin-bottom:8px; text-align: ${r.direction === 'outbound' ? 'right' : 'left'};">
-              <div style="display:inline-block; padding:8px 12px; border-radius:12px; font-size:13px; background:${r.direction === 'outbound' ? 'var(--navy)' : 'var(--card)'}; color:${r.direction === 'outbound' ? '#fff' : 'var(--tx)'}; border:.5px solid var(--br);">
-                ${r.body}
-              </div>
-            </div>
-          `).join('') : '<div style="font-size:12px; color:var(--tx3); text-align:center;">No conversation history yet.</div>'}
-        </div>
+    return { ...c, replies, lastMsg, isUnread, ts: lastMsg.timestamp };
+  }).filter(Boolean).sort((a,b) => b.ts - a.ts); 
 
-        <div style="display:flex; gap:8px; margin-top:12px;">
-          <input type="text" id="reply-input-${c.id}" placeholder="Type a reply..." style="flex:1; height:38px;">
-          <button class="btn bsm" onclick="sendReply('${c.id}', '${c.phone}', this)">Send</button>
-          <button class="btn bsm bo" onclick="archiveLead('${c.id}')">Archive</button>
+  el.innerHTML = inboxItems.map(c => `
+    <div class="ios-msg-row" data-id="${c.id}">
+      <div class="ios-swipe-bg">Archive</div>
+      <div class="ios-msg-row-inner" onclick="openConversation('${c.id}', '${c.name.replace(/'/g,"\\'")}', '${c.phone}')">
+        <div class="ios-msg-avatar">${(c.name[0]||'#').toUpperCase()}</div>
+        <div class="ios-msg-content">
+          <div class="ios-msg-top">
+            <div class="ios-msg-name" style="${c.isUnread ? 'color:var(--tx);' : 'color:var(--tx);'}">${c.name}</div>
+            <div class="ios-msg-time" style="${c.isUnread ? 'color:var(--ios-blue); font-weight:600;' : ''}">${formatMsgTime(c.ts)}</div>
+          </div>
+          <div class="ios-msg-bot">
+            <div class="ios-msg-preview" style="${c.isUnread ? 'color:var(--tx); font-weight:600;' : ''}">${c.lastMsg.direction === 'outbound' ? 'You: ' : ''}${c.lastMsg.body}</div>
+            ${c.isUnread ? '<div class="ios-msg-unread"></div>' : ''}
+          </div>
         </div>
-      </div>`;
-  }).join('');
+      </div>
+    </div>
+  `).join('');
   
+  attachSwipeGestures();
   listenForReplies();
 };
 
-window.sendReply=async function(contactKey, phone, btnEl){
-  const input=document.getElementById('reply-input-'+contactKey);
-  const body=input.value.trim();
-  if(!body)return;
-  btnEl.textContent='Sending...';btnEl.disabled=true;
-  try{
-    const res=await fetch('https://us-central1-agenthq-3c2c9.cloudfunctions.net/sendReply',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({to:phone,body,contactKey})
+function attachSwipeGestures() {
+  let startX = 0, currentX = 0;
+  document.querySelectorAll('.ios-msg-row').forEach(row => {
+    const inner = row.querySelector('.ios-msg-row-inner');
+    const id = row.dataset.id;
+    
+    inner.addEventListener('touchstart', e => {
+      startX = e.touches[0].clientX;
+      inner.style.transition = 'none';
+    }, {passive: true});
+    
+    inner.addEventListener('touchmove', e => {
+      currentX = e.touches[0].clientX - startX;
+      if (currentX < 0 && currentX > -120) inner.style.transform = `translateX(${currentX}px)`; 
+    }, {passive: true});
+    
+    inner.addEventListener('touchend', e => {
+      inner.style.transition = 'transform 0.2s ease-out';
+      if (currentX < -65) {
+        inner.style.transform = `translateX(-100%)`;
+        setTimeout(() => archiveLead(id), 200); 
+      } else {
+        inner.style.transform = `translateX(0)`; 
+      }
+      currentX = 0;
     });
-    const data=await res.json();
-    if(data.success){input.value='';toast('Reply sent!');}
-    else{toast('Failed to send — check Twilio');}
-  }catch(e){toast('Network error');}
-  btnEl.textContent='Send';btnEl.disabled=false;
+  });
+}
+
+window.openConversation = function(id, name, phone) {
+  activeConvId = id; activeConvPhone = phone;
+  document.getElementById('ios-conv-name').textContent = name;
+  document.getElementById('ios-conv-av').textContent = (name[0]||'#').toUpperCase();
+  
+  const replies = S.replies ? Object.values(S.replies[id] || {}).sort((a,b)=>a.timestamp-b.timestamp) : [];
+  renderBubbles(replies);
+
+  const i=S.contacts.findIndex(c=>c.id===id);
+  if(i>-1) { S.contacts[i].status='replied'; save(); }
+
+  const overlay = document.getElementById('ios-conv-overlay');
+  overlay.style.display = 'flex';
+  setTimeout(() => overlay.classList.add('active'), 10);
 };
 
-// Listen for real-time replies from Firebase
+function renderBubbles(replies) {
+  const container = document.getElementById('ios-bubbles-container');
+  if (replies.length === 0) {
+    container.innerHTML = '<div class="ios-ts">No history yet. Send a message to start.</div>';
+    return;
+  }
+  container.innerHTML = replies.map(r => `
+    <div class="ios-ts">${formatMsgTime(r.timestamp)}</div>
+    <div class="ios-bubble ${r.direction === 'outbound' ? 'out' : 'in'}">${r.body}</div>
+  `).join('');
+  container.scrollTop = container.scrollHeight;
+}
+
+window.closeConversation = function() {
+  const overlay = document.getElementById('ios-conv-overlay');
+  overlay.classList.remove('active');
+  setTimeout(() => overlay.style.display = 'none', 300);
+  activeConvId = null; activeConvPhone = null;
+  renderInbox(); 
+};
+
+window.sendIOSReply = async function() {
+  const input = document.getElementById('ios-reply-input');
+  const body = input.value.trim();
+  if (!body || !activeConvId) return;
+  
+  input.value = '';
+  
+  const tempMsg = { body, direction: 'outbound', timestamp: Date.now(), read: true };
+  if (!S.replies) S.replies = {};
+  if (!S.replies[activeConvId]) S.replies[activeConvId] = {};
+  S.replies[activeConvId]['temp_'+Date.now()] = tempMsg;
+  renderBubbles(Object.values(S.replies[activeConvId]).sort((a,b)=>a.timestamp-b.timestamp));
+
+  try {
+    const res = await fetch('https://us-central1-agenthq-3c2c9.cloudfunctions.net/sendReply',{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({to: activeConvPhone, body, contactKey: activeConvId})
+    });
+    if(!res.ok) toast('Failed to send — check Twilio');
+  } catch(e) { toast('Network error'); }
+};
+
 let repliesListener=null;
 function listenForReplies(){
   if(!fbDb||!fbRef)return;
-  if(repliesListener)return; // already listening
+  if(repliesListener)return; 
   repliesListener=true;
   import('https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js').then(fd=>{
     fd.onValue(fd.ref(fbDb,'agent_hq_data/replies'),snap=>{
       S.replies=snap.val()||{};
-      if(document.getElementById('scn-inbox').classList.contains('on'))renderInbox();
+      if(document.getElementById('scn-inbox').classList.contains('on')) renderInbox();
+      if(activeConvId) renderBubbles(Object.values(S.replies[activeConvId] || {}).sort((a,b)=>a.timestamp-b.timestamp));
       updateInboxBadge();
     });
   });
@@ -1055,10 +1168,10 @@ window.updateInboxBadge=function(){
   const totalNew = n.length + unknown;
   const b=document.getElementById('inbox-badge');if(b)b.style.display=totalNew>0?'block':'none';
 };
+
 window.archiveLead=function(id){
-  // Handle archiving an unknown lead by just hiding it or deleting it
   if (id.toString().startsWith('unknown_')) {
-     if(!confirm('Archive this unknown lead?'))return;
+     if(!confirm('Archive this unknown lead?')) return renderInbox();
      dbRef.parent.child(`agent_hq_data/replies/${id}`).remove();
      toast('Unknown lead archived');
      return;
@@ -1066,6 +1179,7 @@ window.archiveLead=function(id){
   const i=S.contacts.findIndex(c=>c.id===id);
   if(i>-1){S.contacts[i].status='archived';save();renderInbox();toast('Lead archived');}
 };
+
 window.startHustleWithLead=function(id){selectedContacts=[id];launchHustle();};
 
 // --- COUNTERS ---
@@ -1087,7 +1201,6 @@ function updateC(){
   const net=S.closings.reduce((a,c)=>a+c.net,0);
   document.getElementById('m-cl').textContent=S.closings.length;
   document.getElementById('m-ne').textContent='$'+Math.round(net).toLocaleString();
-  // Perf tracker
   const pt=document.getElementById('perf-tracker'),pTitle=document.getElementById('perf-title'),pDesc=document.getElementById('perf-desc');
   if(S.cv===0&&S.dr===0&&(S.nc||0)===0){
     pt.style.borderLeftColor='var(--red)';pTitle.style.color='var(--red)';pTitle.textContent='NO ACTIVITY LOGGED.';pDesc.textContent='The market doesn\'t pay for intentions. Start dialing.';
@@ -1240,7 +1353,6 @@ function showHustle(){
   document.getElementById('h-av').textContent=(c.name[0]||'').toUpperCase();
 }
 
-// A2P-compliant outreach message
 function buildOutreachSMS(contact){
   const isMilitary=contact.type==='military';
   let body=isMilitary
@@ -1401,6 +1513,48 @@ function showScn(id,el){
 window.showScn=showScn;window.adj=adj;window.openRC=openRC;window.closeRC=closeRC;window.saveRC=saveRC;
 window.openDocs=openDocs;window.closeDocs=closeDocs;window.toggleDark=toggleDark;
 
+// --- ACCOUNTABILITY NUDGE ENGINE ---
+let nudgeFiredToday = false;
+
+function startNudgeEngine() {
+  setInterval(() => {
+    const now = new Date();
+    const currentHour = String(now.getHours()).padStart(2, '0');
+    const currentMin = String(now.getMinutes()).padStart(2, '0');
+    const currentTime = `${currentHour}:${currentMin}`;
+    
+    const targetTime = S.rc.nudgeTime || '16:00';
+    const goal = S.rc.convGoal || 20;
+
+    if (currentTime === '00:00') nudgeFiredToday = false;
+
+    if (currentTime === targetTime && !nudgeFiredToday && S.cv < goal) {
+      fireNudgeNotification(goal - S.cv);
+      nudgeFiredToday = true;
+    }
+  }, 30000);
+}
+
+function fireNudgeNotification(shortfall) {
+  const title = "Accountability Check";
+  const body = `You are ${shortfall} conversations short of your daily goal. Pick up the phone.`;
+
+  if (S.notifPermission === 'granted' && 'Notification' in window) {
+    navigator.serviceWorker.getRegistration().then(reg => {
+      if (reg) {
+        reg.showNotification(title, { body: body, icon: '/apple-touch-icon.png', badge: '/apple-touch-icon.png', vibrate: [200, 100, 200] });
+      } else {
+        new Notification(title, { body: body });
+      }
+    });
+  }
+
+  document.getElementById('nb-title').textContent = title;
+  document.getElementById('nb-msg').textContent = body;
+  document.getElementById('notif-banner').style.display = 'flex';
+  setTimeout(() => document.getElementById('notif-banner').style.display = 'none', 8000);
+}
+
 window.onload=()=>{
   load();applyDark();applyRC();
   const day=Math.floor((new Date()-new Date(new Date().getFullYear(),0,1))/86400000);
@@ -1410,6 +1564,9 @@ window.onload=()=>{
   renderMoney();renderContacts();renderClients();renderPortfolioQuick();
   updateNotifUI();
   if(document.getElementById('cal-month'))renderCal();
+  
+  // Kick off the background tracker
+  startNudgeEngine(); 
 };
 </script>
 </body>
