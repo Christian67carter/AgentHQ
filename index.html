@@ -1224,7 +1224,8 @@ window.closeConversation = function() {
 
 window.convertUnknown = function() {
   if (!activeConvId || !String(activeConvId).startsWith('unknown_')) return;
-  const phone = activeConvPhone || activeConvId.replace('unknown_', '');
+  const oldKey = activeConvId;
+  const phone = activeConvPhone || oldKey.replace('unknown_', '');
   const name = prompt('Enter contact name:');
   if (!name || !name.trim()) return;
   const type = prompt('Contact type? (general / military / firsttime / investor / fsbo)', 'general') || 'general';
@@ -1236,28 +1237,38 @@ window.convertUnknown = function() {
 
   if (fbDb && fbPush && fbRef && setDb) {
     const newRef = fbPush(fbRef(fbDb, 'agent_hq_data/contacts'));
-    setDb(newRef, newContact);
     newContact.fbKey = newRef.key;
 
-    // Move replies from unknown_ key to new fbKey
-    if (S.replies && S.replies[activeConvId]) {
-      setDb(fbRef(fbDb, `agent_hq_data/replies/${newRef.key}`), S.replies[activeConvId]);
-      setDb(fbRef(fbDb, `agent_hq_data/replies/${activeConvId}`), null);
-      S.replies[newRef.key] = S.replies[activeConvId];
-      delete S.replies[activeConvId];
-    }
-    newContact.fbKey = newRef.key;
+    // Step 1: Copy replies to new key FIRST
+    const existingReplies = S.replies && S.replies[oldKey] ? S.replies[oldKey] : {};
+    setDb(fbRef(fbDb, `agent_hq_data/replies/${newRef.key}`), existingReplies)
+      .then(() => {
+        // Step 2: Save contact AFTER replies are moved
+        setDb(newRef, newContact);
+        // Step 3: Delete old unknown replies key LAST
+        setDb(fbRef(fbDb, `agent_hq_data/replies/${oldKey}`), null);
+      });
+
+    // Update local state
+    S.replies[newRef.key] = existingReplies;
+    delete S.replies[oldKey];
+
+    // Remove unknown from contacts list — prevent duplicate when onValue fires
+    S.contacts = S.contacts.filter(c => String(c.fbKey) !== oldKey && String(c.id) !== oldKey);
+    // Add new contact locally
+    S.contacts.unshift(newContact);
+
+    // Update active conversation
+    activeConvId = newRef.key;
+    activeConvPhone = phone;
+    document.getElementById('ios-conv-name').textContent = name.trim();
+    document.getElementById('ios-conv-av').textContent = name.trim()[0].toUpperCase();
+    document.getElementById('ios-conv-convert-btn').style.display = 'none';
+
+    // Re-render bubbles from moved replies
+    renderBubbles(Object.values(existingReplies).sort((a,b)=>a.timestamp-b.timestamp));
   }
 
-  S.contacts.unshift(newContact);
-  
-  // Update active conversation to new key
-  activeConvId = newContact.fbKey || String(newContact.id);
-  document.getElementById('ios-conv-name').textContent = name.trim();
-  document.getElementById('ios-conv-av').textContent = name.trim()[0].toUpperCase();
-  document.getElementById('ios-conv-convert-btn').style.display = 'none';
-  
-  save();
   toast('Contact saved: ' + name.trim());
   renderInbox();
 };
