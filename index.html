@@ -375,7 +375,7 @@ input:focus,select:focus{border-color:var(--navy);}
       <div class="ios-conv-title-av" id="ios-conv-av"></div>
       <div class="ios-conv-title-name" id="ios-conv-name">Name</div>
     </div>
-    <div style="width: 50px;"></div>
+    <button id="ios-conv-convert-btn" onclick="convertUnknown()" style="display:none;height:30px;padding:0 12px;border-radius:15px;border:none;background:var(--ios-green);color:#fff;font-size:12px;font-weight:600;cursor:pointer;">+ Save</button>
   </div>
   <div class="ios-bubbles" id="ios-bubbles-container"></div>
   <div class="ios-input-area">
@@ -1178,6 +1178,9 @@ window.openConversation = function(id, name, phone) {
   activeConvId = id; activeConvPhone = phone;
   document.getElementById('ios-conv-name').textContent = name;
   document.getElementById('ios-conv-av').textContent = (name[0]||'#').toUpperCase();
+  // Show convert button for unknown numbers
+  const convertBtn = document.getElementById('ios-conv-convert-btn');
+  convertBtn.style.display = String(id).startsWith('unknown_') ? 'block' : 'none';
   
   const replies = S.replies ? Object.values(S.replies[id] || {}).sort((a,b)=>a.timestamp-b.timestamp) : [];
   renderBubbles(replies);
@@ -1217,6 +1220,46 @@ window.closeConversation = function() {
   setTimeout(() => overlay.style.display = 'none', 300);
   activeConvId = null; activeConvPhone = null;
   renderInbox(); 
+};
+
+window.convertUnknown = function() {
+  if (!activeConvId || !String(activeConvId).startsWith('unknown_')) return;
+  const phone = activeConvPhone || activeConvId.replace('unknown_', '');
+  const name = prompt('Enter contact name:');
+  if (!name || !name.trim()) return;
+  const type = prompt('Contact type? (general / military / firsttime / investor / fsbo)', 'general') || 'general';
+  
+  const newContact = {
+    id: Date.now(), name: name.trim(), phone, type,
+    source: 'Inbound Text', status: 'replied', lt: Date.now()
+  };
+
+  if (fbDb && fbPush && fbRef && setDb) {
+    const newRef = fbPush(fbRef(fbDb, 'agent_hq_data/contacts'));
+    setDb(newRef, newContact);
+    newContact.fbKey = newRef.key;
+
+    // Move replies from unknown_ key to new fbKey
+    if (S.replies && S.replies[activeConvId]) {
+      setDb(fbRef(fbDb, `agent_hq_data/replies/${newRef.key}`), S.replies[activeConvId]);
+      setDb(fbRef(fbDb, `agent_hq_data/replies/${activeConvId}`), null);
+      S.replies[newRef.key] = S.replies[activeConvId];
+      delete S.replies[activeConvId];
+    }
+    newContact.fbKey = newRef.key;
+  }
+
+  S.contacts.unshift(newContact);
+  
+  // Update active conversation to new key
+  activeConvId = newContact.fbKey || String(newContact.id);
+  document.getElementById('ios-conv-name').textContent = name.trim();
+  document.getElementById('ios-conv-av').textContent = name.trim()[0].toUpperCase();
+  document.getElementById('ios-conv-convert-btn').style.display = 'none';
+  
+  save();
+  toast('Contact saved: ' + name.trim());
+  renderInbox();
 };
 
 window.sendIOSReply = async function() {
