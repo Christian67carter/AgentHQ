@@ -826,7 +826,7 @@ import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js').then(fa=>{
           } else {
             S.contacts = Object.entries(data.contacts).map(([key, val]) => {
               return { ...val, fbKey: key, id: val.id || key }; 
-            });
+            }).filter(c => c.name);
           }
         } else {
           S.contacts = [];
@@ -846,7 +846,7 @@ import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js').then(fa=>{
         }
         if(document.getElementById('scn-inbox').classList.contains('on'))renderInbox();
         if(activeConvId) renderBubbles(Object.values(S.replies[activeConvId] || {}).sort((a,b)=>a.timestamp-b.timestamp));
-        updateInboxBadge(); // FIX: always refresh badge when Firebase data arrives
+        updateInboxBadge();
       }
     });
   });
@@ -1074,7 +1074,7 @@ window.renderInbox = function() {
     
     const hasReplies = replies.length > 0;
     const isUnknown = String(targetKey).startsWith('unknown');
-    if (!hasReplies && c.status === 'archived') return null; // FIX: show all non-archived contacts regardless of status
+    if (!hasReplies && c.status === 'archived') return null;
     
     const lastMsg = hasReplies ? replies[replies.length-1] : {body: 'New Lead — Tap to message', direction: 'inbound', timestamp: c.lt || Date.now()};
     const isUnread = lastMsg.direction === 'inbound' && !lastMsg.read;
@@ -1217,7 +1217,7 @@ window.sendIOSReply = async function() {
 };
 
 window.updateInboxBadge=function(){
-  const n=S.contacts.filter(c=>c.status==='new'||c.status==='active'||c.status==='contacted'); // FIX: count all new leads not just Open House iPad
+  const n=S.contacts.filter(c=>c.status==='new'||c.status==='active'||c.status==='contacted');
   const unknown = Object.keys(S.replies || {}).filter(k => k.startsWith('unknown_')).length;
   const totalNew = n.length + unknown;
   const b=document.getElementById('inbox-badge');if(b)b.style.display=totalNew>0?'block':'none';
@@ -1630,7 +1630,7 @@ function showScn(id,el){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
   document.getElementById('scn-'+id).classList.add('on');if(el)el.classList.add('on');
   if(id==='money')renderMoney();if(id==='circle')renderContacts();if(id==='clients')renderClients();
-  if(id==='inbox'){renderInbox();setTimeout(()=>renderInbox(),500);} // FIX: delayed re-render catches late Firebase data
+  if(id==='inbox'){renderInbox();setTimeout(()=>renderInbox(),500);}
   if(id==='open')renderPortfolioQuick();
 }
 
