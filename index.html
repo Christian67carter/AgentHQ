@@ -378,6 +378,14 @@ input:focus,select:focus{border-color:var(--navy);}
     <button id="ios-conv-convert-btn" onclick="convertUnknown()" style="display:none;height:30px;padding:0 12px;border-radius:15px;border:none;background:var(--ios-green);color:#fff;font-size:12px;font-weight:600;cursor:pointer;">+ Save</button>
   </div>
   <div class="ios-bubbles" id="ios-bubbles-container"></div>
+  <div id="quick-replies" style="display:flex;gap:6px;padding:8px 16px 0;overflow-x:auto;scrollbar-width:none;background:var(--card);border-top:.5px solid var(--br);">
+    <button onclick="setQuickReply(this)" style="flex-shrink:0;height:28px;padding:0 12px;border-radius:14px;border:.5px solid var(--br);background:var(--inp);color:var(--tx2);font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;">Thanks for reaching out! When are you looking to move?</button>
+    <button onclick="setQuickReply(this)" style="flex-shrink:0;height:28px;padding:0 12px;border-radius:14px;border:.5px solid var(--br);background:var(--inp);color:var(--tx2);font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;">Are you working with a lender yet?</button>
+    <button onclick="setQuickReply(this)" style="flex-shrink:0;height:28px;padding:0 12px;border-radius:14px;border:.5px solid var(--br);background:var(--inp);color:var(--tx2);font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;">Would you like to schedule a showing?</button>
+    <button onclick="setQuickReply(this)" style="flex-shrink:0;height:28px;padding:0 12px;border-radius:14px;border:.5px solid var(--br);background:var(--inp);color:var(--tx2);font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;">What's your timeline for buying?</button>
+    <button onclick="setQuickReply(this)" style="flex-shrink:0;height:28px;padding:0 12px;border-radius:14px;border:.5px solid var(--br);background:var(--inp);color:var(--tx2);font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;">I'll give you a call shortly!</button>
+    <button onclick="setQuickReply(this)" style="flex-shrink:0;height:28px;padding:0 12px;border-radius:14px;border:.5px solid var(--br);background:var(--inp);color:var(--tx2);font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;">Are you pre-approved?</button>
+  </div>
   <div class="ios-input-area">
     <input type="text" id="ios-reply-input" class="ios-input" placeholder="iMessage" onkeypress="if(event.key==='Enter') sendIOSReply()">
     <button class="ios-send-btn" onclick="sendIOSReply()">↑</button>
@@ -399,6 +407,31 @@ input:focus,select:focus{border-color:var(--navy);}
     <div class="perf-desc" id="perf-desc">The market doesn't pay for intentions. Start dialing.</div>
   </div>
 
+  <div id="closing-aniv-alert" style="display:none;background:var(--red-lt);border:.5px solid var(--red);border-radius:14px;padding:14px 16px;margin-bottom:12px;cursor:pointer;" onclick="showScn('clients',document.querySelector('.tab:nth-child(5)'))">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <div>
+        <div style="font-size:13px;font-weight:700;color:var(--red);">🏡 Home anniversaries coming up</div>
+        <div style="font-size:12px;color:var(--red);margin-top:2px;" id="closing-aniv-names"></div>
+      </div>
+      <div style="background:var(--red);color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:10px;" id="closing-aniv-badge"></div>
+    </div>
+  </div>
+
+  <div id="bday-alert" style="display:none;background:#EDE0F0;border:.5px solid rgba(90,52,114,.3);border-radius:14px;padding:14px 16px;margin-bottom:12px;">
+    <div style="font-size:13px;font-weight:700;color:var(--pu);">🎂 Birthdays coming up</div>
+    <div style="font-size:12px;color:var(--pu);margin-top:2px;" id="bday-list"></div>
+  </div>
+
+  <div id="followup-alert" style="display:none;background:var(--gold-xlt);border:.5px solid rgba(201,168,76,.4);border-radius:14px;padding:14px 16px;margin-bottom:12px;cursor:pointer;" onclick="showScn('circle',document.querySelector('.tab:nth-child(4)'))">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <div>
+        <div style="font-size:13px;font-weight:700;color:#7A5C1E;">Follow-ups due</div>
+        <div style="font-size:12px;color:#7A5C1E;margin-top:2px;" id="followup-names"></div>
+      </div>
+      <div style="background:var(--gold);color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:10px;" id="followup-badge"></div>
+    </div>
+  </div>
+
   <div class="mg">
     <div class="m"><div class="mv navy" id="m-cv">0</div><div class="ml">Conversations</div><div class="ms" id="ms-cv">Goal: 20 today</div><div class="pb"><div class="pf" id="p-cv" style="width:0%;background:var(--navy);"></div></div></div>
     <div class="m"><div class="mv red" id="m-debt">$93,432</div><div class="ml">Total Debt</div><div class="ms">Truck + Student Loans</div></div>
@@ -408,7 +441,7 @@ input:focus,select:focus{border-color:var(--navy);}
   <div class="mg" style="grid-template-columns:1fr 1fr 1fr;">
     <div class="m"><div class="mv" id="m-st">0</div><div class="ml">Day Streak</div><div class="ms">20+ convos</div></div>
     <div class="m"><div class="mv navy" id="m-cl">0</div><div class="ml">Closings</div><div class="ms" id="ms-cl">of 21 needed</div></div>
-    <div class="m"><div class="mv navy" id="m-ne">$0</div><div class="ml">Net Earned</div><div class="ms">of $75K</div></div>
+    <div class="m"><div class="mv navy" id="m-ne">$0</div><div class="ml">Net Earned</div><div class="ms">of $75K</div><div class="pb" style="margin-top:6px;"><div class="pf" id="p-ne" style="width:0%;background:var(--navy);"></div></div></div>
   </div>
 
   <div class="card"><div class="ch">Quick Counters</div>
@@ -519,6 +552,22 @@ input:focus,select:focus{border-color:var(--navy);}
     <div style="font-family:var(--font-display);font-size:18px;font-weight:600;color:var(--tx);" id="oh-current-addr">None</div>
     <div style="font-size:13px;color:var(--tx2);margin-top:2px;" id="oh-current-details"></div>
   </div>
+
+  <div class="card" style="padding:16px;">
+    <div class="sst" style="margin-bottom:10px;">Guest Counter</div>
+    <div style="font-size:12px;color:var(--tx2);margin-bottom:14px;">Tap + every time someone walks in the door.</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+      <div>
+        <div style="font-family:var(--font-display);font-size:48px;font-weight:700;color:var(--navy);line-height:1;" id="guest-count">0</div>
+        <div style="font-size:12px;color:var(--tx2);margin-top:4px;">guests today</div>
+      </div>
+      <div style="display:flex;gap:10px;">
+        <button onclick="adjGuest(-1)" style="width:48px;height:48px;border-radius:50%;background:var(--inp);border:none;font-size:24px;color:var(--ios-blue);cursor:pointer;display:flex;align-items:center;justify-content:center;">-</button>
+        <button onclick="adjGuest(1)" style="width:64px;height:64px;border-radius:50%;background:var(--navy);border:none;font-size:32px;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;">+</button>
+      </div>
+    </div>
+    <button onclick="resetGuests()" style="width:100%;margin-top:14px;height:32px;border-radius:10px;border:none;background:var(--inp);color:var(--tx2);font-size:12px;font-weight:600;cursor:pointer;">Reset Counter</button>
+  </div>
 </div>
 
 <div id="scn-circle" class="scn">
@@ -547,6 +596,10 @@ input:focus,select:focus{border-color:var(--navy);}
       <input type="text" id="cnot" placeholder="Notes (PCSing, met at...)">
       <input type="text" id="cref" placeholder="Source">
     </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+      <input type="date" id="cbday" placeholder="Birthday (optional)" style="font-size:13px;">
+      <input type="text" id="cemail" placeholder="Email (optional)">
+    </div>
     <div style="display:flex;gap:8px;">
       <select id="ctype" style="flex:1;">
         <option value="general">General</option>
@@ -566,6 +619,11 @@ input:focus,select:focus{border-color:var(--navy);}
     </div>
   </div>
 
+  <div id="source-breakdown" class="card" style="padding:16px;margin-bottom:12px;">
+    <div class="sst" style="margin-bottom:10px;">Lead Sources</div>
+    <div id="source-bars"></div>
+  </div>
+
   <div class="fst" id="filter-tabs">
     <button class="fc on" onclick="setFilter('all',this)">All</button>
     <button class="fc" onclick="setFilter('new',this)">New</button>
@@ -573,8 +631,21 @@ input:focus,select:focus{border-color:var(--navy);}
     <button class="fc" onclick="setFilter('firsttime',this)">First-Time</button>
     <button class="fc" onclick="setFilter('investor',this)">Investor</button>
     <button class="fc" onclick="setFilter('fsbo',this)">FSBO</button>
+    <button class="fc" onclick="setFilter('farm',this)">🗺 Farm</button>
   </div>
   <div class="card" id="clist"></div>
+
+  <div id="farm-panel" style="display:none;">
+    <div class="card" style="padding:16px;margin-bottom:12px;">
+      <div class="sst" style="margin-bottom:10px;">Neighborhood Farm Tracker</div>
+      <div style="font-size:12px;color:var(--tx2);margin-bottom:12px;">Track streets you've knocked so you never repeat yourself.</div>
+      <div style="display:flex;gap:8px;margin-bottom:12px;">
+        <input type="text" id="farm-street" placeholder="Street name (e.g. Oak St, Dyess Ave)" style="flex:1;">
+        <button class="btn bsm" onclick="addFarmStreet()">Add</button>
+      </div>
+      <div id="farm-list"></div>
+    </div>
+  </div>
 </div>
 
 <div id="scn-clients" class="scn">
@@ -760,7 +831,7 @@ const SCRIPTS={
   aniv:[{s:'1-Year Anniversary Text',t:'"Hey [name]! I can\'t believe it\'s already been a year since you closed on [address]. I hope you\'re absolutely loving it! If you ever need anything or know someone looking to buy or sell, I\'m always your guy. Happy home anniversary!"',tip:'Send this text the week before the anniversary date. Set a calendar reminder the day you close every transaction.'}]
 };
 
-let rChart=null, selectedContacts=[], hIdx=0, currentFilter='all', activeDocsClientId=null, pendingBroadcastAddr='', pendingBroadcastData=null;
+let rChart=null, selectedContacts=[], hIdx=0, currentFilter='all', activeDocsClientId=null, pendingBroadcastAddr='', pendingBroadcastData=null, guestCount=0;
 
 const S={
   dark:false,cv:0,dr:0,nc:0,streak:0,history:{},calEvents:{},
@@ -768,6 +839,7 @@ const S={
   contacts:[],clients:[],closings:[],currentOpenHouse:{},portfolio:[],replies:{},
   sallie:24225,federal:5500,zr1x:0,manualTax:0,manualSav:0,docs:{},
   rc:{convGoal:20,doorGoal:20,nudgeTime:'16:00',showZR1X:true,showDebt:true,sprintMode:false,closingsGoal:21},
+  farm:[],
   notifPermission:'default'
 };
 
@@ -807,6 +879,7 @@ import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js').then(fa=>{
         S.closings = data.closings || [];
         S.currentOpenHouse = data.currentOpenHouse || {};
         S.portfolio = data.portfolio || [];
+        S.farm = data.farm || [];
         S.replies = data.replies || {};
         S.sallie = data.sallie || 24225;
         S.federal = data.federal || 5500;
@@ -860,7 +933,7 @@ window.save=function(){
       cv: S.cv, dr: S.dr, nc: S.nc, streak: S.streak,
       history: S.history, calEvents: S.calEvents, tasks: S.tasks,
       clients: S.clients, closings: S.closings, currentOpenHouse: S.currentOpenHouse,
-      portfolio: S.portfolio, sallie: S.sallie, federal: S.federal,
+      portfolio: S.portfolio, farm: S.farm, sallie: S.sallie, federal: S.federal,
       zr1x: S.zr1x, manualTax: S.manualTax, manualSav: S.manualSav, docs: S.docs, rc: S.rc
     };
     try{fd_update(fbRef(fbDb,'agent_hq_data'), updates);}catch(e){console.error(e);}
@@ -873,6 +946,7 @@ window.load=function(){
     if(!S.calEvents)S.calEvents={};if(!S.docs)S.docs={};if(!S.contacts)S.contacts=[];
     if(!S.rc)S.rc={convGoal:20,doorGoal:20,nudgeTime:'16:00',showZR1X:true,showDebt:true,sprintMode:false,closingsGoal:21};
     if(!S.portfolio)S.portfolio=[];
+    if(!S.farm)S.farm=[];
   }catch(e){}
   updateC();
 };
@@ -1273,6 +1347,11 @@ window.convertUnknown = function() {
   renderInbox();
 };
 
+window.setQuickReply = function(btn) {
+  document.getElementById('ios-reply-input').value = btn.textContent;
+  document.getElementById('ios-reply-input').focus();
+};
+
 window.sendIOSReply = async function() {
   const input = document.getElementById('ios-reply-input');
   const body = input.value.trim();
@@ -1356,6 +1435,8 @@ function updateC(){
   const net=S.closings.reduce((a,c)=>a+c.net,0);
   document.getElementById('m-cl').textContent=S.closings.length;
   document.getElementById('m-ne').textContent='$'+Math.round(net).toLocaleString();
+  const neBar = document.getElementById('p-ne');
+  if(neBar) neBar.style.width=Math.min(100,(net/75000)*100)+'%';
   const pt=document.getElementById('perf-tracker'),pTitle=document.getElementById('perf-title'),pDesc=document.getElementById('perf-desc');
   if(S.cv===0&&S.dr===0&&(S.nc||0)===0){
     pt.style.borderLeftColor='var(--red)';pTitle.style.color='var(--red)';pTitle.textContent='NO ACTIVITY LOGGED.';pDesc.textContent='The market doesn\'t pay for intentions. Start dialing.';
@@ -1365,6 +1446,14 @@ function updateC(){
     pt.style.borderLeftColor='var(--ios-green)';pTitle.style.color='var(--ios-green)';pTitle.textContent='DAILY GOAL MET.';pDesc.textContent="Outstanding. Now push past 120%.";
   }
   renderTasks();if(document.getElementById('cal-month'))renderCal();updateInboxBadge();
+  // Follow-up reminder check
+  checkBirthdays();
+  checkClosingAnniversaries();
+  const overdue = checkFollowUpReminders();
+  const alertEl = document.getElementById('followup-alert');
+  const namesEl = document.getElementById('followup-names');
+  if (alertEl) alertEl.style.display = overdue.length > 0 ? 'block' : 'none';
+  if (namesEl) namesEl.textContent = overdue.slice(0,3).map(c=>c.name).join(', ') + (overdue.length > 3 ? ` +${overdue.length-3} more` : '');
 }
 
 function renderTasks(){
@@ -1464,7 +1553,8 @@ window.addContact=function(){
   const n=document.getElementById('cn').value.trim(),p=document.getElementById('cp').value.trim(),nt=document.getElementById('cnot').value.trim(),src=document.getElementById('cref').value.trim(),type=document.getElementById('ctype').value,st=document.getElementById('cs').value;
   if(!n)return;
   
-  const newContact = {id:Date.now(),name:n,phone:p,note:nt,source:src,type,status:st,lt:Date.now()};
+  const bday=document.getElementById('cbday').value||''; const email=document.getElementById('cemail').value.trim()||'';
+  const newContact = {id:Date.now(),name:n,phone:p,note:nt,source:src,type,status:st,lt:Date.now(),bday,email};
   
   if (fbDb && fbPush && fbRef && setDb) {
       const newRef = fbPush(fbRef(fbDb, 'agent_hq_data/contacts'));
@@ -1473,13 +1563,52 @@ window.addContact=function(){
   }
   
   S.contacts.unshift(newContact);
-  ['cn','cp','cnot','cref'].forEach(id=>document.getElementById(id).value='');
+  ['cn','cp','cnot','cref','cbday','cemail'].forEach(id=>document.getElementById(id).value='');
   adj('nc',1);window.renderContacts();save();
 };
 
-window.setFilter=function(f,el){currentFilter=f;document.querySelectorAll('.fc').forEach(b=>b.classList.remove('on'));el.classList.add('on');window.renderContacts();};
+function renderSourceBreakdown() {
+  const el = document.getElementById('source-bars');
+  if (!el) return;
+  const sources = {};
+  S.contacts.forEach(c => {
+    const src = c.source || 'Unknown';
+    sources[src] = (sources[src] || 0) + 1;
+  });
+  const total = S.contacts.length || 1;
+  const sorted = Object.entries(sources).sort((a,b) => b[1]-a[1]).slice(0,5);
+  if (sorted.length === 0) { el.innerHTML = '<div style="font-size:13px;color:var(--tx3);">No contacts yet.</div>'; return; }
+  el.innerHTML = sorted.map(([src, count]) => `
+    <div style="margin-bottom:10px;">
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;">
+        <span style="font-weight:500;color:var(--tx);">${src}</span>
+        <span style="color:var(--tx2);">${count} lead${count>1?'s':''}</span>
+      </div>
+      <div style="height:6px;background:var(--inp);border-radius:3px;overflow:hidden;">
+        <div style="height:100%;width:${Math.round((count/total)*100)}%;background:var(--navy);border-radius:3px;transition:width .4s;"></div>
+      </div>
+    </div>`).join('');
+}
+
+window.setFilter=function(f,el){
+  currentFilter=f;
+  document.querySelectorAll('.fc').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');
+  const farmPanel=document.getElementById('farm-panel');
+  const clist=document.getElementById('clist');
+  if(f==='farm'){
+    if(farmPanel)farmPanel.style.display='block';
+    if(clist)clist.style.display='none';
+    renderFarm();
+  } else {
+    if(farmPanel)farmPanel.style.display='none';
+    if(clist)clist.style.display='block';
+    window.renderContacts();
+  }
+};
 
 window.renderContacts=function(){
+  renderSourceBreakdown();
   const el=document.getElementById('clist');
   let filtered=S.contacts;
   if(currentFilter==='new')filtered=S.contacts.filter(c=>c.status==='new');
@@ -1598,6 +1727,7 @@ window.addClient=function(){
 function daysUntil(dateStr){const today=new Date();today.setHours(0,0,0,0);const target=new Date(dateStr);target.setHours(0,0,0,0);return Math.round((target-today)/86400000);}
 
 function renderClients(){
+  checkClosingAnniversaries();
   const el=document.getElementById('client-list'),alertEl=document.getElementById('aniv-alert'),anivList=document.getElementById('aniv-list'),anivCount=document.getElementById('aniv-count');
   if(S.clients.length===0){el.innerHTML='<div class="empty-state">No clients yet.<br>Log your first closing above.</div>';alertEl.style.display='none';return;}
   const upcoming=S.clients.filter(c=>{const d=daysUntil(c.anivDate);return d>=0&&d<=14;});
@@ -1713,8 +1843,140 @@ function showScn(id,el){
   if(id==='open')renderPortfolioQuick();
 }
 
+function renderFarm(){
+  if(!S.farm)S.farm=[];
+  const el=document.getElementById('farm-list');
+  if(!el)return;
+  if(S.farm.length===0){el.innerHTML='<div class="empty-state" style="padding:20px 0;">No streets tracked yet. Add your first one above.</div>';return;}
+  el.innerHTML=S.farm.map((f,i)=>`
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:.5px solid var(--br);">
+      <div>
+        <div style="font-size:15px;font-weight:500;">${f.street}</div>
+        <div style="font-size:12px;color:var(--tx2);">Knocked ${f.count} door${f.count!==1?'s':''} · ${new Date(f.lastKnocked).toLocaleDateString('en-US',{month:'short',day:'numeric'})}</div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button onclick="farmKnock(${i})" class="btn bsm" style="background:var(--navy);">+1 Door</button>
+        <button onclick="deleteFarmStreet(${i})" style="width:28px;height:28px;border-radius:50%;background:var(--red-lt);color:var(--red);border:none;font-size:12px;cursor:pointer;">✕</button>
+      </div>
+    </div>`).join('');
+}
+
+window.addFarmStreet=function(){
+  const inp=document.getElementById('farm-street');
+  const street=inp.value.trim();
+  if(!street)return;
+  if(!S.farm)S.farm=[];
+  if(S.farm.find(f=>f.street.toLowerCase()===street.toLowerCase())){toast('Street already tracked');return;}
+  S.farm.push({street,count:0,lastKnocked:Date.now()});
+  inp.value='';
+  renderFarm();save();toast('Street added to farm');
+};
+
+window.farmKnock=function(i){
+  S.farm[i].count++;S.farm[i].lastKnocked=Date.now();
+  adj('dr',1);
+  renderFarm();save();toast('Door logged!');
+};
+
+window.deleteFarmStreet=function(i){
+  if(!confirm('Remove this street?'))return;
+  S.farm.splice(i,1);renderFarm();save();
+};
+
+window.adjGuest=function(d){
+  guestCount=Math.max(0,guestCount+d);
+  const el=document.getElementById('guest-count');
+  if(el)el.textContent=guestCount;
+};
+window.resetGuests=function(){
+  guestCount=0;
+  const el=document.getElementById('guest-count');
+  if(el)el.textContent=0;
+  toast('Guest counter reset');
+};
+
 window.showScn=showScn;window.adj=adj;window.openRC=openRC;window.closeRC=closeRC;window.saveRC=saveRC;
 window.openDocs=openDocs;window.closeDocs=closeDocs;window.toggleDark=toggleDark;
+
+// --- CLOSING ANNIVERSARY ENGINE ---
+function checkClosingAnniversaries() {
+  if (!S.clients || S.clients.length === 0) return;
+  const upcoming = S.clients.filter(c => {
+    const d = daysUntil(c.anivDate);
+    return d >= 0 && d <= 14;
+  });
+
+  const alertEl = document.getElementById('closing-aniv-alert');
+  const namesEl = document.getElementById('closing-aniv-names');
+  const badgeEl = document.getElementById('closing-aniv-badge');
+
+  if (alertEl) alertEl.style.display = upcoming.length > 0 ? 'block' : 'none';
+  if (badgeEl) badgeEl.textContent = upcoming.length > 0 ? upcoming.length : '';
+  if (namesEl) namesEl.textContent = upcoming.map(c => {
+    const d = daysUntil(c.anivDate);
+    return `${c.name} — ${d === 0 ? 'TODAY' : d === 1 ? 'Tomorrow' : 'in ' + d + ' days'}`;
+  }).join(' · ');
+}
+
+// --- BIRTHDAY REMINDER ENGINE ---
+function checkBirthdays() {
+  const today = new Date();
+  const mm = String(today.getMonth()+1).padStart(2,'0');
+  const dd = String(today.getDate()).padStart(2,'0');
+  const upcoming = S.contacts.filter(c => {
+    if (!c.bday || !c.name) return false;
+    const parts = c.bday.split('-');
+    if (parts.length < 3) return false;
+    const cMm = parts[1], cDd = parts[2];
+    // Check today or next 7 days
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(today); d.setDate(d.getDate() + i);
+      const dMm = String(d.getMonth()+1).padStart(2,'0');
+      const dDd = String(d.getDate()).padStart(2,'0');
+      if (cMm === dMm && cDd === dDd) return true;
+    }
+    return false;
+  });
+  
+  const bdayAlert = document.getElementById('bday-alert');
+  const bdayList = document.getElementById('bday-list');
+  if (bdayAlert) bdayAlert.style.display = upcoming.length > 0 ? 'block' : 'none';
+  if (bdayList) bdayList.textContent = upcoming.map(c => {
+    const parts = c.bday.split('-');
+    const d = new Date(today.getFullYear(), parseInt(parts[1])-1, parseInt(parts[2]));
+    const diff = Math.round((d - today) / 86400000);
+    return `${c.name} — ${diff === 0 ? 'TODAY' : diff === 1 ? 'Tomorrow' : 'in '+diff+' days'}`;
+  }).join(' · ');
+}
+
+// --- FOLLOW-UP REMINDER ENGINE ---
+function checkFollowUpReminders() {
+  const threeDaysAgo = Date.now() - (3 * 24 * 60 * 60 * 1000);
+  const needsFollowUp = S.contacts.filter(c => {
+    if (!c.name || c.status === 'archived') return false;
+    const lastContact = c.lt || 0;
+    const hasRecentReply = S.replies && S.replies[c.fbKey || c.id] && 
+      Object.values(S.replies[c.fbKey || c.id]).some(r => r.timestamp > threeDaysAgo);
+    return lastContact < threeDaysAgo && !hasRecentReply && c.status !== 'replied';
+  });
+  
+  const badge = document.getElementById('followup-badge');
+  if (badge) badge.textContent = needsFollowUp.length > 0 ? needsFollowUp.length : '';
+  
+  return needsFollowUp;
+}
+
+// --- DAILY RESET ENGINE ---
+function checkDailyReset() {
+  const today = new Date().toISOString().split('T')[0];
+  const lastReset = S.lastResetDate || '';
+  if (lastReset !== today) {
+    S.cv = 0; S.dr = 0; S.nc = 0;
+    S.lastResetDate = today;
+    updateC(); save();
+    console.log('Daily counters reset for', today);
+  }
+}
 
 // --- ACCOUNTABILITY NUDGE ENGINE ---
 let nudgeFiredToday = false;
@@ -1767,6 +2029,10 @@ window.onload=()=>{
   renderMoney();renderContacts();renderClients();renderPortfolioQuick();
   updateNotifUI();
   if(document.getElementById('cal-month'))renderCal();
+
+  // Daily reset check
+  checkDailyReset();
+  setInterval(checkDailyReset, 60000); // check every minute for midnight rollover
 
   // Register Service Worker
   if ('serviceWorker' in navigator) {
