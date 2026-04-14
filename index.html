@@ -891,81 +891,75 @@ import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js').then(fa=>{
     fauth.onAuthStateChanged(auth, user => {
       const loginScreen = document.getElementById('login-screen');
       if (user) {
-        // User is signed in — hide login, show app
         console.log('Signed in as:', user.email);
         if (loginScreen) loginScreen.style.display = 'none';
-        // Start listening to Firebase data
         startDataListener(fd);
       } else {
-        // Not signed in — show login screen
         if (loginScreen) loginScreen.style.display = 'flex';
       }
     });
 
-    // Data listener is now started only after auth confirmed
-  });
-});
+  }); // closes Promise.all.then
+}); // closes firebase-app.then
 
 function startDataListener(fd) {
   fd.onValue(dbRef,snap=>{
-      const data=snap.val();
-      if(data){
-        S.cv = data.cv || 0;
-        S.dr = data.dr || 0;
-        S.nc = data.nc || 0;
-        S.streak = data.streak || 0;
-        S.history = data.history || {};
-        S.calEvents = data.calEvents || {};
-        if(data.tasks) S.tasks = data.tasks;
-        S.clients = data.clients || [];
-        S.closings = data.closings || [];
-        S.currentOpenHouse = data.currentOpenHouse || {};
-        S.portfolio = data.portfolio || [];
-        S.farm = data.farm || [];
-        S.replies = data.replies || {};
-        S.sallie = data.sallie || 24225;
-        S.federal = data.federal || 5500;
-        S.zr1x = data.zr1x || 0;
-        S.manualTax = data.manualTax || 0;
-        S.manualSav = data.manualSav || 0;
-        S.docs = data.docs || {};
-        if(data.rc) S.rc = data.rc;
+    const data=snap.val();
+    if(data){
+      S.cv = data.cv || 0;
+      S.dr = data.dr || 0;
+      S.nc = data.nc || 0;
+      S.streak = data.streak || 0;
+      S.history = data.history || {};
+      S.calEvents = data.calEvents || {};
+      if(data.tasks) S.tasks = data.tasks;
+      S.clients = data.clients || [];
+      S.closings = data.closings || [];
+      S.currentOpenHouse = data.currentOpenHouse || {};
+      S.portfolio = data.portfolio || [];
+      S.farm = data.farm || [];
+      S.replies = data.replies || {};
+      S.sallie = data.sallie || 24225;
+      S.federal = data.federal || 5500;
+      S.zr1x = data.zr1x || 0;
+      S.manualTax = data.manualTax || 0;
+      S.manualSav = data.manualSav || 0;
+      S.docs = data.docs || {};
+      if(data.rc) S.rc = data.rc;
 
-        if (data.contacts) {
-          if (Array.isArray(data.contacts)) {
-            S.contacts = data.contacts.map((val, idx) => {
-              if(!val) return null;
-              return { ...val, fbKey: String(idx), id: val.id || String(idx) };
-            }).filter(Boolean);
-          } else {
-            S.contacts = Object.entries(data.contacts).map(([key, val]) => {
-              return { ...val, fbKey: key, id: val.id || key }; 
-            }).filter(c => c.name);
-          }
+      if (data.contacts) {
+        if (Array.isArray(data.contacts)) {
+          S.contacts = data.contacts.map((val, idx) => {
+            if(!val) return null;
+            return { ...val, fbKey: String(idx), id: val.id || String(idx) };
+          }).filter(Boolean);
         } else {
-          S.contacts = [];
+          S.contacts = Object.entries(data.contacts).map(([key, val]) => {
+            return { ...val, fbKey: key, id: val.id || key };
+          }).filter(c => c.name);
         }
-        
-        applyRC();updateC();if(document.getElementById('cal-month'))renderCal();
-        renderMoney();renderContacts();renderClients();renderPortfolioQuick();
-        updateInboxBadge();
-        
-        if(S.currentOpenHouse){
-          document.getElementById('oh-admin-addr').value=S.currentOpenHouse.address||'';
-          document.getElementById('oh-admin-price').value=S.currentOpenHouse.price||'';
-          document.getElementById('oh-admin-details').value=S.currentOpenHouse.details||'';
-          document.getElementById('oh-admin-url').value=S.currentOpenHouse.url||'';
-          document.getElementById('oh-current-addr').textContent=S.currentOpenHouse.address||'None';
-          document.getElementById('oh-current-details').textContent=S.currentOpenHouse.price?`${S.currentOpenHouse.price} · ${S.currentOpenHouse.details||''}`:'';
-        }
-        if(document.getElementById('scn-inbox').classList.contains('on'))renderInbox();
-        if(activeConvId) renderBubbles(Object.values(S.replies[activeConvId] || {}).sort((a,b)=>a.timestamp-b.timestamp));
-        updateInboxBadge();
+      } else {
+        S.contacts = [];
       }
-    });
-  });
-}
-});
+
+      applyRC();updateC();if(document.getElementById('cal-month'))renderCal();
+      renderMoney();renderContacts();renderClients();renderPortfolioQuick();
+      updateInboxBadge();
+
+      if(S.currentOpenHouse){
+        document.getElementById('oh-admin-addr').value=S.currentOpenHouse.address||'';
+        document.getElementById('oh-admin-price').value=S.currentOpenHouse.price||'';
+        document.getElementById('oh-admin-details').value=S.currentOpenHouse.details||'';
+        document.getElementById('oh-admin-url').value=S.currentOpenHouse.url||'';
+        document.getElementById('oh-current-addr').textContent=S.currentOpenHouse.address||'None';
+        document.getElementById('oh-current-details').textContent=S.currentOpenHouse.price?`${S.currentOpenHouse.price} · ${S.currentOpenHouse.details||''}`:'';
+      }
+      if(document.getElementById('scn-inbox').classList.contains('on'))renderInbox();
+      if(activeConvId) renderBubbles(Object.values(S.replies[activeConvId] || {}).sort((a,b)=>a.timestamp-b.timestamp));
+      updateInboxBadge();
+    }
+  }); // closes onValue
+} // closes startDataListener
 
 // ─── AUTH FUNCTIONS ──────────────────────────────────────────────────
 window.signInWithGoogle = async function() {
