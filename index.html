@@ -996,10 +996,35 @@ window.saveActiveOpenHouse=async function(){
 };
 
 // --- NOTIFICATIONS ---
+async function subscribeToPush() {
+  if (!('PushManager' in window)) { console.log('PushManager not supported'); return; }
+  try {
+    const reg = await navigator.serviceWorker.ready;
+    const existing = await reg.pushManager.getSubscription();
+    if (existing) {
+      if (fbDb && fbRef && setDb) {
+        setDb(fbRef(fbDb, 'agent_hq_data/push_tokens/christian'), JSON.parse(JSON.stringify(existing)));
+      }
+      return;
+    }
+    const subscription = await reg.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: 'BDoRsgYU3jjxXtr14x21y78sYPJFfNTvByIl4qXLIdfQdsU_vtCfP82ZmKySXlUPWU-qsZXjDFFILlPHaUAOSho'
+    });
+    if (fbDb && fbRef && setDb) {
+      setDb(fbRef(fbDb, 'agent_hq_data/push_tokens/christian'), JSON.parse(JSON.stringify(subscription)));
+      toast('Push token saved — notifications active!');
+    }
+    console.log('Push subscription saved:', subscription.endpoint);
+  } catch(err) {
+    console.error('Push subscription failed:', err);
+  }
+}
+
 window.requestNotifPermission=async function(){
   if(!('Notification' in window)){toast('Notifications not supported here');return;}
   const p=await Notification.requestPermission();S.notifPermission=p;updateNotifUI();
-  if(p==='granted'){toast('Notifications enabled');save();}
+  if(p==='granted'){toast('Notifications enabled');save();subscribeToPush();}
 };
 function updateNotifUI(){
   const p=('Notification' in window)?Notification.permission:'unsupported';
@@ -1689,7 +1714,8 @@ window.onload=()=>{
   updateNotifUI();
   if(document.getElementById('cal-month'))renderCal();
   
-  startNudgeEngine(); 
+  startNudgeEngine();
+  if(Notification.permission === 'granted') subscribeToPush();
 };
 </script>
 </body>
