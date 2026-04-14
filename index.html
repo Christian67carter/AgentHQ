@@ -97,7 +97,7 @@ input:focus,select:focus{border-color:var(--navy);}
 /* --- HERO BANNER --- */
 .hero-banner{background:var(--navy);border-radius:18px;padding:22px 22px 18px;margin-bottom:12px;position:relative;overflow:hidden;}
 .hero-banner::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;border:1.5px solid rgba(201,168,76,.2);}
-.hero-banner::after{content:'absolute;bottom:-20px;left:60px;width:80px;height:80px;border-radius:50%;border:1.5px solid rgba(201,168,76,.12);}
+.hero-banner::after{content:'';position:absolute;bottom:-20px;left:60px;width:80px;height:80px;border-radius:50%;border:1.5px solid rgba(201,168,76,.12);}
 .hero-eyebrow{font-size:10px;font-weight:600;letter-spacing:.15em;color:var(--gold);text-transform:uppercase;margin-bottom:10px;}
 .hero-quote{font-family:var(--font-display);font-size:19px;font-weight:500;color:#fff;line-height:1.45;letter-spacing:-.1px;}
 .hero-divider{height:.5px;background:rgba(201,168,76,.25);margin:14px 0 10px;}
@@ -489,17 +489,12 @@ input:focus,select:focus{border-color:var(--navy);}
         <button onclick="openAddEvent()" style="border:none;background:none;color:var(--red);font-size:26px;font-weight:300;cursor:pointer;padding:0;">+</button>
       </div>
       <div id="cal-events-list"></div>
-      
-      <div style="padding:14px 16px; display:flex; gap:10px;">
-        <label class="btn bo bsm" style="flex:1; height:36px; cursor:pointer; margin:0; display:flex; justify-content:center; align-items:center;">
+      <div style="padding:14px 16px;">
+        <label class="btn bo bsm" style="width:100%;height:36px;cursor:pointer;margin:0;display:flex;justify-content:center;">
           <input type="file" id="ics-upload" accept=".ics" multiple style="display:none;" onchange="importICS(this)">
-          Import .ics
+          Import .ics Schedule
         </label>
-        <button class="btn bsm" style="flex:1; height:36px; background:var(--red-lt); color:var(--red); margin:0;" onclick="clearCalendar()">
-          Clear Calendar
-        </button>
       </div>
-      
     </div>
   </div>
 
@@ -1562,15 +1557,6 @@ window.importICS = function(inp) {
     r.readAsText(f);
   });
   inp.value = '';
-};
-
-// ADDED: Logic to completely clear the calendar object
-window.clearCalendar = function() {
-  if (!confirm("Are you sure you want to delete all calendar events? This cannot be undone.")) return;
-  S.calEvents = {};
-  save();
-  renderCal();
-  toast("Calendar cleared");
 };
 
 window.calNav=function(dir){calMonth+=dir;if(calMonth>11){calMonth=0;calYear++;}if(calMonth<0){calMonth=11;calYear--;}renderCal();};
