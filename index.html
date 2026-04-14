@@ -862,7 +862,7 @@ import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js').then(fa=>{
     const app=fa.initializeApp(cfg);
     fbDb=fd.getDatabase(app);fbPush=fd.push;fbRef=fd.ref;fd_update=fd.update;setDb=fd.set;
     dbRef=fd.ref(fbDb,'agent_hq_data');
-    const storage=fs.getStorage(app);storageRef=fs.ref;fbUploadBytes=fs.uploadBytesResumable;fbGetDownloadURL=fs.getDownloadURL;
+    const storage=fs.getStorage(app);window._fbStorage=storage;storageRef=fs.ref;fbUploadBytes=fs.uploadBytesResumable;fbGetDownloadURL=fs.getDownloadURL;
 
     fd.onValue(dbRef,snap=>{
       const data=snap.val();
@@ -1131,6 +1131,65 @@ function renderDocsList(){
 window.deleteDoc=function(i){
   if(!S.docs[activeDocsClientId])return;
   S.docs[activeDocsClientId].splice(i,1);renderDocsList();save();
+};
+
+function formatFileSize(bytes){
+  if(bytes < 1024) return bytes + ' B';
+  if(bytes < 1024*1024) return Math.round(bytes/1024) + ' KB';
+  return (bytes/(1024*1024)).toFixed(1) + ' MB';
+}
+
+window.uploadDocs = async function(input) {
+  const files = Array.from(input.files);
+  if (!files.length || !activeDocsClientId) return;
+
+  const label = document.getElementById('doc-upload-label');
+  const origHTML = label ? label.innerHTML : '';
+  if (label) label.innerHTML = '<div style="font-size:15px;font-weight:600;color:var(--gold);padding:14px;text-align:center;">⏳ Uploading...</div>';
+
+  if (!S.docs[activeDocsClientId]) S.docs[activeDocsClientId] = [];
+
+  for (const file of files) {
+    try {
+      if (fbUploadBytes && storageRef && fbGetDownloadURL && window._fbStorage) {
+        // Firebase Storage upload
+        const path = `docs/${activeDocsClientId}/${Date.now()}_${file.name}`;
+        const sRef = storageRef(window._fbStorage, path);
+        const snap = await fbUploadBytes(sRef, file);
+        const url = await fbGetDownloadURL(snap.ref);
+        S.docs[activeDocsClientId].push({
+          name: file.name,
+          size: formatFileSize(file.size),
+          url,
+          uploadedAt: Date.now()
+        });
+      } else {
+        // Base64 fallback for files under 1MB
+        if (file.size > 1000000) { toast('File too large — Firebase Storage not connected'); continue; }
+        const url = await new Promise((res, rej) => {
+          const r = new FileReader();
+          r.onload = e => res(e.target.result);
+          r.onerror = rej;
+          r.readAsDataURL(file);
+        });
+        S.docs[activeDocsClientId].push({
+          name: file.name,
+          size: formatFileSize(file.size),
+          url,
+          uploadedAt: Date.now()
+        });
+      }
+    } catch(err) {
+      console.error('Upload error:', err);
+      toast('Upload failed: ' + file.name);
+    }
+  }
+
+  if (label) label.innerHTML = origHTML;
+  input.value = '';
+  renderDocsList();
+  save();
+  toast(files.length === 1 ? '1 document uploaded' : files.length + ' documents uploaded');
 };
 
 // --- iOS INBOX OVERHAUL ---
