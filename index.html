@@ -867,7 +867,6 @@ import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js').then(fa=>{
     fd.onValue(dbRef,snap=>{
       const data=snap.val();
       if(data){
-        // Safe mapping to avoid Object/Array overwrites
         S.cv = data.cv || 0;
         S.dr = data.dr || 0;
         S.nc = data.nc || 0;
@@ -889,7 +888,6 @@ import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js').then(fa=>{
         S.docs = data.docs || {};
         if(data.rc) S.rc = data.rc;
 
-        // 🔥 CRITICAL FIX: Safe Contacts Parsing w/ fbKey
         if (data.contacts) {
           if (Array.isArray(data.contacts)) {
             S.contacts = data.contacts.map((val, idx) => {
@@ -928,7 +926,6 @@ import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js').then(fa=>{
 window.save=function(){
   try{localStorage.setItem('ahq_v7',JSON.stringify(S));}catch(e){}
   if(fbDb&&fbRef&&fd_update){
-    // 🔥 CRITICAL FIX: Only update dashboard metrics to prevent overwriting new inbound messages
     const updates = {
       cv: S.cv, dr: S.dr, nc: S.nc, streak: S.streak,
       history: S.history, calEvents: S.calEvents, tasks: S.tasks,
@@ -1252,7 +1249,6 @@ window.openConversation = function(id, name, phone) {
   activeConvId = id; activeConvPhone = phone;
   document.getElementById('ios-conv-name').textContent = name;
   document.getElementById('ios-conv-av').textContent = (name[0]||'#').toUpperCase();
-  // Show convert button for unknown numbers
   const convertBtn = document.getElementById('ios-conv-convert-btn');
   convertBtn.style.display = String(id).startsWith('unknown_') ? 'block' : 'none';
   
@@ -1313,33 +1309,25 @@ window.convertUnknown = function() {
     const newRef = fbPush(fbRef(fbDb, 'agent_hq_data/contacts'));
     newContact.fbKey = newRef.key;
 
-    // Step 1: Copy replies to new key FIRST
     const existingReplies = S.replies && S.replies[oldKey] ? S.replies[oldKey] : {};
     setDb(fbRef(fbDb, `agent_hq_data/replies/${newRef.key}`), existingReplies)
       .then(() => {
-        // Step 2: Save contact AFTER replies are moved
         setDb(newRef, newContact);
-        // Step 3: Delete old unknown replies key LAST
         setDb(fbRef(fbDb, `agent_hq_data/replies/${oldKey}`), null);
       });
 
-    // Update local state
     S.replies[newRef.key] = existingReplies;
     delete S.replies[oldKey];
 
-    // Remove unknown from contacts list — prevent duplicate when onValue fires
     S.contacts = S.contacts.filter(c => String(c.fbKey) !== oldKey && String(c.id) !== oldKey);
-    // Add new contact locally
     S.contacts.unshift(newContact);
 
-    // Update active conversation
     activeConvId = newRef.key;
     activeConvPhone = phone;
     document.getElementById('ios-conv-name').textContent = name.trim();
     document.getElementById('ios-conv-av').textContent = name.trim()[0].toUpperCase();
     document.getElementById('ios-conv-convert-btn').style.display = 'none';
 
-    // Re-render bubbles from moved replies
     renderBubbles(Object.values(existingReplies).sort((a,b)=>a.timestamp-b.timestamp));
   }
 
@@ -1446,7 +1434,6 @@ function updateC(){
     pt.style.borderLeftColor='var(--ios-green)';pTitle.style.color='var(--ios-green)';pTitle.textContent='DAILY GOAL MET.';pDesc.textContent="Outstanding. Now push past 120%.";
   }
   renderTasks();if(document.getElementById('cal-month'))renderCal();updateInboxBadge();
-  // Follow-up reminder check
   checkBirthdays();
   checkClosingAnniversaries();
   const overdue = checkFollowUpReminders();
@@ -1470,7 +1457,6 @@ window.importICS = function(inp) {
   Array.from(inp.files).forEach(f => {
     const r = new FileReader();
     r.onload = e => {
-      // 1. Unfold lines (ICS standard splits long lines with a line break + space)
       const icsData = e.target.result.replace(/\r?\n[ \t]/g, '');
       const events = icsData.split(/BEGIN:VEVENT/i);
       let added = 0;
@@ -1478,18 +1464,16 @@ window.importICS = function(inp) {
       for (let i = 1; i < events.length; i++) {
         const ev = events[i];
 
-        // 2. Extract core fields (case insensitive)
         const summaryMatch = ev.match(/SUMMARY[:;]([^\r\n]*)/i);
         const startMatch = ev.match(/DTSTART[^:]*:([^\r\n]*)/i);
         const endMatch = ev.match(/DTEND[^:]*:([^\r\n]*)/i);
-        const rruleMatch = ev.match(/RRULE:([^\r\n]*)/i); // The missing piece for recurring classes
+        const rruleMatch = ev.match(/RRULE:([^\r\n]*)/i); 
 
         if (summaryMatch && startMatch) {
           const title = summaryMatch[1].trim();
           const startRaw = startMatch[1].trim();
           const endRaw = endMatch ? endMatch[1].trim() : '';
 
-          // Helper to strictly parse ICS dates and convert to JS Date objects
           const parseIcsDate = (raw) => {
             const m = raw.match(/(\d{4})(\d{2})(\d{2})(?:T(\d{2})(\d{2})(\d{2})Z?)?/);
             if (!m) return null;
@@ -1509,22 +1493,19 @@ window.importICS = function(inp) {
           const addEv = (dStr, sTime, eTime) => {
             if (!S.calEvents) S.calEvents = {};
             if (!S.calEvents[dStr]) S.calEvents[dStr] = [];
-            // Prevent exact duplicates
             if (!S.calEvents[dStr].find(x => x.title === title && x.start === sTime)) {
               S.calEvents[dStr].push({ type: 'class', title: title, start: sTime, end: eTime });
               added++;
             }
           };
 
-          // Add the main initial event
           addEv(sDate.dateStr, sDate.timeStr, eDate.timeStr);
 
-          // 3. Handle Weekly Recurrences (Expands class schedules automatically)
           if (rruleMatch) {
             const rule = rruleMatch[1].toUpperCase();
             if (rule.includes('FREQ=WEEKLY')) {
               let untilObj = null;
-              let count = 60; // Safe fallback cap to prevent infinite loops
+              let count = 60; 
 
               const untilMatch = rule.match(/UNTIL=([^;]+)/);
               if (untilMatch) {
@@ -1545,7 +1526,7 @@ window.importICS = function(inp) {
               }
 
               let currDate = new Date(sDate.dateObj);
-              currDate.setDate(currDate.getDate() + 1); // Start checking from the day after
+              currDate.setDate(currDate.getDate() + 1); 
               let instances = 1;
 
               while (instances < count) {
@@ -1558,7 +1539,7 @@ window.importICS = function(inp) {
                   addEv(`${yr}-${mo}-${dy}`, sDate.timeStr, eDate.timeStr);
                   instances++;
                 }
-                currDate.setDate(currDate.getDate() + 1); // Move to next day
+                currDate.setDate(currDate.getDate() + 1); 
               }
             }
           }
@@ -1578,18 +1559,6 @@ window.importICS = function(inp) {
   inp.value = '';
 };
 
-      if (added > 0) {
-        save();
-        renderCal();
-        toast(`Imported ${added} events`);
-      } else {
-        toast('No readable events found');
-      }
-    };
-    r.readAsText(f);
-  });
-  inp.value='';
-};
 window.calNav=function(dir){calMonth+=dir;if(calMonth>11){calMonth=0;calYear++;}if(calMonth<0){calMonth=11;calYear--;}renderCal();};
 window.selectDate=function(key){activeDateStr=key;renderCal();};
 
