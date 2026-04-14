@@ -1713,9 +1713,18 @@ window.onload=()=>{
   renderMoney();renderContacts();renderClients();renderPortfolioQuick();
   updateNotifUI();
   if(document.getElementById('cal-month'))renderCal();
-  
+
+  // Register Service Worker
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/AgentHQ/sw.js')
+      .then(reg => {
+        console.log('SW registered:', reg.scope);
+        if(Notification.permission === 'granted') subscribeToPush();
+      })
+      .catch(err => console.error('SW failed:', err));
+  }
+
   startNudgeEngine();
-  if(Notification.permission === 'granted') subscribeToPush();
 };
 </script>
 </body>
