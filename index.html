@@ -1466,56 +1466,117 @@ function renderTasks(){
 window.togT=function(id){const t=S.tasks.find(x=>x.id===id);t.d=!t.d;renderTasks();save();};
 
 // --- CALENDAR ---
-window.importICS=function(inp){
-  Array.from(inp.files).forEach(f=>{
-    const r=new FileReader();
-    r.onload=e=>{
-      const icsData = e.target.result;
-      const events = icsData.split('BEGIN:VEVENT');
+window.importICS = function(inp) {
+  Array.from(inp.files).forEach(f => {
+    const r = new FileReader();
+    r.onload = e => {
+      // 1. Unfold lines (ICS standard splits long lines with a line break + space)
+      const icsData = e.target.result.replace(/\r?\n[ \t]/g, '');
+      const events = icsData.split(/BEGIN:VEVENT/i);
       let added = 0;
 
       for (let i = 1; i < events.length; i++) {
         const ev = events[i];
-        
-        const summaryMatch = ev.match(/SUMMARY:([^\r\n]*)/);
-        const startMatch = ev.match(/DTSTART[^:]*:([^\r\n]*)/);
-        const endMatch = ev.match(/DTEND[^:]*:([^\r\n]*)/);
+
+        // 2. Extract core fields (case insensitive)
+        const summaryMatch = ev.match(/SUMMARY[:;]([^\r\n]*)/i);
+        const startMatch = ev.match(/DTSTART[^:]*:([^\r\n]*)/i);
+        const endMatch = ev.match(/DTEND[^:]*:([^\r\n]*)/i);
+        const rruleMatch = ev.match(/RRULE:([^\r\n]*)/i); // The missing piece for recurring classes
 
         if (summaryMatch && startMatch) {
           const title = summaryMatch[1].trim();
           const startRaw = startMatch[1].trim();
           const endRaw = endMatch ? endMatch[1].trim() : '';
 
-          const parseDate = (raw) => {
-            if (!raw || raw.length < 8) return { date: null, time: '' };
-            const year = raw.substring(0,4);
-            const month = raw.substring(4,6);
-            const day = raw.substring(6,8);
-            let time = '12:00'; 
-            
-            if (raw.includes('T') && raw.length >= 13) {
-              time = `${raw.substring(9,11)}:${raw.substring(11,13)}`;
-            }
-            return { date: `${year}-${month}-${day}`, time };
+          // Helper to strictly parse ICS dates and convert to JS Date objects
+          const parseIcsDate = (raw) => {
+            const m = raw.match(/(\d{4})(\d{2})(\d{2})(?:T(\d{2})(\d{2})(\d{2})Z?)?/);
+            if (!m) return null;
+            const dObj = new Date(m[1], m[2]-1, m[3], m[4]||12, m[5]||0, m[6]||0);
+            return {
+              dateStr: `${m[1]}-${m[2]}-${m[3]}`,
+              timeStr: m[4] ? `${m[4]}:${m[5]}` : '12:00',
+              dateObj: dObj
+            };
           };
 
-          const sDate = parseDate(startRaw);
-          const eDate = parseDate(endRaw);
+          const sDate = parseIcsDate(startRaw);
+          const eDate = parseIcsDate(endRaw) || sDate;
 
-          if (sDate.date) {
+          if (!sDate) continue;
+
+          const addEv = (dStr, sTime, eTime) => {
             if (!S.calEvents) S.calEvents = {};
-            if (!S.calEvents[sDate.date]) S.calEvents[sDate.date] = [];
+            if (!S.calEvents[dStr]) S.calEvents[dStr] = [];
+            // Prevent exact duplicates
+            if (!S.calEvents[dStr].find(x => x.title === title && x.start === sTime)) {
+              S.calEvents[dStr].push({ type: 'class', title: title, start: sTime, end: eTime });
+              added++;
+            }
+          };
 
-            S.calEvents[sDate.date].push({
-              type: 'other', 
-              title: title,
-              start: sDate.time,
-              end: eDate.time || sDate.time
-            });
-            added++;
+          // Add the main initial event
+          addEv(sDate.dateStr, sDate.timeStr, eDate.timeStr);
+
+          // 3. Handle Weekly Recurrences (Expands class schedules automatically)
+          if (rruleMatch) {
+            const rule = rruleMatch[1].toUpperCase();
+            if (rule.includes('FREQ=WEEKLY')) {
+              let untilObj = null;
+              let count = 60; // Safe fallback cap to prevent infinite loops
+
+              const untilMatch = rule.match(/UNTIL=([^;]+)/);
+              if (untilMatch) {
+                const u = parseIcsDate(untilMatch[1]);
+                if (u) untilObj = u.dateObj;
+              }
+
+              const countMatch = rule.match(/COUNT=(\d+)/);
+              if (countMatch) count = parseInt(countMatch[1]);
+
+              let byDay = rule.match(/BYDAY=([^;]+)/);
+              let days = [];
+              if (byDay) {
+                const dayMap = { 'SU':0, 'MO':1, 'TU':2, 'WE':3, 'TH':4, 'FR':5, 'SA':6 };
+                days = byDay[1].split(',').map(d => dayMap[d.replace(/[^A-Z]/g,'')]).filter(d => d !== undefined);
+              } else {
+                days = [sDate.dateObj.getDay()];
+              }
+
+              let currDate = new Date(sDate.dateObj);
+              currDate.setDate(currDate.getDate() + 1); // Start checking from the day after
+              let instances = 1;
+
+              while (instances < count) {
+                if (untilObj && currDate > untilObj) break;
+
+                if (days.includes(currDate.getDay())) {
+                  const yr = currDate.getFullYear();
+                  const mo = String(currDate.getMonth() + 1).padStart(2, '0');
+                  const dy = String(currDate.getDate()).padStart(2, '0');
+                  addEv(`${yr}-${mo}-${dy}`, sDate.timeStr, eDate.timeStr);
+                  instances++;
+                }
+                currDate.setDate(currDate.getDate() + 1); // Move to next day
+              }
+            }
           }
         }
       }
+
+      if (added > 0) {
+        save();
+        renderCal();
+        toast(`Imported ${added} events`);
+      } else {
+        toast('No readable events found');
+      }
+    };
+    r.readAsText(f);
+  });
+  inp.value = '';
+};
 
       if (added > 0) {
         save();
